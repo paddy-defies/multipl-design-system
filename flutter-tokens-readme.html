@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1440, initial-scale=1" />
+  <title>Multipl — Flutter Token Setup Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --midnight:   #0C1220;
+      --bgBase:     #FDFAF0;
+      --bgCard:     #FFFFFF;
+      --gold:       #F5C842;
+      --teal:       #00D4AA;
+      --tealText:   #006B55;
+      --txDark:     #0C1220;
+      --txMid:      rgba(12,18,32,0.55);
+      --txLight:    rgba(12,18,32,0.38);
+      --borderSub:  rgba(12,18,32,0.08);
+    }
+
+    body {
+      background: #F0EDE4;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--txDark);
+      width: 1440px;
+    }
+
+    /* ── Header ───────────────────────────────────────────────────── */
+    .doc-header {
+      background: var(--midnight);
+      padding: 56px 80px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-glow-gold {
+      position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(245,200,66,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-glow-teal {
+      position: absolute; bottom: -60px; right: 80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(0,212,170,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-inner { position: relative; z-index: 1; }
+    .header-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      height: 28px; padding: 0 12px;
+      background: rgba(245,200,66,0.12);
+      border: 1px solid rgba(245,200,66,0.25);
+      border-radius: 999px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
+      color: var(--gold); text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px; font-weight: 700;
+      color: #FFFFFF; letter-spacing: -0.5px;
+      line-height: 1.15; margin-bottom: 14px;
+    }
+    .header-title span { color: var(--gold); }
+    .header-sub {
+      font-size: 16px; font-weight: 400; line-height: 1.6;
+      color: rgba(255,255,255,0.55); max-width: 560px;
+    }
+    .header-chips {
+      display: flex; gap: 10px; margin-top: 28px; flex-wrap: wrap;
+    }
+    .header-chip {
+      height: 30px; padding: 0 14px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      font-size: 12px; font-weight: 500;
+      color: rgba(255,255,255,0.65);
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .header-chip .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── Doc body ─────────────────────────────────────────────────── */
+    .doc-body { padding: 64px 80px 80px; }
+
+    /* ── Workflow banner ──────────────────────────────────────────── */
+    .workflow-banner {
+      background: var(--midnight);
+      border-radius: 16px;
+      padding: 32px 40px;
+      margin-bottom: 56px;
+      position: relative; overflow: hidden;
+    }
+    .workflow-banner::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245,200,66,0.4), transparent);
+    }
+    .workflow-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 20px;
+    }
+    .workflow-steps {
+      display: flex; align-items: center; gap: 0; flex-wrap: nowrap;
+    }
+    .wf-step {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      flex: 1; text-align: center;
+    }
+    .wf-step-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .wf-step-label {
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.80);
+      line-height: 1.3;
+    }
+    .wf-step-sub {
+      font-size: 10px; font-weight: 400; color: rgba(255,255,255,0.38);
+    }
+    .wf-arrow {
+      color: rgba(255,255,255,0.20); font-size: 18px; padding: 0 8px;
+      margin-top: -16px; flex-shrink: 0;
+    }
+    .wf-highlight .wf-step-icon {
+      background: rgba(245,200,66,0.12);
+      border-color: rgba(245,200,66,0.30);
+    }
+    .wf-highlight .wf-step-label { color: var(--gold); }
+
+    /* ── Section titles ───────────────────────────────────────────── */
+    .section { margin-bottom: 56px; }
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+      color: var(--tealText); text-transform: uppercase; margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: 26px; font-weight: 700; color: var(--txDark);
+      letter-spacing: -0.3px; margin-bottom: 6px; line-height: 1.2;
+    }
+    .section-title .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--midnight); color: var(--gold);
+      font-size: 14px; font-weight: 700;
+      margin-right: 10px; vertical-align: middle;
+    }
+    .section-desc {
+      font-size: 15px; color: var(--txMid); line-height: 1.6; margin-bottom: 20px;
+      max-width: 680px;
+    }
+
+    /* ── Card layout ──────────────────────────────────────────────── */
+    .card {
+      background: var(--bgCard);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(12,18,32,0.08);
+    }
+    .card-title {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.3px;
+      color: var(--txMid); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title .tag {
+      height: 20px; padding: 0 8px; border-radius: 999px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+      display: inline-flex; align-items: center;
+    }
+    .tag-file { background: rgba(0,212,170,0.10); color: var(--tealText); }
+    .tag-new  { background: rgba(245,200,66,0.12); color: #9B7A00; }
+
+    /* ── Code blocks ──────────────────────────────────────────────── */
+    .code-block {
+      background: #0C1220;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-top: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .code-block::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245,200,66,0.20), transparent);
+    }
+    .code-block pre {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; line-height: 1.7;
+      color: rgba(255,255,255,0.82);
+      white-space: pre-wrap; word-break: break-all;
+    }
+    .code-block .c-comment { color: rgba(255,255,255,0.30); }
+    .code-block .c-key     { color: #7B9FFF; }
+    .code-block .c-val     { color: #F5C842; }
+    .code-block .c-str     { color: #00D4AA; }
+    .code-block .c-type    { color: #FF9F7B; }
+    .code-block .c-kw      { color: #C79FFF; }
+
+    /* ── Two-column layout ────────────────────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+    /* ── Font type cards ─────────────────────────────────────────── */
+    .font-card {
+      background: var(--bgCard);
+      border-radius: 16px;
+      padding: 24px 24px 20px;
+      box-shadow: 0 2px 12px rgba(12,18,32,0.08);
+    }
+    .font-specimen { margin: 16px 0 12px; }
+    .font-rule {
+      font-size: 11px; color: var(--txLight);
+      padding-top: 12px; border-top: 1px solid var(--borderSub);
+      line-height: 1.4;
+    }
+    .font-rule strong { color: var(--txMid); }
+
+    /* ── Tables ──────────────────────────────────────────────────── */
+    .data-table {
+      width: 100%; border-collapse: collapse;
+    }
+    .data-table th {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+      color: var(--txLight); text-transform: uppercase;
+      padding: 10px 16px; text-align: left;
+      border-bottom: 1px solid var(--borderSub);
+      background: rgba(12,18,32,0.03);
+    }
+    .data-table td {
+      padding: 12px 16px; font-size: 13px;
+      border-bottom: 1px solid rgba(12,18,32,0.05);
+      vertical-align: top; line-height: 1.5;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table code {
+      font-family: 'DM Mono', monospace; font-size: 12px;
+      background: rgba(12,18,32,0.06); border-radius: 4px;
+      padding: 2px 6px; color: var(--txDark);
+    }
+    .data-table .dont { color: #C04A00; }
+    .data-table .do   { color: var(--tealText); font-weight: 500; }
+    .data-table .x { color: #E53935; font-size: 16px; font-weight: 700; }
+    .data-table .check { color: var(--tealText); font-size: 16px; font-weight: 700; }
+
+    /* ── Do/Don't table ────────────────────────────────────────────── */
+    .dont-do-table {
+      width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden;
+    }
+    .dont-do-table th {
+      padding: 12px 20px; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.5px; text-transform: uppercase; text-align: left;
+    }
+    .dont-do-table .th-dont { background: rgba(229,57,53,0.08); color: #C04A00; }
+    .dont-do-table .th-do   { background: rgba(0,107,85,0.08);  color: var(--tealText); }
+    .dont-do-table td {
+      padding: 11px 20px; font-size: 13px;
+      border-bottom: 1px solid rgba(12,18,32,0.05); vertical-align: middle;
+    }
+    .dont-do-table tr:last-child td { border-bottom: none; }
+    .dont-do-table td code {
+      font-family: 'DM Mono', monospace; font-size: 12px;
+      border-radius: 4px; padding: 2px 6px;
+    }
+    .dont-do-table .td-dont { background: rgba(229,57,53,0.04); }
+    .dont-do-table .td-dont code { background: rgba(229,57,53,0.10); color: #C04A00; }
+    .dont-do-table .td-do   { background: rgba(0,107,85,0.04); }
+    .dont-do-table .td-do   code { background: rgba(0,107,85,0.10); color: var(--tealText); }
+
+    /* ── Quick ref cards ─────────────────────────────────────────── */
+    .qr-card {
+      background: var(--bgCard);
+      border-radius: 16px; padding: 24px 28px;
+      box-shadow: 0 2px 12px rgba(12,18,32,0.08);
+    }
+    .qr-title {
+      font-size: 13px; font-weight: 700; color: var(--txMid);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .qr-title svg { flex-shrink: 0; }
+    .qr-row {
+      display: flex; align-items: flex-start;
+      padding: 9px 0; border-bottom: 1px solid rgba(12,18,32,0.06);
+      gap: 14px;
+    }
+    .qr-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .qr-q { font-size: 12px; color: var(--txMid); flex: 1; line-height: 1.5; }
+    .qr-a {
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      background: rgba(0,107,85,0.09); color: var(--tealText);
+      border-radius: 6px; padding: 3px 8px; white-space: nowrap;
+    }
+
+    /* ── File tree ───────────────────────────────────────────────── */
+    .file-tree {
+      background: var(--midnight);
+      border-radius: 14px; padding: 24px 28px;
+    }
+    .file-tree pre {
+      font-family: 'DM Mono', monospace; font-size: 13px;
+      color: rgba(255,255,255,0.70); line-height: 2.0;
+    }
+    .file-tree .ft-dir  { color: rgba(255,255,255,0.90); font-weight: 500; }
+    .file-tree .ft-file { color: var(--gold); }
+    .file-tree .ft-note { color: rgba(255,255,255,0.30); }
+
+    /* ── Time estimate pill ──────────────────────────────────────── */
+    .time-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,212,170,0.10); border: 1px solid rgba(0,212,170,0.20);
+      border-radius: 999px; height: 34px; padding: 0 16px;
+      font-size: 13px; font-weight: 600; color: var(--tealText);
+      margin-top: 24px;
+    }
+
+    /* ── Special note box ────────────────────────────────────────── */
+    .note-box {
+      background: rgba(245,200,66,0.08);
+      border: 1px solid rgba(245,200,66,0.20);
+      border-radius: 12px; padding: 16px 20px;
+      font-size: 13px; line-height: 1.6; color: var(--txDark);
+      margin: 16px 0;
+    }
+    .note-box strong { color: #8B6A00; }
+
+    /* ── Section divider ─────────────────────────────────────────── */
+    .divider {
+      height: 1px; background: rgba(12,18,32,0.08);
+      margin: 48px 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────── -->
+<div class="doc-header">
+  <div class="header-glow-gold"></div>
+  <div class="header-glow-teal"></div>
+  <div class="header-inner">
+    <div class="header-badge">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+        <circle cx="5" cy="5" r="4" stroke="#F5C842" stroke-width="1.5"/>
+        <circle cx="5" cy="5" r="1.5" fill="#F5C842"/>
+      </svg>
+      Flutter Developer Guide · Design System v4.0
+    </div>
+    <div class="header-title">Multipl Design Tokens —<br><span>Flutter Setup Guide</span></div>
+    <div class="header-sub">Wire the Golden Canvas design system into your Flutter project. Once set up, Figma designs translate to code with zero guesswork — and designer changes propagate everywhere automatically.</div>
+    <div class="header-chips">
+      <div class="header-chip"><span class="dot" style="background:#F5C842;"></span> 7 token files</div>
+      <div class="header-chip"><span class="dot" style="background:#00D4AA;"></span> 60+ color tokens</div>
+      <div class="header-chip"><span class="dot" style="background:#4A9FFF;"></span> DM Sans · Playfair · DM Mono</div>
+      <div class="header-chip"><span class="dot" style="background:#FF9F7B;"></span> Flutter MCP compatible</div>
+      <div class="header-chip"><span class="dot" style="background:rgba(255,255,255,0.4);"></span> ~2hr setup</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Doc body ─────────────────────────────────────────────────── -->
+<div class="doc-body">
+
+  <!-- Workflow banner -->
+  <div class="workflow-banner">
+    <div class="workflow-title">How This Fits Into Your Workflow</div>
+    <div class="workflow-steps">
+      <div class="wf-step">
+        <div class="wf-step-icon">✦</div>
+        <div class="wf-step-label">Designer iterates<br>in Figma</div>
+        <div class="wf-step-sub">via Claude MCP</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step">
+        <div class="wf-step-icon">✓</div>
+        <div class="wf-step-label">Design finalised</div>
+        <div class="wf-step-sub">components + screens</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step wf-highlight">
+        <div class="wf-step-icon">⬡</div>
+        <div class="wf-step-label">Flutter MCP reads<br>Figma Dev Mode</div>
+        <div class="wf-step-sub">tokens = shared language</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step wf-highlight">
+        <div class="wf-step-icon">{ }</div>
+        <div class="wf-step-label">Build widgets using<br>token names</div>
+        <div class="wf-step-sub">AppColors.tealText, not #006B55</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step">
+        <div class="wf-step-icon">↻</div>
+        <div class="wf-step-label">Design changes<br>→ 1 line update</div>
+        <div class="wf-step-sub">propagates everywhere</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 1: Fonts ─────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">Step 1</div>
+    <div class="section-title"><span class="step-num">1</span>Add Fonts to pubspec.yaml</div>
+    <div class="section-desc">The design system uses three typefaces. Add DM Mono — you likely already have DM Sans and Playfair Display via Google Fonts.</div>
+
+    <div class="three-col">
+      <div class="font-card">
+        <div class="card-title">DM Sans</div>
+        <div class="font-specimen">
+          <div style="font-family:'DM Sans'; font-size:22px; font-weight:700; color:#0C1220; letter-spacing:-0.3px;">Spend smarter.</div>
+          <div style="font-family:'DM Sans'; font-size:14px; color:rgba(12,18,32,0.55); margin-top:4px;">Body copy and labels</div>
+        </div>
+        <div class="font-rule"><strong>ALL UI text.</strong> Default everywhere — headings, body, labels, buttons.</div>
+      </div>
+      <div class="font-card">
+        <div class="card-title">Playfair Display</div>
+        <div class="font-specimen">
+          <div style="font-family:'Playfair Display'; font-size:22px; font-weight:700; color:#0C1220; letter-spacing:-0.2px;">Build wealth faster.</div>
+          <div style="font-family:'DM Sans'; font-size:14px; color:rgba(12,18,32,0.55); margin-top:4px;">Wealth context headings</div>
+        </div>
+        <div class="font-rule"><strong>Wealth headings ONLY.</strong> Celebration screens, goal titles, onboarding nudge headings.</div>
+      </div>
+      <div class="font-card" style="background:#0C1220;">
+        <div class="card-title" style="color:rgba(255,255,255,0.45);">DM Mono <span class="tag tag-new">NEW</span></div>
+        <div class="font-specimen">
+          <div style="font-family:'DM Mono'; font-size:28px; font-weight:500; color:#00D4AA; letter-spacing:-0.5px; font-variant-numeric:tabular-nums;">₹1,240.00</div>
+          <div style="font-family:'DM Sans'; font-size:14px; color:rgba(255,255,255,0.38); margin-top:4px;">Live counters &amp; voucher codes</div>
+        </div>
+        <div class="font-rule" style="border-color:rgba(255,255,255,0.08); color:rgba(255,255,255,0.30);"><strong style="color:rgba(255,255,255,0.55);">Counters, tickers, voucher codes.</strong> Earnings heartbeat, milestone displays, DM Mono code cells.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">pubspec.yaml — add DM Mono <span class="tag tag-new">Add this</span></div>
+      <div class="code-block">
+        <pre><span class="c-comment"># Option A — Google Fonts package (recommended)</span>
+<span class="c-key">dependencies</span>:
+  <span class="c-str">google_fonts</span>: <span class="c-val">^6.2.1</span>
+
+<span class="c-comment"># In code: GoogleFonts.dmMono(fontSize: 34, fontWeight: FontWeight.w500)</span>
+
+
+<span class="c-comment"># Option B — Bundle locally</span>
+<span class="c-key">flutter</span>:
+  <span class="c-key">fonts</span>:
+    - <span class="c-key">family</span>: <span class="c-str">DM Mono</span>
+      <span class="c-key">fonts</span>:
+        - <span class="c-key">asset</span>: <span class="c-str">assets/fonts/DMMono-Regular.ttf</span>
+        - <span class="c-key">asset</span>: <span class="c-str">assets/fonts/DMMono-Medium.ttf</span>
+          <span class="c-key">weight</span>: <span class="c-val">500</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: Token Files ───────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">Step 2</div>
+    <div class="section-title"><span class="step-num">2</span>Create lib/design/ Token Files</div>
+    <div class="section-desc">Create a <code style="font-family:'DM Mono';font-size:13px;background:rgba(12,18,32,0.07);padding:2px 7px;border-radius:5px;">lib/design/</code> directory. Add all 7 files. Copy-paste the code from the full guide — the key rules for each file are shown below.</div>
+
+    <!-- app_colors -->
+    <div class="card">
+      <div class="card-title">app_colors.dart — 60+ color tokens <span class="tag tag-file">lib/design/</span></div>
+      <div class="two-col" style="margin-top:16px;gap:12px;">
+        <!-- Surface rule -->
+        <div style="background:rgba(0,107,85,0.06);border:1px solid rgba(0,107,85,0.14);border-radius:10px;padding:16px 18px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.5px;color:var(--tealText);text-transform:uppercase;margin-bottom:10px;">Teal Surface Rule</div>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;">
+            <div style="width:40px;height:22px;border-radius:6px;background:#0C1220;flex-shrink:0;margin-top:2px;"></div>
+            <div><div style="font-family:'DM Mono';font-size:12px;color:var(--tealText);">AppColors.teal</div><div style="font-size:11px;color:var(--txLight);margin-top:2px;">Dark surfaces only — counters, chips, icons</div></div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <div style="width:40px;height:22px;border-radius:6px;background:#FDFAF0;border:1px solid rgba(12,18,32,0.10);flex-shrink:0;margin-top:2px;"></div>
+            <div><div style="font-family:'DM Mono';font-size:12px;color:var(--tealText);">AppColors.tealText</div><div style="font-size:11px;color:var(--txLight);margin-top:2px;">Light surfaces — financial values, labels (5.2:1 ✅)</div></div>
+          </div>
+        </div>
+        <!-- Gold rule -->
+        <div style="background:rgba(245,200,66,0.07);border:1px solid rgba(245,200,66,0.18);border-radius:10px;padding:16px 18px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.5px;color:#8B6A00;text-transform:uppercase;margin-bottom:10px;">Gold CTA Rule</div>
+          <div style="margin-bottom:8px;">
+            <div style="font-family:'DM Mono';font-size:12px;color:#8B6A00;">AppColors.btnPrimaryText</div>
+            <div style="font-size:11px;color:var(--txLight);margin-top:3px;">Text ON gold buttons = <span style="font-family:'DM Mono';">#1A1200</span> (NOT midnight) — 18.3:1 ✅</div>
+          </div>
+          <div>
+            <div style="font-family:'DM Mono';font-size:12px;color:#8B6A00;">One gold CTA per screen max</div>
+            <div style="font-size:11px;color:var(--txLight);margin-top:3px;">Never use gold as text on light backgrounds (1.6:1 fails)</div>
+          </div>
+        </div>
+      </div>
+      <div class="code-block" style="margin-top:14px;">
+        <pre><span class="c-comment">// Key tokens — see full file for all 60+</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">bgBase</span>          = <span class="c-type">Color</span>(<span class="c-val">0xFFFDFAF0</span>); <span class="c-comment">// warm cream — all screens</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">bgDark</span>          = <span class="c-type">Color</span>(<span class="c-val">0xFF0C1220</span>); <span class="c-comment">// midnight — hero cards</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">gold</span>            = <span class="c-type">Color</span>(<span class="c-val">0xFFF5C842</span>); <span class="c-comment">// CTA only</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">btnPrimaryText</span>  = <span class="c-type">Color</span>(<span class="c-val">0xFF1A1200</span>); <span class="c-comment">// text ON gold buttons ⚠️</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">teal</span>            = <span class="c-type">Color</span>(<span class="c-val">0xFF00D4AA</span>); <span class="c-comment">// dark surfaces only</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">tealText</span>        = <span class="c-type">Color</span>(<span class="c-val">0xFF006B55</span>); <span class="c-comment">// light surfaces 5.2:1 ✅</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">txMid</span>           = <span class="c-type">Color</span>(<span class="c-val">0x8C0C1220</span>); <span class="c-comment">// 55% midnight — opacity-based</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">txLight</span>         = <span class="c-type">Color</span>(<span class="c-val">0x590C1220</span>); <span class="c-comment">// 35% midnight — opacity-based</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">formBorderFocus</span> = <span class="c-type">Color</span>(<span class="c-val">0xFFF5C842</span>); <span class="c-comment">// gold focus border</span>
+<span class="c-kw">static const</span> <span class="c-type">Color</span> <span class="c-key">formFocusRing</span>   = <span class="c-type">Color</span>(<span class="c-val">0x1FF5C842</span>); <span class="c-comment">// 12% gold — focus box shadow</span></pre>
+      </div>
+    </div>
+
+    <!-- app_radius -->
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">app_radius.dart <span class="tag tag-file">lib/design/</span></div>
+        <div class="code-block" style="margin-top:8px;">
+          <pre><span class="c-kw">static const double</span> <span class="c-key">rXS</span>    =  <span class="c-val">4</span>;  <span class="c-comment">// badges</span>
+<span class="c-kw">static const double</span> <span class="c-key">rS</span>     =  <span class="c-val">8</span>;  <span class="c-comment">// icon wrappers</span>
+<span class="c-kw">static const double</span> <span class="c-key">rM</span>     = <span class="c-val">12</span>;  <span class="c-comment">// inputs, dropdowns</span>
+<span class="c-kw">static const double</span> <span class="c-key">rL</span>     = <span class="c-val">20</span>;  <span class="c-comment">// default cards</span>
+<span class="c-kw">static const double</span> <span class="c-key">rXL</span>    = <span class="c-val">24</span>;  <span class="c-comment">// hero dark cards</span>
+<span class="c-kw">static const double</span> <span class="c-key">rSheet</span> = <span class="c-val">28</span>;  <span class="c-comment">// bottom sheets</span>
+<span class="c-kw">static const double</span> <span class="c-key">rFull</span>  = <span class="c-val">999</span>; <span class="c-comment">// pills, CTAs
+
+// Pre-built BorderRadius objects</span>
+<span class="c-kw">static const</span> <span class="c-type">BorderRadius</span> <span class="c-key">card</span>     = <span class="c-comment">// rL (20)</span>
+<span class="c-kw">static const</span> <span class="c-type">BorderRadius</span> <span class="c-key">hero</span>     = <span class="c-comment">// rXL (24)</span>
+<span class="c-kw">static const</span> <span class="c-type">BorderRadius</span> <span class="c-key">sheetTop</span> = <span class="c-comment">// top: rSheet (28)</span>
+<span class="c-kw">static const</span> <span class="c-type">BorderRadius</span> <span class="c-key">input</span>    = <span class="c-comment">// rM (12)</span>
+<span class="c-kw">static const</span> <span class="c-type">BorderRadius</span> <span class="c-key">chip</span>     = <span class="c-comment">// rFull (999)</span></pre>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">app_motion.dart <span class="tag tag-new">NEW FILE</span></div>
+        <div class="code-block" style="margin-top:8px;">
+          <pre><span class="c-comment">// Durations</span>
+<span class="c-kw">static const</span> <span class="c-type">Duration</span> <span class="c-key">micro</span>       = <span class="c-val">150ms</span>;  <span class="c-comment">// press/toggle</span>
+<span class="c-kw">static const</span> <span class="c-type">Duration</span> <span class="c-key">standard</span>    = <span class="c-val">300ms</span>;  <span class="c-comment">// transitions</span>
+<span class="c-kw">static const</span> <span class="c-type">Duration</span> <span class="c-key">entrance</span>    = <span class="c-val">500ms</span>;  <span class="c-comment">// card entrance</span>
+<span class="c-kw">static const</span> <span class="c-type">Duration</span> <span class="c-key">spring</span>      = <span class="c-val">600ms</span>;  <span class="c-comment">// bottom sheet</span>
+<span class="c-kw">static const</span> <span class="c-type">Duration</span> <span class="c-key">celebration</span> = <span class="c-val">800ms</span>;  <span class="c-comment">// delight screens</span>
+<span class="c-kw">static const</span> <span class="c-type">Duration</span> <span class="c-key">counter</span>     = <span class="c-val">1500ms</span>; <span class="c-comment">// live counter roll
+
+// Curves</span>
+<span class="c-kw">static const</span> <span class="c-type">Curve</span> <span class="c-key">springCurve</span> =
+  <span class="c-type">Cubic</span>(<span class="c-val">0.34</span>, <span class="c-val">1.56</span>, <span class="c-val">0.64</span>, <span class="c-val">1.0</span>); <span class="c-comment">// bottom sheets
+
+// Stagger</span>
+<span class="c-kw">static const</span> <span class="c-type">Duration</span> <span class="c-key">staggerItem</span> = <span class="c-val">60ms</span>; <span class="c-comment">// per list row</span>
+<span class="c-kw">static const double</span>   <span class="c-key">pressScale</span>  = <span class="c-val">0.95</span>; <span class="c-comment">// tap-down scale</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- app_spacing + app_shadows -->
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">app_spacing.dart — 8px grid <span class="tag tag-file">lib/design/</span></div>
+        <div class="code-block" style="margin-top:8px;">
+          <pre><span class="c-comment">// Semantic aliases (use these, not raw numbers)</span>
+<span class="c-kw">static const double</span> <span class="c-key">pagePadding</span> = <span class="c-val">20</span>; <span class="c-comment">// screen edges</span>
+<span class="c-kw">static const double</span> <span class="c-key">cardPadding</span> = <span class="c-val">20</span>; <span class="c-comment">// inside cards</span>
+<span class="c-kw">static const double</span> <span class="c-key">sectionGap</span>  = <span class="c-val">32</span>; <span class="c-comment">// between sections</span>
+<span class="c-kw">static const double</span> <span class="c-key">itemGap</span>     = <span class="c-val">12</span>; <span class="c-comment">// list items</span>
+<span class="c-kw">static const double</span> <span class="c-key">rowGap</span>      =  <span class="c-val">8</span>; <span class="c-comment">// within rows</span>
+<span class="c-kw">static const double</span> <span class="c-key">inlineGap</span>   =  <span class="c-val">4</span>; <span class="c-comment">// icon + label
+
+// Component heights</span>
+<span class="c-kw">static const double</span> <span class="c-key">btnHeight</span>   = <span class="c-val">56</span>; <span class="c-comment">// primary CTA</span>
+<span class="c-kw">static const double</span> <span class="c-key">inputHeight</span> = <span class="c-val">56</span>; <span class="c-comment">// text inputs</span>
+<span class="c-kw">static const double</span> <span class="c-key">navHeight</span>   = <span class="c-val">72</span>; <span class="c-comment">// bottom nav</span>
+<span class="c-kw">static const double</span> <span class="c-key">touchMin</span>    = <span class="c-val">44</span>; <span class="c-comment">// Apple HIG min</span></pre>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">app_shadows.dart — shadows &amp; glows <span class="tag tag-file">lib/design/</span></div>
+        <div class="code-block" style="margin-top:8px;">
+          <pre><span class="c-comment">// Card shadows (light surfaces)</span>
+<span class="c-key">card</span>     <span class="c-comment">// default white card on cream</span>
+<span class="c-key">cardMd</span>   <span class="c-comment">// modals, dropdowns</span>
+<span class="c-key">cardHigh</span> <span class="c-comment">// celebration card, overlays
+
+// CTA and growth glows</span>
+<span class="c-key">glowGold</span>     <span class="c-comment">// gold CTA button outer glow</span>
+<span class="c-key">glowTealChip</span> <span class="c-comment">// growth chip (dark card only)
+
+// Focus ring for all form elements</span>
+<span class="c-key">focusRingGold</span> = [
+  <span class="c-type">BoxShadow</span>(
+    color: <span class="c-type">Color</span>(<span class="c-val">0x1FF5C842</span>), <span class="c-comment">// 12% gold</span>
+    blurRadius: <span class="c-val">0</span>,
+    spreadRadius: <span class="c-val">3</span>,        <span class="c-comment">// 3px ring</span>
+  ),
+]</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: ThemeData ─────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">Step 3</div>
+    <div class="section-title"><span class="step-num">3</span>Wire Into ThemeData</div>
+    <div class="section-desc">Create <code style="font-family:'DM Mono';font-size:13px;background:rgba(12,18,32,0.07);padding:2px 7px;border-radius:5px;">lib/design/app_theme.dart</code> and wire it into MaterialApp. This makes the tokens the system-wide defaults.</div>
+
+    <div class="card">
+      <div class="card-title">app_theme.dart</div>
+      <div class="code-block">
+        <pre><span class="c-kw">class</span> <span class="c-type">AppTheme</span> {
+  <span class="c-kw">static</span> <span class="c-type">ThemeData</span> <span class="c-key">get</span> light => <span class="c-type">ThemeData</span>(
+    useMaterial3: <span class="c-val">true</span>,
+    scaffoldBackgroundColor: <span class="c-type">AppColors</span>.<span class="c-key">bgBase</span>,
+
+    colorScheme: <span class="c-kw">const</span> <span class="c-type">ColorScheme</span>.light(
+      primary:   <span class="c-type">AppColors</span>.<span class="c-key">gold</span>,
+      onPrimary: <span class="c-type">AppColors</span>.<span class="c-key">btnPrimaryText</span>,  <span class="c-comment">// #1A1200 ← not midnight</span>
+      secondary: <span class="c-type">AppColors</span>.<span class="c-key">teal</span>,
+      surface:   <span class="c-type">AppColors</span>.<span class="c-key">bgCard</span>,
+      onSurface: <span class="c-type">AppColors</span>.<span class="c-key">txDark</span>,
+      error:     <span class="c-type">AppColors</span>.<span class="c-key">error</span>,
+    ),
+
+    cardTheme: <span class="c-kw">const</span> <span class="c-type">CardTheme</span>(
+      color:  <span class="c-type">AppColors</span>.<span class="c-key">bgCard</span>,
+      shape:  <span class="c-type">RoundedRectangleBorder</span>(borderRadius: <span class="c-type">AppRadius</span>.<span class="c-key">card</span>),
+      elevation: <span class="c-val">0</span>,
+    ),
+
+    inputDecorationTheme: <span class="c-type">InputDecorationTheme</span>(
+      filled:    <span class="c-val">true</span>,
+      fillColor: <span class="c-type">AppColors</span>.<span class="c-key">formBg</span>,
+      border: <span class="c-type">OutlineInputBorder</span>(
+        borderRadius: <span class="c-type">AppRadius</span>.<span class="c-key">input</span>,
+        borderSide: <span class="c-kw">const</span> <span class="c-type">BorderSide</span>(color: <span class="c-type">AppColors</span>.<span class="c-key">formBorderNormal</span>),
+      ),
+      focusedBorder: <span class="c-type">OutlineInputBorder</span>(
+        borderRadius: <span class="c-type">AppRadius</span>.<span class="c-key">input</span>,
+        borderSide: <span class="c-kw">const</span> <span class="c-type">BorderSide</span>(color: <span class="c-type">AppColors</span>.<span class="c-key">formBorderFocus</span>, width: <span class="c-val">1.5</span>),
+      ),
+    ),
+
+    elevatedButtonTheme: <span class="c-type">ElevatedButtonThemeData</span>(
+      style: <span class="c-type">ElevatedButton</span>.styleFrom(
+        backgroundColor: <span class="c-type">AppColors</span>.<span class="c-key">gold</span>,
+        foregroundColor: <span class="c-type">AppColors</span>.<span class="c-key">btnPrimaryText</span>,
+        minimumSize:     <span class="c-kw">const</span> <span class="c-type">Size</span>(<span class="c-val">double.infinity</span>, <span class="c-val">56</span>),
+        shape:           <span class="c-kw">const</span> <span class="c-type">StadiumBorder</span>(),
+        elevation:       <span class="c-val">0</span>,
+      ),
+    ),
+  );
+}
+
+<span class="c-comment">// main.dart</span>
+<span class="c-type">MaterialApp</span>(
+  theme: <span class="c-type">AppTheme</span>.light,
+)</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: The Golden Rule ───────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">Step 4</div>
+    <div class="section-title"><span class="step-num">4</span>The Golden Rule</div>
+    <div class="section-desc">Tokens only work if values are never hardcoded. If a code review shows raw hex, inline pixel numbers, or bare TextStyles — flag it.</div>
+
+    <div class="card">
+      <table class="dont-do-table">
+        <thead>
+          <tr>
+            <th class="th-dont">❌ Never hardcode</th>
+            <th class="th-do">✅ Always use the token</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-dont"><code>Color(0xFF00D4AA)</code></td>
+            <td class="td-do"><code>AppColors.teal</code></td>
+          </tr>
+          <tr>
+            <td class="td-dont"><code>Color(0xFF006B55)</code></td>
+            <td class="td-do"><code>AppColors.tealText</code>  — on light surfaces</td>
+          </tr>
+          <tr>
+            <td class="td-dont"><code>Color(0xFFF5C842)</code></td>
+            <td class="td-do"><code>AppColors.gold</code></td>
+          </tr>
+          <tr>
+            <td class="td-dont"><code>Color(0xFF0C1220)</code> on gold button text</td>
+            <td class="td-do"><code>AppColors.btnPrimaryText</code>  <span style="font-size:11px;color:var(--txLight);">uses #1A1200, not midnight</span></td>
+          </tr>
+          <tr>
+            <td class="td-dont"><code>BorderRadius.circular(12)</code></td>
+            <td class="td-do"><code>AppRadius.input</code></td>
+          </tr>
+          <tr>
+            <td class="td-dont"><code>EdgeInsets.all(20)</code></td>
+            <td class="td-do"><code>EdgeInsets.all(AppSpacing.pagePadding)</code></td>
+          </tr>
+          <tr>
+            <td class="td-dont"><code>TextStyle(fontSize: 16, fontWeight: FontWeight.w700)</code></td>
+            <td class="td-do"><code>AppTextStyles.labelL</code></td>
+          </tr>
+          <tr>
+            <td class="td-dont"><code>Duration(milliseconds: 300)</code></td>
+            <td class="td-do"><code>AppMotion.standard</code></td>
+          </tr>
+          <tr>
+            <td class="td-dont"><code>Curves.easeOut</code>  inline</td>
+            <td class="td-do"><code>AppMotion.easeOut</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note-box">
+      <strong>⚠️ btnPrimaryText trap:</strong> Text on gold buttons must be <code style="font-family:'DM Mono';font-size:12px;background:rgba(139,106,0,0.12);padding:1px 5px;border-radius:4px;">AppColors.btnPrimaryText</code> (<code style="font-family:'DM Mono';font-size:12px;background:rgba(139,106,0,0.12);padding:1px 5px;border-radius:4px;">#1A1200</code>), <strong>not</strong> <code style="font-family:'DM Mono';font-size:12px;background:rgba(139,106,0,0.12);padding:1px 5px;border-radius:4px;">AppColors.txDark</code> or midnight. This gives 18.3:1 contrast on gold. Using midnight <code style="font-family:'DM Mono';font-size:12px;">#0C1220</code> is visually similar but semantically wrong and will fail if gold lightens in future.
+    </div>
+  </div>
+
+  <!-- ── STEP 5: Figma MCP ─────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">Step 5</div>
+    <div class="section-title"><span class="step-num">5</span>Using With Your Figma MCP</div>
+    <div class="section-desc">Since you already have the Flutter MCP wired to Figma, tokens close the loop. Both sides now speak the same language.</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">When a screen is finalised in Figma</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--midnight);color:var(--gold);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">1</div>
+            <div style="font-size:13px;color:var(--txMid);line-height:1.5;">Open the Figma screen in Flutter MCP / Dev Mode</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--midnight);color:var(--gold);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">2</div>
+            <div style="font-size:13px;color:var(--txMid);line-height:1.5;">Every color, radius, and type spec maps to a token name — your MCP references them directly</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--midnight);color:var(--gold);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">3</div>
+            <div style="font-size:13px;color:var(--txMid);line-height:1.5;">If generated code has raw hex → swap to the token name (one lookup in app_colors.dart)</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">When a designer updates a token</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(0,107,85,0.10);color:var(--tealText);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">1</div>
+            <div style="font-size:13px;color:var(--txMid);line-height:1.5;">Designer updates Figma Variables → exports JSON via Tokens Studio</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(0,107,85,0.10);color:var(--tealText);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">2</div>
+            <div style="font-size:13px;color:var(--txMid);line-height:1.5;">Run Style Dictionary transform → Dart token files regenerate</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(0,107,85,0.10);color:var(--tealText);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">3</div>
+            <div style="font-size:13px;color:var(--txMid);line-height:1.5;">All widgets using that token update automatically on next build — zero hunting</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── Quick Reference ───────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">Quick Reference</div>
+    <div class="section-title">Token Cheatsheet</div>
+
+    <div class="three-col">
+      <div class="qr-card">
+        <div class="qr-title">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#006B55" stroke-width="1.5"/><path d="M7 4v4M7 9.5v.5" stroke="#006B55" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Which teal?
+        </div>
+        <div class="qr-row"><div class="qr-q">Dark card / midnight bg?</div><div class="qr-a">AppColors.teal</div></div>
+        <div class="qr-row"><div class="qr-q">Light card / cream bg?</div><div class="qr-a">AppColors.tealText</div></div>
+        <div class="qr-row"><div class="qr-q">Growth chip background (dark)?</div><div class="qr-a">AppColors.tealChipBg</div></div>
+        <div class="qr-row"><div class="qr-q">Financial value on white card?</div><div class="qr-a">AppColors.tealText</div></div>
+      </div>
+      <div class="qr-card">
+        <div class="qr-title">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="3" stroke="#006B55" stroke-width="1.5"/></svg>
+          Which radius?
+        </div>
+        <div class="qr-row"><div class="qr-q">Default white card?</div><div class="qr-a">AppRadius.card</div></div>
+        <div class="qr-row"><div class="qr-q">Hero dark card?</div><div class="qr-a">AppRadius.hero</div></div>
+        <div class="qr-row"><div class="qr-q">Bottom sheet?</div><div class="qr-a">AppRadius.sheetTop</div></div>
+        <div class="qr-row"><div class="qr-q">Text input / dropdown?</div><div class="qr-a">AppRadius.input</div></div>
+        <div class="qr-row"><div class="qr-q">CTA button / chip / tag?</div><div class="qr-a">AppRadius.chip</div></div>
+      </div>
+      <div class="qr-card">
+        <div class="qr-title">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2v10" stroke="#006B55" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Which text style?
+        </div>
+        <div class="qr-row"><div class="qr-q">Main balance (hero card)?</div><div class="qr-a">amountHero</div></div>
+        <div class="qr-row"><div class="qr-q">Live counter (heartbeat)?</div><div class="qr-a">counterLarge (DM Mono)</div></div>
+        <div class="qr-row"><div class="qr-q">Celebration heading?</div><div class="qr-a">wealthHeading (Playfair)</div></div>
+        <div class="qr-row"><div class="qr-q">Voucher code?</div><div class="qr-a">voucherCode (DM Mono)</div></div>
+        <div class="qr-row"><div class="qr-q">Lifetime score big number?</div><div class="qr-a">scoreDisplay (DM Mono)</div></div>
+      </div>
+    </div>
+
+    <div class="three-col">
+      <div class="qr-card">
+        <div class="qr-title">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#006B55" stroke-width="1.5"/><path d="M7 5v3l2 1" stroke="#006B55" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Which duration?
+        </div>
+        <div class="qr-row"><div class="qr-q">Button press / toggle?</div><div class="qr-a">AppMotion.micro</div></div>
+        <div class="qr-row"><div class="qr-q">Tab switch / toast?</div><div class="qr-a">AppMotion.standard</div></div>
+        <div class="qr-row"><div class="qr-q">Bottom sheet slide-up?</div><div class="qr-a">AppMotion.spring</div></div>
+        <div class="qr-row"><div class="qr-q">Live counter roll?</div><div class="qr-a">AppMotion.counter</div></div>
+        <div class="qr-row"><div class="qr-q">Stagger per list item?</div><div class="qr-a">AppMotion.staggerItem</div></div>
+      </div>
+      <div class="qr-card">
+        <div class="qr-title">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 12L7 2l5 10H2z" stroke="#006B55" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          Shadows &amp; glows
+        </div>
+        <div class="qr-row"><div class="qr-q">Default white card?</div><div class="qr-a">AppShadows.card</div></div>
+        <div class="qr-row"><div class="qr-q">Modal / bottom sheet?</div><div class="qr-a">AppShadows.cardMd</div></div>
+        <div class="qr-row"><div class="qr-q">Gold CTA button?</div><div class="qr-a">AppShadows.glowGold</div></div>
+        <div class="qr-row"><div class="qr-q">Focused input / PIN?</div><div class="qr-a">AppShadows.focusRingGold</div></div>
+        <div class="qr-row"><div class="qr-q">Growth chip (dark card)?</div><div class="qr-a">AppShadows.glowTealChip</div></div>
+      </div>
+      <div class="qr-card">
+        <div class="qr-title">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="6" width="10" height="6" rx="2" stroke="#006B55" stroke-width="1.5"/><path d="M5 6V4.5a2 2 0 114 0V6" stroke="#006B55" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Gradients
+        </div>
+        <div class="qr-row"><div class="qr-q">Hero dark card?</div><div class="qr-a">AppGradients.heroCard</div></div>
+        <div class="qr-row"><div class="qr-q">Gold CTA background?</div><div class="qr-a">AppGradients.goldCta</div></div>
+        <div class="qr-row"><div class="qr-q">KYC / progress bars?</div><div class="qr-a">AppGradients.progressTeal</div></div>
+        <div class="qr-row"><div class="qr-q">Savings score bar?</div><div class="qr-a">AppGradients.progressScore</div></div>
+        <div class="qr-row"><div class="qr-q">Brand tile header?</div><div class="qr-a">AppGradients.brandFood / Shop…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── File structure ────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-label">Summary</div>
+    <div class="section-title">File Structure</div>
+
+    <div class="two-col" style="align-items:start;">
+      <div class="file-tree">
+        <pre><span class="ft-dir">lib/
+└── design/</span>
+    <span class="ft-file">├── app_colors.dart</span>      <span class="ft-note">← 60+ color tokens</span>
+    <span class="ft-file">├── app_radius.dart</span>      <span class="ft-note">← radius values + presets</span>
+    <span class="ft-file">├── app_spacing.dart</span>     <span class="ft-note">← 8px grid + heights</span>
+    <span class="ft-file">├── app_text_styles.dart</span> <span class="ft-note">← DM Sans / Playfair / DM Mono</span>
+    <span class="ft-file">├── app_shadows.dart</span>     <span class="ft-note">← BoxShadow lists</span>
+    <span class="ft-file">├── app_gradients.dart</span>   <span class="ft-note">← LinearGradient defs</span>
+    <span class="ft-file">├── app_motion.dart</span>      <span class="ft-note">← Duration + Curve constants</span>
+    <span class="ft-file">└── app_theme.dart</span>       <span class="ft-note">← ThemeData for MaterialApp</span></pre>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:0;">
+          <div class="card-title">Setup checklist</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+            <div style="display:flex;gap:10px;align-items:center;font-size:13px;color:var(--txMid);">
+              <div style="width:18px;height:18px;border-radius:5px;background:rgba(0,107,85,0.12);border:1.5px solid rgba(0,107,85,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="9" height="9" viewBox="0 0 9 9"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#006B55" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              Add DM Mono to pubspec.yaml
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;font-size:13px;color:var(--txMid);">
+              <div style="width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(12,18,32,0.15);flex-shrink:0;"></div>
+              Create lib/design/ with all 7 files
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;font-size:13px;color:var(--txMid);">
+              <div style="width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(12,18,32,0.15);flex-shrink:0;"></div>
+              Wire AppTheme.light into MaterialApp
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;font-size:13px;color:var(--txMid);">
+              <div style="width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(12,18,32,0.15);flex-shrink:0;"></div>
+              Replace hardcoded values in existing screens
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;font-size:13px;color:var(--txMid);">
+              <div style="width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(12,18,32,0.15);flex-shrink:0;"></div>
+              Add token lint rule to code review checklist
+            </div>
+          </div>
+          <div class="time-pill">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#006B55" stroke-width="1.5"/><path d="M7 4.5V7l1.5 1.5" stroke="#006B55" stroke-width="1.5" stroke-linecap="round"/></svg>
+            ~2 hours total setup time
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

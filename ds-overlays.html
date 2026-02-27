@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=1400"/>
+  <title>Multipl DS v4 — Overlays &amp; Modals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="stylesheet" href="tokens-v3.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 1400px; font-family: 'DM Sans', sans-serif; background: #EBEBEB; color: #1A1A1A; -webkit-font-smoothing: antialiased; }
+    .page { width: 1400px; padding: 48px; display: flex; flex-direction: column; gap: 32px; }
+    .section-card { background: #FFFFFF; border-radius: 24px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 24px; }
+    .section-title { font-size: 22px; font-weight: 800; color: #0C1220; letter-spacing: -0.4px; margin-bottom: 8px; }
+    .section-sub { font-size: 14px; color: #6B6B6B; margin-bottom: 32px; }
+    .divider-line { height: 1px; background: #F0F0F0; margin: 28px 0; }
+    .group-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #AAAAAA; margin-bottom: 16px; }
+    .row { display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: 6px; }
+    .state-label { font-size: 10px; color: #AAAAAA; font-weight: 600; letter-spacing: 0.5px; text-align: center; margin-top: 8px; }
+    .spec-box { background: #F8F8F8; border-radius: 12px; padding: 16px 20px; font-size: 13px; color: #555; line-height: 1.6; border-left: 3px solid #F5C842; }
+
+    /* Header */
+    .ds-header { background: #0C1220; border-radius: 24px; padding: 48px; position: relative; overflow: hidden; }
+    .hdr-glow-gold { position: absolute; top: -60px; left: 200px; width: 400px; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.18) 0%, transparent 70%); pointer-events: none; }
+    .hdr-glow-blue { position: absolute; top: -80px; right: 0; width: 500px; height: 400px; border-radius: 50%; background: radial-gradient(ellipse, rgba(74,159,255,0.14) 0%, transparent 70%); pointer-events: none; }
+    .hdr-inner { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; }
+    .hdr-wordmark { font-size: 48px; font-weight: 800; color: #FFFFFF; letter-spacing: -1px; line-height: 1; }
+    .hdr-wordmark span { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hdr-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .hdr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); border-radius: 999px; font-size: 12px; font-weight: 700; color: #F5C842; letter-spacing: 1px; }
+    .hdr-meta p { font-size: 13px; color: rgba(255,255,255,0.45); }
+    .hdr-pills { display: flex; gap: 12px; margin-top: 32px; position: relative; z-index: 2; }
+    .hdr-pill { padding: 10px 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+
+    /* ── Phone canvas context ────────────────────────────── */
+    .phone-frame {
+      width: 375px; border-radius: 40px; overflow: hidden;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.15); position: relative;
+      border: 1px solid rgba(0,0,0,0.08); background: #FDFAF0;
+    }
+    .backdrop { background: rgba(12,18,32,0.5); backdrop-filter: blur(4px); }
+
+    /* ── Bottom Sheet ────────────────────────────────────── */
+    .sheet-handle-bar {
+      width: 40px; height: 4px; border-radius: 999px; background: rgba(0,0,0,0.18);
+      margin: 0 auto 20px;
+    }
+    .sheet-half {
+      background: #FFFFFF; border-radius: 28px 28px 0 0;
+      padding: 12px 20px 32px; position: relative;
+    }
+    .sheet-full {
+      background: #FFFFFF; border-radius: 28px 28px 0 0;
+      display: flex; flex-direction: column; position: relative;
+    }
+    .sheet-header {
+      padding: 12px 20px 16px; border-bottom: 1px solid #F0F0F0; flex-shrink: 0;
+    }
+    .sheet-title { font-size: 18px; font-weight: 800; color: #0C1220; }
+    .sheet-body { flex: 1; overflow-y: auto; padding: 20px; }
+    .sheet-footer {
+      padding: 16px 20px 24px; border-top: 1px solid #F0F0F0; flex-shrink: 0;
+    }
+    .sheet-option {
+      display: flex; align-items: center; gap: 12px; padding: 14px 0;
+      border-bottom: 1px solid #F5F5F5; cursor: pointer;
+    }
+    .sheet-option:last-child { border-bottom: none; }
+    .sheet-opt-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .sheet-opt-label { font-size: 16px; font-weight: 600; color: #0C1220; }
+    .sheet-opt-sub { font-size: 13px; color: #888; }
+
+    /* ── Action Sheet ────────────────────────────────────── */
+    .action-sheet-body {
+      background: #FFFFFF; border-radius: 20px; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12); width: 335px;
+    }
+    .action-sheet-title {
+      padding: 16px 20px; font-size: 13px; color: #888; text-align: center;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .action-row {
+      display: flex; align-items: center; gap: 12px; padding: 16px 20px;
+      border-bottom: 1px solid #F5F5F5; cursor: pointer; font-size: 16px; font-weight: 500; color: #0C1220;
+    }
+    .action-row.destructive { color: #FF6B6B; }
+    .action-row:last-child { border-bottom: none; }
+    .action-icon { font-size: 20px; }
+    .action-cancel {
+      background: #FFFFFF; border-radius: 20px; margin-top: 8px;
+      display: flex; align-items: center; justify-content: center; padding: 16px 20px;
+      font-size: 16px; font-weight: 700; color: #0C1220; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    }
+
+    /* ── Modal / Dialog ──────────────────────────────────── */
+    .modal-backdrop {
+      width: 375px; height: 560px; background: rgba(12,18,32,0.5); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 32px; overflow: hidden;
+    }
+    .modal {
+      width: 335px; background: #FFFFFF; border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3); overflow: hidden;
+    }
+    .modal-header { padding: 24px 24px 0; }
+    .modal-icon { font-size: 36px; margin-bottom: 12px; }
+    .modal-title { font-size: 20px; font-weight: 800; color: #0C1220; letter-spacing: -0.3px; margin-bottom: 8px; }
+    .modal-body { padding: 12px 24px 24px; font-size: 14px; color: #666; line-height: 1.6; }
+    .modal-footer { padding: 0 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .modal-btn-primary {
+      height: 52px; border-radius: 999px; background: linear-gradient(135deg, #F7D464, #F0A832);
+      border: none; color: #0C1220; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+    .modal-btn-secondary {
+      height: 52px; border-radius: 999px; background: transparent;
+      border: 1.5px solid #E0E0E0; color: #0C1220; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+    .modal-btn-destructive {
+      height: 52px; border-radius: 999px; background: rgba(255,107,107,0.1);
+      border: 1.5px solid rgba(255,107,107,0.3); color: #FF6B6B; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+    .modal-divider { height: 1px; background: #F5F5F5; }
+
+    /* ── Tooltip ─────────────────────────────────────────── */
+    .tooltip-wrap { position: relative; display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
+    .tooltip-dark {
+      background: #0C1220; color: #FFFFFF; padding: 8px 12px; border-radius: 10px;
+      font-size: 13px; font-weight: 500; white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+    .tooltip-light {
+      background: #FFFFFF; color: #0C1220; padding: 8px 12px; border-radius: 10px;
+      font-size: 13px; font-weight: 500; white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12); border: 1px solid #E8E8E8;
+    }
+    .tooltip-arrow-down { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #0C1220; }
+    .tooltip-arrow-down-light { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #FFFFFF; filter: drop-shadow(0 1px 0 #E8E8E8); }
+    .tooltip-arrow-up { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 6px solid #0C1220; }
+    .trigger-btn { padding: 10px 20px; border-radius: 12px; background: #F5F5F5; border: 1.5px solid #E0E0E0; font-size: 14px; font-weight: 600; color: #555; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+    /* ── Dropdown Menu ───────────────────────────────────── */
+    .dropdown-menu {
+      width: 220px; background: #FFFFFF; border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15); border: 1px solid #F0F0F0; overflow: hidden;
+    }
+    .dmenu-item {
+      display: flex; align-items: center; gap: 10px; padding: 13px 16px;
+      font-size: 14px; font-weight: 500; color: #0C1220; cursor: pointer;
+      border-bottom: 1px solid #F8F8F8;
+    }
+    .dmenu-item:last-child { border-bottom: none; }
+    .dmenu-item:hover { background: #FAFAFA; }
+    .dmenu-item.destructive { color: #FF6B6B; }
+    .dmenu-icon { font-size: 16px; flex-shrink: 0; }
+    .dmenu-divider { height: 1px; background: #F0F0F0; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="ds-header">
+    <div class="hdr-glow-gold"></div>
+    <div class="hdr-glow-blue"></div>
+    <div class="hdr-inner">
+      <div>
+        <div class="hdr-wordmark">Multipl <span>Design System</span></div>
+        <div style="color:rgba(255,255,255,0.45); font-size:15px; margin-top:6px;">v4.0 — Page 6 of 7</div>
+      </div>
+      <div class="hdr-meta">
+        <div class="hdr-badge">OVERLAYS &amp; MODALS</div>
+        <p>Bottom Sheet · Action Sheet · Modal · Tooltip · Dropdown Menu</p>
+      </div>
+    </div>
+    <div class="hdr-pills">
+      <div class="hdr-pill">28px top radius</div>
+      <div class="hdr-pill">40×4px handle bar</div>
+      <div class="hdr-pill">50% backdrop blur</div>
+      <div class="hdr-pill">335px modal width</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM SHEETS -->
+  <div class="section-card">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">Bottom Sheet</div>
+    <div class="section-sub">28px top corners (sheetTop token). Handle bar 40×4px. Backdrop 50% opacity + blur. Half-height ≈ 50vh, Full = sticky header + scrollable + sticky footer.</div>
+
+    <div class="row" style="gap:40px; align-items:flex-start;">
+
+      <!-- Half-height sheet -->
+      <div class="col">
+        <div class="group-label">Half-Height Sheet</div>
+        <div class="phone-frame">
+          <div style="height:260px; background:#FDFAF0; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:13px;">Screen content</div>
+          <div style="background:rgba(12,18,32,0.5);">
+            <div class="sheet-half">
+              <div class="sheet-handle-bar"></div>
+              <div style="font-size:18px; font-weight:800; color:#0C1220; margin-bottom:6px;">Add Money</div>
+              <div style="font-size:14px; color:#888; margin-bottom:20px;">Choose amount to invest</div>
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                <div class="sheet-option">
+                  <div class="sheet-opt-icon" style="background:rgba(245,200,66,0.12);">💰</div>
+                  <div><div class="sheet-opt-label">Quick Invest ₹500</div><div class="sheet-opt-sub">Round-up from today</div></div>
+                </div>
+                <div class="sheet-option">
+                  <div class="sheet-opt-icon" style="background:rgba(0,212,170,0.12);">📱</div>
+                  <div><div class="sheet-opt-label">Custom Amount</div><div class="sheet-opt-sub">Enter any amount</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="state-label">Half-height — options list</div>
+      </div>
+
+      <!-- Full-height with header + sticky footer -->
+      <div class="col">
+        <div class="group-label">Full-Height Sheet (sticky footer)</div>
+        <div class="phone-frame" style="height:520px; display:flex; flex-direction:column;">
+          <div style="height:80px; background:#FDFAF0; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:12px;">Peeking content</div>
+          <div style="flex:1; background:rgba(12,18,32,0.45); display:flex; flex-direction:column;">
+            <div class="sheet-full" style="flex:1; border-radius:28px 28px 0 0;">
+              <div style="padding:12px 20px 0;">
+                <div class="sheet-handle-bar" style="margin-bottom:0;"></div>
+              </div>
+              <div class="sheet-header">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div class="sheet-title">Select Brand</div>
+                  <div style="width:32px; height:32px; border-radius:999px; background:#F5F5F5; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; color:#888;">✕</div>
+                </div>
+              </div>
+              <div class="sheet-body">
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                  <div class="sheet-option" style="padding:12px 0;">
+                    <div class="sheet-opt-icon" style="background:linear-gradient(135deg,#E23744,#B31B25); font-size:16px; font-weight:800; color:#FFFFFF;">Z</div>
+                    <div style="flex:1;"><div class="sheet-opt-label">Zomato</div><div class="sheet-opt-sub">5% cashback · Food</div></div>
+                    <div style="color:#F5C842; font-size:16px;">✓</div>
+                  </div>
+                  <div class="sheet-option" style="padding:12px 0;">
+                    <div class="sheet-opt-icon" style="background:linear-gradient(135deg,#FC8019,#E25F01); font-size:16px; font-weight:800; color:#FFFFFF;">S</div>
+                    <div style="flex:1;"><div class="sheet-opt-label">Swiggy</div><div class="sheet-opt-sub">4% cashback · Food</div></div>
+                  </div>
+                  <div class="sheet-option" style="padding:12px 0;">
+                    <div class="sheet-opt-icon" style="background:linear-gradient(135deg,#2D2D2D,#1A1A1A); font-size:16px; font-weight:800; color:#FFFFFF;">A</div>
+                    <div style="flex:1;"><div class="sheet-opt-label">Amazon</div><div class="sheet-opt-sub">3% cashback · Shopping</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="sheet-footer">
+                <button style="width:100%; height:52px; border-radius:999px; background:linear-gradient(135deg,#F7D464,#F0A832); border:none; color:#0C1220; font-size:16px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif;">Confirm Selection</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="state-label">Full-height + sticky CTA footer</div>
+      </div>
+
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="spec-box">
+      <strong>Bottom Sheet Spec:</strong> borderRadius 28px 28px 0 0 · Handle: 40×4px, rFull, rgba(0,0,0,0.18), centered 12px from top · Backdrop: rgba(12,18,32,0.5) + blur(4px) · Dismiss on backdrop tap · Sticky footer: border-top 1px #F0F0F0, padding 16px 20px 24px.
+    </div>
+  </div>
+
+  <!-- ACTION SHEET -->
+  <div class="section-card">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">Action Sheet</div>
+    <div class="section-sub">iOS-style action list with optional title, destructive option, and separate cancel button. Opens from bottom.</div>
+
+    <div class="row" style="gap:40px;">
+      <div class="col">
+        <div class="group-label">Standard Action Sheet</div>
+        <div style="display:flex; flex-direction:column; gap:8px; width:335px;">
+          <div class="action-sheet-body">
+            <div class="action-sheet-title">Share or export transaction</div>
+            <div class="action-row"><span class="action-icon">📤</span> Share Transaction</div>
+            <div class="action-row"><span class="action-icon">📋</span> Copy Reference ID</div>
+            <div class="action-row"><span class="action-icon">📥</span> Download PDF Receipt</div>
+          </div>
+          <div class="action-cancel">Cancel</div>
+        </div>
+        <div class="state-label">3 actions + cancel</div>
+      </div>
+
+      <div class="col">
+        <div class="group-label">With Destructive Option</div>
+        <div style="display:flex; flex-direction:column; gap:8px; width:335px;">
+          <div class="action-sheet-body">
+            <div class="action-sheet-title">Brand — Zomato</div>
+            <div class="action-row"><span class="action-icon">✏️</span> Edit Preferences</div>
+            <div class="action-row"><span class="action-icon">🔔</span> Notification Settings</div>
+            <div class="dmenu-divider"></div>
+            <div class="action-row destructive"><span class="action-icon">🗑</span> Remove Brand</div>
+          </div>
+          <div class="action-cancel">Cancel</div>
+        </div>
+        <div class="state-label">With destructive row</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div class="section-card">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">Modal / Dialog</div>
+    <div class="section-sub">335px wide, 24px radius, shadowHigh. Centered vertically with backdrop. Confirm (2 buttons), Info (1 dismiss), and Form variants.</div>
+
+    <div class="row" style="gap:32px; align-items:flex-start;">
+
+      <!-- Confirmation -->
+      <div class="col">
+        <div class="group-label">Confirmation Dialog</div>
+        <div class="modal-backdrop" style="width:375px; height:460px;">
+          <div class="modal">
+            <div class="modal-header">
+              <div class="modal-icon">⚠️</div>
+              <div class="modal-title">Confirm Investment</div>
+            </div>
+            <div class="modal-body">You're about to invest <strong>₹1,000</strong> in Zomato. This will be deducted from your Multipl wallet immediately.</div>
+            <div class="modal-divider"></div>
+            <div class="modal-footer" style="padding-top:16px;">
+              <button class="modal-btn-primary">Invest ₹1,000</button>
+              <button class="modal-btn-secondary">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <div class="state-label">Confirm + Cancel</div>
+      </div>
+
+      <!-- Info only -->
+      <div class="col">
+        <div class="group-label">Info Dialog</div>
+        <div class="modal-backdrop" style="width:375px; height:460px;">
+          <div class="modal">
+            <div class="modal-header">
+              <div class="modal-icon">🎉</div>
+              <div class="modal-title">Cashback Credited!</div>
+            </div>
+            <div class="modal-body">₹47.20 has been credited to your Multipl wallet from last week's shopping. Keep spending to earn more!</div>
+            <div class="modal-divider"></div>
+            <div class="modal-footer" style="padding-top:16px;">
+              <button class="modal-btn-primary">View Wallet</button>
+              <button class="modal-btn-secondary">Dismiss</button>
+            </div>
+          </div>
+        </div>
+        <div class="state-label">Info — dismiss only</div>
+      </div>
+
+      <!-- Destructive confirmation -->
+      <div class="col">
+        <div class="group-label">Destructive Confirmation</div>
+        <div class="modal-backdrop" style="width:375px; height:460px;">
+          <div class="modal">
+            <div class="modal-header">
+              <div class="modal-icon">🗑</div>
+              <div class="modal-title">Remove Zomato?</div>
+            </div>
+            <div class="modal-body">Removing Zomato will stop all cashback tracking for future purchases. Your earned cashback won't be affected.</div>
+            <div class="modal-divider"></div>
+            <div class="modal-footer" style="padding-top:16px;">
+              <button class="modal-btn-destructive">Remove Brand</button>
+              <button class="modal-btn-secondary">Keep It</button>
+            </div>
+          </div>
+        </div>
+        <div class="state-label">Destructive action</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOOLTIPS -->
+  <div class="section-card">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Tooltips</div>
+    <div class="section-sub">Dark (bgDark) and Light (bgCard + border) variants. 4 arrow positions. Max-width 220px. Appear on long-press (mobile) or hover (web).</div>
+
+    <div class="row" style="gap:48px; align-items:flex-end;">
+      <!-- Tooltip above -->
+      <div class="col" style="align-items:center;">
+        <div class="tooltip-dark" style="max-width:200px; text-align:center;">XIRR = annualised return rate including timing of cash flows</div>
+        <div class="tooltip-arrow-down"></div>
+        <div class="trigger-btn" style="margin-top:4px;">XIRR ℹ</div>
+        <div class="state-label">Dark — above trigger</div>
+      </div>
+
+      <!-- Tooltip below -->
+      <div class="col" style="align-items:center;">
+        <div class="trigger-btn">Cashback ℹ</div>
+        <div class="tooltip-arrow-up" style="border-bottom-color:#FFFFFF; filter:drop-shadow(0 -1px 0 #E8E8E8);"></div>
+        <div class="tooltip-light" style="max-width:200px; text-align:center;">Cashback is credited within 48 hours of a qualifying purchase</div>
+        <div class="state-label">Light — below trigger</div>
+      </div>
+
+      <!-- Right position -->
+      <div class="col" style="flex-direction:row; align-items:center; gap:4px;">
+        <div class="trigger-btn">Rate ℹ</div>
+        <div style="width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-right:6px solid #0C1220;"></div>
+        <div class="tooltip-dark" style="max-width:180px;">Annual rate: 8.4% compounding daily</div>
+        <div class="state-label" style="position:absolute; margin-top:60px;">Dark — right</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DROPDOWN MENU -->
+  <div class="section-card">
+    <div class="section-label">Section 05</div>
+    <div class="section-title">Dropdown Menu</div>
+    <div class="section-sub">Floating card, 16px radius, shadowHigh. Opens on tap of ⋮ or chevron. Auto-positions to stay within viewport. Max 5 items.</div>
+
+    <div class="row" style="gap:40px; align-items:flex-start;">
+      <div class="col">
+        <div class="group-label">Standard Menu (3 items)</div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+          <button style="padding:8px 16px; border-radius:10px; background:#F5F5F5; border:1.5px solid #E0E0E0; font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif;">Options ⋮</button>
+          <div class="dropdown-menu">
+            <div class="dmenu-item"><span class="dmenu-icon">✏️</span> Edit Details</div>
+            <div class="dmenu-item"><span class="dmenu-icon">📤</span> Share</div>
+            <div class="dmenu-item"><span class="dmenu-icon">🔔</span> Notifications</div>
+          </div>
+        </div>
+        <div class="state-label">Open — 3 options</div>
+      </div>
+
+      <div class="col">
+        <div class="group-label">Menu with Destructive</div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+          <button style="padding:8px 16px; border-radius:10px; background:#F5F5F5; border:1.5px solid #E0E0E0; font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif;">More ⋮</button>
+          <div class="dropdown-menu">
+            <div class="dmenu-item"><span class="dmenu-icon">📥</span> Export</div>
+            <div class="dmenu-item"><span class="dmenu-icon">📋</span> Copy Link</div>
+            <div class="dmenu-item"><span class="dmenu-icon">📌</span> Pin to Top</div>
+            <div class="dmenu-divider"></div>
+            <div class="dmenu-item destructive"><span class="dmenu-icon">🗑</span> Delete</div>
+          </div>
+        </div>
+        <div class="state-label">With destructive option</div>
+      </div>
+
+      <div class="col">
+        <div class="group-label">Icon-only Trigger</div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+          <div style="width:44px; height:44px; border-radius:12px; background:#F5F5F5; display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer;">⋮</div>
+          <div class="dropdown-menu">
+            <div class="dmenu-item"><span class="dmenu-icon">⭐</span> Add to Favourites</div>
+            <div class="dmenu-item"><span class="dmenu-icon">🔗</span> Copy Reference</div>
+          </div>
+        </div>
+        <div class="state-label">Icon trigger ⋮</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

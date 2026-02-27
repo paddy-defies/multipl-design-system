@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=1400"/>
+  <title>Multipl DS v4 — Forms &amp; Inputs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="stylesheet" href="tokens-v3.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 1400px; font-family: 'DM Sans', sans-serif; background: #EBEBEB; color: #1A1A1A; -webkit-font-smoothing: antialiased; }
+    .page { width: 1400px; padding: 48px; display: flex; flex-direction: column; gap: 32px; }
+    .section-card { background: #FFFFFF; border-radius: 24px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 24px; }
+    .section-title { font-size: 22px; font-weight: 800; color: #0C1220; letter-spacing: -0.4px; margin-bottom: 8px; }
+    .section-sub { font-size: 14px; color: #6B6B6B; margin-bottom: 32px; }
+    .divider-line { height: 1px; background: #F0F0F0; margin: 28px 0; }
+    .group-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #AAAAAA; margin-bottom: 16px; }
+    .row { display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: 6px; }
+    .state-label { font-size: 10px; color: #AAAAAA; font-weight: 600; letter-spacing: 0.5px; text-align: center; margin-top: 6px; }
+    .spec-box { background: #F8F8F8; border-radius: 12px; padding: 16px 20px; font-size: 13px; color: #555; line-height: 1.6; border-left: 3px solid #F5C842; }
+    .spec-box strong { color: #0C1220; }
+
+    /* Header */
+    .ds-header { background: #0C1220; border-radius: 24px; padding: 48px; position: relative; overflow: hidden; }
+    .hdr-glow-gold { position: absolute; top: -60px; left: 200px; width: 400px; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.18) 0%, transparent 70%); pointer-events: none; }
+    .hdr-glow-blue { position: absolute; top: -80px; right: 0; width: 500px; height: 400px; border-radius: 50%; background: radial-gradient(ellipse, rgba(74,159,255,0.14) 0%, transparent 70%); pointer-events: none; }
+    .hdr-inner { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; }
+    .hdr-wordmark { font-size: 48px; font-weight: 800; color: #FFFFFF; letter-spacing: -1px; line-height: 1; }
+    .hdr-wordmark span { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hdr-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .hdr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); border-radius: 999px; font-size: 12px; font-weight: 700; color: #F5C842; letter-spacing: 1px; }
+    .hdr-meta p { font-size: 13px; color: rgba(255,255,255,0.45); }
+    .hdr-pills { display: flex; gap: 12px; margin-top: 32px; position: relative; z-index: 2; }
+    .hdr-pill { padding: 10px 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+
+    /* ── Text Inputs ────────────────────────────────────── */
+    .input-wrap { display: flex; flex-direction: column; gap: 6px; width: 260px; }
+    .input-label { font-size: 12px; font-weight: 600; color: #555; }
+    .input-field {
+      height: 56px; border-radius: 14px; padding: 0 16px;
+      border: 1.5px solid #E0E0E0; background: #FAFAFA;
+      font-size: 15px; color: #0C1220; font-family: 'DM Sans', sans-serif; outline: none;
+      display: flex; align-items: center;
+    }
+    .input-field.focused { border-color: #F5C842; background: #FFFFFF; box-shadow: 0 0 0 3px rgba(245,200,66,0.15); }
+    .input-field.filled { border-color: #E0E0E0; background: #FFFFFF; }
+    .input-field.error-state { border-color: #FF6B6B; background: rgba(255,107,107,0.04); box-shadow: 0 0 0 3px rgba(255,107,107,0.12); }
+    .input-field.disabled { border-color: #EEEEEE; background: #F5F5F5; color: #BBBBBB; cursor: not-allowed; }
+    .input-field.readonly { border-color: #EEEEEE; background: #F8F8F8; color: #888; }
+    .input-text { font-size: 15px; color: #0C1220; font-family: 'DM Sans', sans-serif; }
+    .input-placeholder { font-size: 15px; color: #BBBBBB; font-family: 'DM Sans', sans-serif; }
+    .input-hint { font-size: 12px; color: #AAAAAA; }
+    .input-error { font-size: 12px; color: #FF6B6B; font-weight: 500; }
+    .input-icon-left {
+      height: 56px; border-radius: 14px; padding: 0 16px 0 44px;
+      border: 1.5px solid #E0E0E0; background: #FAFAFA;
+      font-size: 15px; color: #0C1220; font-family: 'DM Sans', sans-serif;
+      position: relative; display: flex; align-items: center;
+    }
+    .input-icon-left-icon {
+      position: absolute; left: 14px; font-size: 18px; color: #AAAAAA;
+    }
+    .input-with-action {
+      height: 56px; border-radius: 14px; padding: 0 12px 0 16px;
+      border: 1.5px solid #E0E0E0; background: #FAFAFA;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .input-action-btn { font-size: 12px; color: #F5C842; font-weight: 700; white-space: nowrap; cursor: pointer; }
+
+    /* ── Amount Input ────────────────────────────────────── */
+    .amount-input-wrap { width: 335px; display: flex; flex-direction: column; gap: 12px; }
+    .amount-input {
+      height: 72px; border-radius: 18px; padding: 0 20px;
+      border: 2px solid #F5C842; background: #FFFFFF;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 0 0 4px rgba(245,200,66,0.12);
+    }
+    .amount-currency { font-size: 28px; font-weight: 700; color: #0C1220; }
+    .amount-value { font-size: 36px; font-weight: 700; color: #0C1220; font-variant-numeric: tabular-nums; flex: 1; }
+    .amount-value.placeholder { color: #CCCCCC; }
+    .denom-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .denom-chip {
+      padding: 8px 14px; border-radius: 999px; border: 1.5px solid #E0E0E0; background: #FAFAFA;
+      font-size: 13px; font-weight: 600; color: #555; cursor: pointer;
+    }
+    .denom-chip.selected {
+      background: rgba(245,200,66,0.12); border-color: #F5C842; color: #0C1220;
+    }
+    .amount-input.error-state { border-color: #FF6B6B; box-shadow: 0 0 0 4px rgba(255,107,107,0.1); }
+
+    /* ── Search Bar ──────────────────────────────────────── */
+    .search-bar {
+      height: 48px; border-radius: 14px; padding: 0 16px;
+      background: #F0F0F0; border: 1.5px solid transparent;
+      display: flex; align-items: center; gap: 10px; width: 320px;
+    }
+    .search-bar.active { background: #FFFFFF; border-color: #F5C842; box-shadow: 0 0 0 3px rgba(245,200,66,0.12); }
+    .search-icon { font-size: 16px; color: #AAAAAA; }
+    .search-text { font-size: 15px; color: #0C1220; flex: 1; font-family: 'DM Sans', sans-serif; }
+    .search-placeholder { font-size: 15px; color: #BBBBBB; flex: 1; }
+    .search-count { font-size: 12px; color: #888; font-weight: 500; white-space: nowrap; }
+    .search-clear { font-size: 16px; color: #AAAAAA; cursor: pointer; }
+
+    /* ── Dropdown ────────────────────────────────────────── */
+    .dropdown-closed {
+      height: 56px; border-radius: 14px; padding: 0 16px;
+      border: 1.5px solid #E0E0E0; background: #FAFAFA;
+      display: flex; align-items: center; justify-content: space-between; width: 260px; cursor: pointer;
+    }
+    .dropdown-value { font-size: 15px; color: #0C1220; }
+    .dropdown-arrow { font-size: 12px; color: #AAAAAA; }
+    .dropdown-placeholder { font-size: 15px; color: #BBBBBB; }
+    .dropdown-options {
+      width: 260px; border-radius: 16px; background: #FFFFFF;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15); border: 1px solid #E8E8E8; overflow: hidden;
+    }
+    .dropdown-option {
+      padding: 14px 16px; font-size: 15px; color: #0C1220; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #F5F5F5;
+    }
+    .dropdown-option:last-child { border-bottom: none; }
+    .dropdown-option:hover { background: #FAFAFA; }
+    .dropdown-option.selected { background: rgba(245,200,66,0.08); color: #0C1220; font-weight: 600; }
+    .dropdown-check { color: #F5C842; font-weight: 700; }
+
+    /* ── Controls ────────────────────────────────────────── */
+    .control-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+    .control-label { font-size: 14px; color: #333; font-weight: 500; }
+    .control-sub { font-size: 12px; color: #AAAAAA; }
+
+    /* Checkbox */
+    .checkbox {
+      width: 22px; height: 22px; border-radius: 6px; border: 2px solid #DADADA;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer;
+      flex-shrink: 0;
+    }
+    .checkbox.checked { background: #0C1220; border-color: #0C1220; }
+    .checkbox.indeterminate { background: #0C1220; border-color: #0C1220; }
+    .checkbox.disabled { background: #F5F5F5; border-color: #E0E0E0; cursor: not-allowed; }
+    .checkbox-mark { color: #FFFFFF; font-size: 13px; font-weight: 700; line-height: 1; }
+    .checkbox-dash { color: #FFFFFF; font-size: 14px; font-weight: 700; line-height: 1; }
+
+    /* Radio */
+    .radio {
+      width: 22px; height: 22px; border-radius: 999px; border: 2px solid #DADADA;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer;
+      flex-shrink: 0;
+    }
+    .radio.selected { border-color: #0C1220; }
+    .radio.disabled { background: #F5F5F5; border-color: #E0E0E0; cursor: not-allowed; }
+    .radio-dot { width: 10px; height: 10px; border-radius: 999px; background: #0C1220; }
+
+    /* Toggle */
+    .toggle {
+      width: 52px; height: 30px; border-radius: 999px; cursor: pointer;
+      position: relative; transition: background 0.2s; flex-shrink: 0;
+    }
+    .toggle.off { background: #E0E0E0; }
+    .toggle.on { background: #0C1220; }
+    .toggle.disabled { cursor: not-allowed; opacity: 0.4; }
+    .toggle-knob {
+      position: absolute; top: 3px; width: 24px; height: 24px; border-radius: 999px;
+      background: #FFFFFF; box-shadow: 0 1px 4px rgba(0,0,0,0.2); transition: left 0.2s;
+    }
+    .toggle.off .toggle-knob { left: 3px; }
+    .toggle.on .toggle-knob { left: 25px; }
+
+    /* Slider */
+    .slider-wrap { width: 260px; }
+    .slider-track { height: 6px; border-radius: 999px; background: #E0E0E0; position: relative; }
+    .slider-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #F7D464 0%, #F0A832 100%); width: 60%; }
+    .slider-thumb {
+      width: 22px; height: 22px; border-radius: 999px; background: #FFFFFF;
+      border: 2.5px solid #F5C842; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      position: absolute; top: 50%; transform: translate(-50%, -50%); left: 60%; cursor: pointer;
+    }
+    .slider-labels { display: flex; justify-content: space-between; font-size: 12px; color: #AAAAAA; margin-top: 8px; }
+
+    /* Star Rating */
+    .star-rating { display: flex; gap: 4px; }
+    .star { font-size: 24px; cursor: pointer; }
+    .star.filled { color: #F5C842; }
+    .star.empty { color: #E0E0E0; }
+
+    /* ── PIN / OTP ────────────────────────────────────────── */
+    .pin-wrap { display: flex; gap: 10px; }
+    .pin-box {
+      width: 56px; height: 64px; border-radius: 14px; border: 2px solid #E0E0E0;
+      background: #FAFAFA; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; color: #0C1220;
+    }
+    .pin-box.active { border-color: #F5C842; background: #FFFFFF; box-shadow: 0 0 0 3px rgba(245,200,66,0.12); }
+    .pin-box.filled { border-color: #E0E0E0; background: #FFFFFF; }
+    .pin-box.error-state { border-color: #FF6B6B; background: rgba(255,107,107,0.04); }
+    .pin-dot { width: 10px; height: 10px; border-radius: 999px; background: #0C1220; }
+
+    .otp-wrap { display: flex; gap: 8px; }
+    .otp-box {
+      width: 48px; height: 56px; border-radius: 12px; border: 2px solid #E0E0E0;
+      background: #FAFAFA; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700; color: #0C1220;
+    }
+    .otp-box.active { border-color: #F5C842; background: #FFFFFF; box-shadow: 0 0 0 3px rgba(245,200,66,0.12); }
+    .otp-box.filled { border-color: #E0E0E0; background: #FFFFFF; }
+    .otp-box.verified { border-color: #00D4AA; background: rgba(0,212,170,0.06); }
+    .otp-box.error-state { border-color: #FF6B6B; background: rgba(255,107,107,0.04); }
+    .otp-verified-mark { color: #006B55; font-size: 18px; }
+
+    /* Textarea */
+    .textarea-wrap { display: flex; flex-direction: column; gap: 6px; width: 320px; }
+    .textarea-field {
+      border-radius: 14px; padding: 14px 16px; min-height: 100px;
+      border: 1.5px solid #E0E0E0; background: #FAFAFA;
+      font-size: 15px; color: #0C1220; font-family: 'DM Sans', sans-serif; resize: none; outline: none;
+    }
+    .textarea-field.focused { border-color: #F5C842; background: #FFFFFF; box-shadow: 0 0 0 3px rgba(245,200,66,0.15); }
+    .textarea-field.error-state { border-color: #FF6B6B; }
+    .char-count { font-size: 11px; color: #AAAAAA; text-align: right; }
+    .char-count.warning { color: #FF6B6B; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="ds-header">
+    <div class="hdr-glow-gold"></div>
+    <div class="hdr-glow-blue"></div>
+    <div class="hdr-inner">
+      <div>
+        <div class="hdr-wordmark">Multipl <span>Design System</span></div>
+        <div style="color:rgba(255,255,255,0.45); font-size:15px; margin-top:6px;">v4.0 — Page 2 of 7</div>
+      </div>
+      <div class="hdr-meta">
+        <div class="hdr-badge">FORMS &amp; INPUTS</div>
+        <p>Text Input · Amount · Search · Dropdown · Controls · PIN/OTP · Textarea</p>
+      </div>
+    </div>
+    <div class="hdr-pills">
+      <div class="hdr-pill">56px input height</div>
+      <div class="hdr-pill">Gold focus ring</div>
+      <div class="hdr-pill">Coral error state</div>
+      <div class="hdr-pill">44pt min touch</div>
+    </div>
+  </div>
+
+  <!-- TEXT INPUT -->
+  <div class="section-card">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">Text Input — All States</div>
+    <div class="section-sub">Height 56px, borderRadius 14px. Focus = gold ring. Error = coral border + message. Disabled = 38% opacity.</div>
+
+    <div class="group-label">Core States</div>
+    <div class="row">
+      <div class="col">
+        <div class="input-wrap">
+          <div class="input-label">Full Name</div>
+          <div class="input-field"><span class="input-placeholder">Enter your name</span></div>
+          <div class="input-hint">As shown on your Aadhaar card</div>
+        </div>
+        <div class="state-label">Default</div>
+      </div>
+      <div class="col">
+        <div class="input-wrap">
+          <div class="input-label">Full Name</div>
+          <div class="input-field focused"><span class="input-text">Paddy Raghavan</span><span style="width:1.5px; height:20px; background:#F5C842; margin-left:1px; animation: blink 1s step-end infinite;"></span></div>
+          <div class="input-hint">As shown on your Aadhaar card</div>
+        </div>
+        <div class="state-label">Focused</div>
+      </div>
+      <div class="col">
+        <div class="input-wrap">
+          <div class="input-label">Full Name</div>
+          <div class="input-field filled"><span class="input-text">Paddy Raghavan</span></div>
+          <div class="input-hint">As shown on your Aadhaar card</div>
+        </div>
+        <div class="state-label">Filled</div>
+      </div>
+      <div class="col">
+        <div class="input-wrap">
+          <div class="input-label">Mobile Number</div>
+          <div class="input-field error-state"><span class="input-text">+91 9999999999</span></div>
+          <div class="input-error">⚠ Number already registered</div>
+        </div>
+        <div class="state-label">Error</div>
+      </div>
+      <div class="col">
+        <div class="input-wrap">
+          <div class="input-label">PAN Number</div>
+          <div class="input-field disabled"><span class="input-placeholder">Locked</span></div>
+          <div class="input-hint">Contact support to update</div>
+        </div>
+        <div class="state-label">Disabled</div>
+      </div>
+      <div class="col">
+        <div class="input-wrap">
+          <div class="input-label">Account Number</div>
+          <div class="input-field readonly"><span class="input-text">●●●● ●●●● 4521</span></div>
+          <div class="input-hint">Read only</div>
+        </div>
+        <div class="state-label">Read-Only</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">With Icons &amp; Actions</div>
+    <div class="row">
+      <div class="col">
+        <div class="input-wrap" style="position:relative;">
+          <div class="input-label">Search Brands</div>
+          <div class="input-icon-left" style="position:relative;">
+            <span class="input-icon-left-icon">🔍</span>
+            <span class="input-placeholder">Search brands…</span>
+          </div>
+        </div>
+        <div class="state-label">Left Icon</div>
+      </div>
+      <div class="col">
+        <div class="input-wrap">
+          <div class="input-label">Password</div>
+          <div class="input-with-action">
+            <span class="input-text">●●●●●●●●</span>
+            <span class="input-action-btn">Show</span>
+          </div>
+        </div>
+        <div class="state-label">Right Action — Show/Hide</div>
+      </div>
+      <div class="col">
+        <div class="input-wrap">
+          <div class="input-label">Voucher Code</div>
+          <div class="input-with-action">
+            <span class="input-text">MULTIPL50</span>
+            <span class="input-action-btn">✕</span>
+          </div>
+        </div>
+        <div class="state-label">Right Action — Clear</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AMOUNT INPUT -->
+  <div class="section-card">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">Amount Input</div>
+    <div class="section-sub">Large ₹ + number (72px height), denomination chips below. Tabular nums for all monetary values.</div>
+
+    <div class="row">
+      <div class="col">
+        <div class="amount-input-wrap">
+          <div class="amount-input">
+            <span class="amount-currency">₹</span>
+            <span class="amount-value">1,000</span>
+          </div>
+          <div class="denom-chips">
+            <div class="denom-chip">₹500</div>
+            <div class="denom-chip selected">₹1K</div>
+            <div class="denom-chip">₹2K</div>
+            <div class="denom-chip">₹5K</div>
+            <div class="denom-chip">₹10K</div>
+          </div>
+        </div>
+        <div class="state-label">Filled (₹1K selected)</div>
+      </div>
+      <div class="col">
+        <div class="amount-input-wrap">
+          <div class="amount-input">
+            <span class="amount-currency">₹</span>
+            <span class="amount-value placeholder">0</span>
+          </div>
+          <div class="denom-chips">
+            <div class="denom-chip">₹500</div>
+            <div class="denom-chip">₹1K</div>
+            <div class="denom-chip">₹2K</div>
+            <div class="denom-chip">₹5K</div>
+            <div class="denom-chip">₹10K</div>
+          </div>
+        </div>
+        <div class="state-label">Empty (placeholder)</div>
+      </div>
+      <div class="col">
+        <div class="amount-input-wrap">
+          <div class="amount-input error-state">
+            <span class="amount-currency" style="color:#FF6B6B;">₹</span>
+            <span class="amount-value" style="color:#FF6B6B;">25,000</span>
+          </div>
+          <div style="font-size:13px; color:#FF6B6B; font-weight:500;">⚠ Insufficient balance (₹18,432 available)</div>
+        </div>
+        <div class="state-label">Error — Insufficient Funds</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div class="section-card">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">Search Bar</div>
+    <div class="section-sub">48px height, 14px radius. Default on gray bg, active shows white + gold focus ring.</div>
+
+    <div class="row">
+      <div class="col">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <span class="search-placeholder">Search brands, offers…</span>
+        </div>
+        <div class="state-label">Default (inactive)</div>
+      </div>
+      <div class="col">
+        <div class="search-bar active">
+          <span class="search-icon" style="color:#F5C842;">🔍</span>
+          <span class="search-text">zomato</span>
+          <span class="search-clear">✕</span>
+        </div>
+        <div class="state-label">Active / Typing</div>
+      </div>
+      <div class="col">
+        <div class="search-bar active">
+          <span class="search-icon" style="color:#F5C842;">🔍</span>
+          <span class="search-text">food</span>
+          <span class="search-count">12 results</span>
+          <span class="search-clear">✕</span>
+        </div>
+        <div class="state-label">With Results Count</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DROPDOWN -->
+  <div class="section-card">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Dropdown / Select</div>
+    <div class="section-sub">Closed state = input-like. Open state = bottom sheet or floating card. 56px options, 16px radius panel.</div>
+
+    <div class="row" style="align-items:flex-start;">
+      <div class="col">
+        <div class="dropdown-closed">
+          <span class="dropdown-placeholder">Select a brand…</span>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div class="state-label">Closed (empty)</div>
+      </div>
+      <div class="col">
+        <div class="dropdown-closed" style="border-color:#F5C842; background:#FFFFFF; box-shadow:0 0 0 3px rgba(245,200,66,0.12);">
+          <span class="dropdown-value">Zomato</span>
+          <span class="dropdown-arrow" style="color:#F5C842;">▲</span>
+        </div>
+        <div class="state-label">Open (focused)</div>
+      </div>
+      <div class="col">
+        <div class="dropdown-closed" style="background:#FFFFFF;">
+          <span class="dropdown-value">Zomato</span>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div class="state-label">Closed (selected)</div>
+      </div>
+      <div class="col">
+        <div class="dropdown-options">
+          <div class="dropdown-option" style="font-size:11px; color:#AAAAAA; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:12px 16px 8px;">Select Brand</div>
+          <div class="dropdown-option selected">Zomato <span class="dropdown-check">✓</span></div>
+          <div class="dropdown-option">Swiggy</div>
+          <div class="dropdown-option">Zepto</div>
+          <div class="dropdown-option">Amazon</div>
+          <div class="dropdown-option">Flipkart</div>
+        </div>
+        <div class="state-label">Open Options Panel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="section-card">
+    <div class="section-label">Section 05</div>
+    <div class="section-title">Controls — Checkbox, Radio, Toggle, Slider, Star Rating</div>
+    <div class="section-sub">All interactive controls with full state coverage. Min 44×44pt touch area on all.</div>
+
+    <div class="row" style="gap:48px; align-items:flex-start;">
+      <!-- Checkboxes -->
+      <div class="col" style="gap:0;">
+        <div class="group-label">Checkbox</div>
+        <div class="control-row">
+          <div class="checkbox"></div>
+          <div class="col" style="gap:2px;"><div class="control-label">Enable notifications</div></div>
+        </div>
+        <div class="state-label" style="text-align:left; margin-left: 34px;">Unchecked</div>
+        <div class="control-row" style="margin-top:12px;">
+          <div class="checkbox checked"><span class="checkbox-mark">✓</span></div>
+          <div class="col" style="gap:2px;"><div class="control-label">Auto-invest active</div></div>
+        </div>
+        <div class="state-label" style="text-align:left; margin-left: 34px;">Checked</div>
+        <div class="control-row" style="margin-top:12px;">
+          <div class="checkbox indeterminate"><span class="checkbox-dash">–</span></div>
+          <div class="col" style="gap:2px;"><div class="control-label">Select all brands</div><div class="control-sub">3 of 8 selected</div></div>
+        </div>
+        <div class="state-label" style="text-align:left; margin-left: 34px;">Indeterminate</div>
+        <div class="control-row" style="margin-top:12px;">
+          <div class="checkbox disabled"></div>
+          <div class="col" style="gap:2px;"><div class="control-label" style="color:#BBBBBB;">Locked option</div></div>
+        </div>
+        <div class="state-label" style="text-align:left; margin-left: 34px;">Disabled</div>
+      </div>
+
+      <!-- Radios -->
+      <div class="col" style="gap:0;">
+        <div class="group-label">Radio</div>
+        <div class="control-row">
+          <div class="radio"></div>
+          <div class="control-label">UPI</div>
+        </div>
+        <div class="state-label" style="text-align:left; margin-left:34px;">Unselected</div>
+        <div class="control-row" style="margin-top:12px;">
+          <div class="radio selected"><div class="radio-dot"></div></div>
+          <div class="control-label">Net Banking</div>
+        </div>
+        <div class="state-label" style="text-align:left; margin-left:34px;">Selected</div>
+        <div class="control-row" style="margin-top:12px;">
+          <div class="radio disabled"></div>
+          <div class="control-label" style="color:#BBBBBB;">Credit Card</div>
+        </div>
+        <div class="state-label" style="text-align:left; margin-left:34px;">Disabled</div>
+      </div>
+
+      <!-- Toggles -->
+      <div class="col" style="gap:0;">
+        <div class="group-label">Toggle / Switch</div>
+        <div class="control-row">
+          <div class="toggle off"><div class="toggle-knob"></div></div>
+          <div class="col" style="gap:2px;"><div class="control-label">Dark mode</div><div class="control-sub">Currently off</div></div>
+        </div>
+        <div class="state-label" style="text-align:left;">Off</div>
+        <div class="control-row" style="margin-top:12px;">
+          <div class="toggle on"><div class="toggle-knob"></div></div>
+          <div class="col" style="gap:2px;"><div class="control-label">Auto-invest</div><div class="control-sub">Rounds up to ₹10</div></div>
+        </div>
+        <div class="state-label" style="text-align:left;">On</div>
+        <div class="control-row" style="margin-top:12px;">
+          <div class="toggle off disabled"><div class="toggle-knob"></div></div>
+          <div class="control-label" style="color:#BBBBBB;">Biometrics</div>
+        </div>
+        <div class="state-label" style="text-align:left;">Disabled</div>
+      </div>
+
+      <!-- Slider + Star -->
+      <div class="col" style="gap:0;">
+        <div class="group-label">Slider</div>
+        <div class="slider-wrap">
+          <div class="slider-track">
+            <div class="slider-fill"></div>
+            <div class="slider-thumb"></div>
+          </div>
+          <div class="slider-labels"><span>₹500</span><span>₹10K</span></div>
+        </div>
+        <div class="state-label" style="text-align:left; margin-top:12px;">Amount Slider (single handle)</div>
+
+        <div class="divider-line" style="margin:20px 0;"></div>
+        <div class="group-label">Star Rating</div>
+        <div class="star-rating">
+          <span class="star filled">★</span>
+          <span class="star filled">★</span>
+          <span class="star filled">★</span>
+          <span class="star filled">★</span>
+          <span class="star empty">★</span>
+        </div>
+        <div class="state-label" style="text-align:left; margin-top:8px;">4 / 5 stars</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIN / OTP -->
+  <div class="section-card">
+    <div class="section-label">Section 06</div>
+    <div class="section-title">PIN &amp; OTP Entry</div>
+    <div class="section-sub">4-box PIN for app lock. 6-box OTP for verification. Each box = 56×64px (PIN) or 48×56px (OTP). Full state coverage.</div>
+
+    <div class="group-label">4-Box PIN</div>
+    <div class="row" style="gap:40px;">
+      <div class="col">
+        <div class="pin-wrap">
+          <div class="pin-box"></div>
+          <div class="pin-box"></div>
+          <div class="pin-box"></div>
+          <div class="pin-box"></div>
+        </div>
+        <div class="state-label">Empty</div>
+      </div>
+      <div class="col">
+        <div class="pin-wrap">
+          <div class="pin-box filled"><div class="pin-dot"></div></div>
+          <div class="pin-box filled"><div class="pin-dot"></div></div>
+          <div class="pin-box active"><span style="width:2px; height:24px; background:#F5C842;"></span></div>
+          <div class="pin-box"></div>
+        </div>
+        <div class="state-label">Typing (cursor on box 3)</div>
+      </div>
+      <div class="col">
+        <div class="pin-wrap">
+          <div class="pin-box filled"><div class="pin-dot"></div></div>
+          <div class="pin-box filled"><div class="pin-dot"></div></div>
+          <div class="pin-box filled"><div class="pin-dot"></div></div>
+          <div class="pin-box filled"><div class="pin-dot"></div></div>
+        </div>
+        <div class="state-label">Filled</div>
+      </div>
+      <div class="col">
+        <div class="pin-wrap">
+          <div class="pin-box error-state"><div class="pin-dot" style="background:#FF6B6B;"></div></div>
+          <div class="pin-box error-state"><div class="pin-dot" style="background:#FF6B6B;"></div></div>
+          <div class="pin-box error-state"><div class="pin-dot" style="background:#FF6B6B;"></div></div>
+          <div class="pin-box error-state"><div class="pin-dot" style="background:#FF6B6B;"></div></div>
+        </div>
+        <div class="input-error" style="margin-top:6px;">Incorrect PIN. 2 attempts left.</div>
+        <div class="state-label">Error</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">6-Box OTP</div>
+    <div class="row" style="gap:40px;">
+      <div class="col">
+        <div class="otp-wrap">
+          <div class="otp-box"></div><div class="otp-box"></div><div class="otp-box"></div>
+          <div class="otp-box"></div><div class="otp-box"></div><div class="otp-box"></div>
+        </div>
+        <div class="state-label">Empty</div>
+      </div>
+      <div class="col">
+        <div class="otp-wrap">
+          <div class="otp-box filled">4</div><div class="otp-box filled">2</div>
+          <div class="otp-box active"><span style="width:2px; height:20px; background:#F5C842;"></span></div>
+          <div class="otp-box"></div><div class="otp-box"></div><div class="otp-box"></div>
+        </div>
+        <div class="state-label">Typing</div>
+      </div>
+      <div class="col">
+        <div class="otp-wrap">
+          <div class="otp-box verified">4</div><div class="otp-box verified">2</div>
+          <div class="otp-box verified">7</div><div class="otp-box verified">1</div>
+          <div class="otp-box verified">9</div><div class="otp-box verified">3</div>
+        </div>
+        <div class="state-label" style="color:#006B55;">✓ Verified</div>
+      </div>
+      <div class="col">
+        <div class="otp-wrap">
+          <div class="otp-box error-state">9</div><div class="otp-box error-state">9</div>
+          <div class="otp-box error-state">9</div><div class="otp-box error-state">9</div>
+          <div class="otp-box error-state">9</div><div class="otp-box error-state">9</div>
+        </div>
+        <div class="input-error" style="margin-top:6px;">Invalid OTP. Try again.</div>
+        <div class="state-label">Error</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEXTAREA -->
+  <div class="section-card">
+    <div class="section-label">Section 07</div>
+    <div class="section-title">Text Area</div>
+    <div class="section-sub">Multi-line input, same token set as text input. Min height 100px, auto-grows. Character count shown at bottom-right.</div>
+
+    <div class="row">
+      <div class="col">
+        <div class="textarea-wrap">
+          <div class="input-label">Message</div>
+          <textarea class="textarea-field" placeholder="Write your message…" rows="4"></textarea>
+          <div class="char-count">0 / 250</div>
+        </div>
+        <div class="state-label">Default</div>
+      </div>
+      <div class="col">
+        <div class="textarea-wrap">
+          <div class="input-label">Message</div>
+          <textarea class="textarea-field focused" rows="4">I would like to know more about the cashback system and how referrals work…</textarea>
+          <div class="char-count">72 / 250</div>
+        </div>
+        <div class="state-label">Focused (72 chars)</div>
+      </div>
+      <div class="col">
+        <div class="textarea-wrap">
+          <div class="input-label">Reason for cancellation</div>
+          <textarea class="textarea-field error-state" rows="4">n/a</textarea>
+          <div class="input-error">Please provide at least 20 characters</div>
+          <div class="char-count warning">3 / 250</div>
+        </div>
+        <div class="state-label">Error + character limit</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

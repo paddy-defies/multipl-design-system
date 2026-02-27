@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=1400"/>
+  <title>Multipl DS v4 — Cards &amp; Lists</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="stylesheet" href="tokens-v3.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 1400px; font-family: 'DM Sans', sans-serif; background: #EBEBEB; color: #1A1A1A; -webkit-font-smoothing: antialiased; }
+    .page { width: 1400px; padding: 48px; display: flex; flex-direction: column; gap: 32px; }
+    .section-card { background: #FFFFFF; border-radius: 24px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 24px; }
+    .section-title { font-size: 22px; font-weight: 800; color: #0C1220; letter-spacing: -0.4px; margin-bottom: 8px; }
+    .section-sub { font-size: 14px; color: #6B6B6B; margin-bottom: 32px; }
+    .divider-line { height: 1px; background: #F0F0F0; margin: 28px 0; }
+    .group-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #AAAAAA; margin-bottom: 16px; }
+    .row { display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: 6px; }
+    .state-label { font-size: 10px; color: #AAAAAA; font-weight: 600; letter-spacing: 0.5px; text-align: center; margin-top: 8px; }
+    .spec-box { background: #F8F8F8; border-radius: 12px; padding: 16px 20px; font-size: 13px; color: #555; line-height: 1.6; border-left: 3px solid #F5C842; }
+
+    /* Header */
+    .ds-header { background: #0C1220; border-radius: 24px; padding: 48px; position: relative; overflow: hidden; }
+    .hdr-glow-gold { position: absolute; top: -60px; left: 200px; width: 400px; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.18) 0%, transparent 70%); pointer-events: none; }
+    .hdr-glow-blue { position: absolute; top: -80px; right: 0; width: 500px; height: 400px; border-radius: 50%; background: radial-gradient(ellipse, rgba(74,159,255,0.14) 0%, transparent 70%); pointer-events: none; }
+    .hdr-inner { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; }
+    .hdr-wordmark { font-size: 48px; font-weight: 800; color: #FFFFFF; letter-spacing: -1px; line-height: 1; }
+    .hdr-wordmark span { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hdr-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .hdr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); border-radius: 999px; font-size: 12px; font-weight: 700; color: #F5C842; letter-spacing: 1px; }
+    .hdr-meta p { font-size: 13px; color: rgba(255,255,255,0.45); }
+    .hdr-pills { display: flex; gap: 12px; margin-top: 32px; position: relative; z-index: 2; }
+    .hdr-pill { padding: 10px 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+
+    /* ── Card Variants ───────────────────────────────────── */
+    .card-white {
+      background: #FFFFFF; border-radius: 20px; padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1px solid #F0F0F0;
+      width: 335px;
+    }
+    .card-compact {
+      background: #FFFFFF; border-radius: 16px; padding: 14px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #F0F0F0;
+      display: flex; align-items: center; gap: 12px; min-height: 72px; width: 335px;
+    }
+    .card-icon-tile {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+      flex-shrink: 0;
+    }
+    .card-insight {
+      background: #FFFFFF; border-radius: 20px; padding: 20px; width: 335px;
+      border-left: 4px solid #F5C842; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .insight-blue { border-left-color: #4A9FFF; }
+    .insight-teal { border-left-color: #00D4AA; }
+    .insight-coral { border-left-color: #FF6B6B; }
+    .card-metric {
+      background: #FFFFFF; border-radius: 20px; padding: 20px; width: 200px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #F0F0F0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .metric-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .metric-label { font-size: 12px; color: #888; font-weight: 500; }
+    .metric-value { font-size: 24px; font-weight: 800; color: #0C1220; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
+    .growth-chip {
+      display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px;
+      font-size: 12px; font-weight: 700;
+    }
+    .growth-chip.up { background: rgba(0,212,170,0.12); color: #006B55; }
+    .growth-chip.down { background: rgba(255,107,107,0.12); color: #C0392B; }
+
+    /* ── List Items ──────────────────────────────────────── */
+    .list-container { background: #FFFFFF; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); width: 375px; }
+    .list-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px; border-bottom: 1px solid #F5F5F5; min-height: 56px;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item.destructive { background: rgba(255,107,107,0.02); }
+    .list-icon-tile {
+      width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .list-avatar {
+      width: 40px; height: 40px; border-radius: 999px; flex-shrink: 0;
+      background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #0C1220;
+    }
+    .list-dot { width: 10px; height: 10px; border-radius: 999px; flex-shrink: 0; }
+    .list-content { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .list-title { font-size: 15px; font-weight: 600; color: #0C1220; }
+    .list-sub { font-size: 13px; color: #888; }
+    .list-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    .list-value { font-size: 15px; font-weight: 700; color: #0C1220; font-variant-numeric: tabular-nums; }
+    .list-chevron { font-size: 16px; color: #CCCCCC; }
+    .toggle-inline { width: 44px; height: 26px; border-radius: 999px; background: #0C1220; position: relative; flex-shrink: 0; }
+    .toggle-inline-knob { position: absolute; right: 3px; top: 3px; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF; }
+
+    /* ── Transaction List ────────────────────────────────── */
+    .txn-list { background: #FDFAF0; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); width: 375px; }
+    .txn-date-header { padding: 10px 16px; font-size: 12px; font-weight: 700; color: #888; letter-spacing: 0.5px; background: rgba(0,0,0,0.02); }
+    .txn-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .txn-item:last-child { border-bottom: none; }
+    .brand-tile {
+      width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; color: #FFFFFF;
+    }
+    .txn-content { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .txn-name { font-size: 15px; font-weight: 600; color: #0C1220; }
+    .txn-meta { display: flex; align-items: center; gap: 6px; }
+    .cat-tag {
+      display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px;
+      font-size: 11px; font-weight: 600;
+    }
+    .cat-food { background: rgba(255,138,80,0.12); color: #C04A00; }
+    .cat-apparel { background: rgba(255,107,157,0.12); color: #B0004A; }
+    .cat-shopping { background: rgba(123,143,255,0.12); color: #3045CC; }
+    .cat-cabs { background: rgba(0,212,170,0.12); color: #006B55; }
+    .txn-date { font-size: 12px; color: #AAAAAA; }
+    .txn-amount { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+    .txn-credit { font-size: 15px; font-weight: 700; color: #006B55; font-variant-numeric: tabular-nums; }
+    .txn-debit { font-size: 15px; font-weight: 700; color: #0C1220; font-variant-numeric: tabular-nums; }
+    .cashback-chip {
+      display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 999px;
+      background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.3);
+      font-size: 10px; font-weight: 700; color: #8B6A00;
+    }
+
+    /* ── Notification List ───────────────────────────────── */
+    .notif-list { background: #FFFFFF; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); width: 375px; }
+    .notif-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px; border-bottom: 1px solid #F5F5F5; position: relative;
+    }
+    .notif-item.unread { background: rgba(245,200,66,0.04); border-left: 3px solid #F5C842; }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .notif-content { flex: 1; }
+    .notif-title { font-size: 14px; font-weight: 600; color: #0C1220; line-height: 1.3; margin-bottom: 3px; }
+    .notif-title.bold { font-weight: 800; }
+    .notif-body { font-size: 13px; color: #888; line-height: 1.4; }
+    .notif-time { font-size: 11px; color: #BBBBBB; margin-top: 4px; }
+    .unread-dot { position: absolute; top: 16px; right: 16px; width: 8px; height: 8px; border-radius: 999px; background: #F5C842; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="ds-header">
+    <div class="hdr-glow-gold"></div>
+    <div class="hdr-glow-blue"></div>
+    <div class="hdr-inner">
+      <div>
+        <div class="hdr-wordmark">Multipl <span>Design System</span></div>
+        <div style="color:rgba(255,255,255,0.45); font-size:15px; margin-top:6px;">v4.0 — Page 4 of 7</div>
+      </div>
+      <div class="hdr-meta">
+        <div class="hdr-badge">CARDS &amp; LISTS</div>
+        <p>Card Variants · List Items · Transaction · Notifications</p>
+      </div>
+    </div>
+    <div class="hdr-pills">
+      <div class="hdr-pill">rL = 20px card radius</div>
+      <div class="hdr-pill">40px icon tiles</div>
+      <div class="hdr-pill">Tabular-nums for amounts</div>
+    </div>
+  </div>
+
+  <!-- CARD VARIANTS -->
+  <div class="section-card">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">Card Variants</div>
+    <div class="section-sub">Cards are the primary content containers. White full-bleed for main content. Compact for horizontal rows. Bordered left for insights.</div>
+
+    <div class="group-label">White Full-Bleed (shadowLow)</div>
+    <div class="row">
+      <div class="col">
+        <div class="card-white">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+            <div>
+              <div style="font-size:12px; color:#888; margin-bottom:4px;">Total Portfolio Value</div>
+              <div style="font-size:28px; font-weight:800; color:#0C1220; font-variant-numeric:tabular-nums; letter-spacing:-0.5px;">₹1,24,350</div>
+            </div>
+            <div class="growth-chip up">↑ 8.4%</div>
+          </div>
+          <div style="height:1px; background:#F5F5F5; margin-bottom:16px;"></div>
+          <div style="display:flex; justify-content:space-between;">
+            <div style="font-size:12px; color:#888;">Invested<br/><span style="font-size:14px; font-weight:700; color:#0C1220;">₹1,14,700</span></div>
+            <div style="font-size:12px; color:#888;">Returns<br/><span style="font-size:14px; font-weight:700; color:#006B55;">+₹9,650</span></div>
+            <div style="font-size:12px; color:#888;">XIRR<br/><span style="font-size:14px; font-weight:700; color:#0C1220;">11.2%</span></div>
+          </div>
+        </div>
+        <div class="state-label">Full card — Portfolio summary</div>
+      </div>
+
+      <div class="col">
+        <div class="card-white" style="width:260px;">
+          <div style="font-size:12px; color:#888; margin-bottom:6px;">Available Balance</div>
+          <div style="font-size:24px; font-weight:800; color:#0C1220; font-variant-numeric:tabular-nums;">₹18,432</div>
+          <div style="margin-top:16px;">
+            <button style="width:100%; height:44px; border-radius:999px; background:linear-gradient(135deg,#F7D464,#F0A832); border:none; font-size:15px; font-weight:700; color:#0C1220; cursor:pointer; font-family:'DM Sans',sans-serif;">Add Money</button>
+          </div>
+        </div>
+        <div class="state-label">Compact — with CTA</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Compact Horizontal (72px min-height)</div>
+    <div class="col" style="gap:12px;">
+      <div class="card-compact">
+        <div class="card-icon-tile" style="background:rgba(245,200,66,0.12);">📈</div>
+        <div style="flex:1;"><div style="font-size:15px; font-weight:600; color:#0C1220;">Daily Earnings</div><div style="font-size:13px; color:#888;">Across 8 brands</div></div>
+        <div style="font-size:16px; font-weight:700; color:#006B55; font-variant-numeric:tabular-nums;">+₹42.50</div>
+      </div>
+      <div class="card-compact">
+        <div class="card-icon-tile" style="background:rgba(74,159,255,0.12);">💳</div>
+        <div style="flex:1;"><div style="font-size:15px; font-weight:600; color:#0C1220;">Cashback Earned</div><div style="font-size:13px; color:#888;">This month</div></div>
+        <div style="font-size:16px; font-weight:700; color:#0C1220; font-variant-numeric:tabular-nums;">₹320</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Left Border — Insight Cards</div>
+    <div class="row">
+      <div class="col">
+        <div class="card-insight">
+          <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+            <span style="font-size:20px;">💡</span>
+            <div style="font-size:15px; font-weight:700; color:#0C1220;">Spend more on Zomato to earn faster</div>
+          </div>
+          <div style="font-size:13px; color:#888; line-height:1.5; margin-bottom:14px;">You're ₹200 away from unlocking the next cashback tier with Zomato.</div>
+          <button style="font-size:13px; font-weight:700; color:#8B6A00; background:rgba(245,200,66,0.12); border:1px solid rgba(245,200,66,0.3); border-radius:999px; padding:8px 16px; cursor:pointer; font-family:'DM Sans',sans-serif;">View Offer →</button>
+        </div>
+        <div class="state-label">Gold border — tip/offer</div>
+      </div>
+      <div class="col">
+        <div class="card-insight insight-blue">
+          <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+            <span style="font-size:20px;">🔔</span>
+            <div style="font-size:15px; font-weight:700; color:#0C1220;">Market update</div>
+          </div>
+          <div style="font-size:13px; color:#888; line-height:1.5; margin-bottom:14px;">Nifty 50 up 1.2% today. Your portfolio is outperforming by 0.3%.</div>
+          <button style="font-size:13px; font-weight:700; color:#1A6FDF; background:rgba(74,159,255,0.1); border:1px solid rgba(74,159,255,0.3); border-radius:999px; padding:8px 16px; cursor:pointer; font-family:'DM Sans',sans-serif;">View details →</button>
+        </div>
+        <div class="state-label">Blue border — info/market</div>
+      </div>
+      <div class="col">
+        <div class="card-insight insight-coral">
+          <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+            <span style="font-size:20px;">⚠️</span>
+            <div style="font-size:15px; font-weight:700; color:#0C1220;">KYC expires in 7 days</div>
+          </div>
+          <div style="font-size:13px; color:#888; line-height:1.5; margin-bottom:14px;">Update your KYC documents to continue investing without interruption.</div>
+          <button style="font-size:13px; font-weight:700; color:#C0392B; background:rgba(255,107,107,0.1); border:1px solid rgba(255,107,107,0.3); border-radius:999px; padding:8px 16px; cursor:pointer; font-family:'DM Sans',sans-serif;">Update now →</button>
+        </div>
+        <div class="state-label">Coral border — alert/warning</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Metric / KPI Cards</div>
+    <div class="row">
+      <div class="col"><div class="card-metric">
+        <div class="metric-icon" style="background:rgba(245,200,66,0.12);">💰</div>
+        <div class="metric-label">Total Invested</div>
+        <div class="metric-value">₹1.14L</div>
+        <div class="growth-chip up">↑ 12.4%</div>
+      </div><div class="state-label">Invested</div></div>
+      <div class="col"><div class="card-metric">
+        <div class="metric-icon" style="background:rgba(0,212,170,0.12);">📈</div>
+        <div class="metric-label">Total Returns</div>
+        <div class="metric-value" style="color:#006B55;">+₹9,650</div>
+        <div class="growth-chip up">↑ 8.4% XIRR</div>
+      </div><div class="state-label">Returns</div></div>
+      <div class="col"><div class="card-metric">
+        <div class="metric-icon" style="background:rgba(74,159,255,0.12);">🏆</div>
+        <div class="metric-label">Cashback</div>
+        <div class="metric-value">₹4,230</div>
+        <div class="growth-chip up">↑ +₹320 this month</div>
+      </div><div class="state-label">Cashback</div></div>
+      <div class="col"><div class="card-metric">
+        <div class="metric-icon" style="background:rgba(255,107,107,0.1);">⏱</div>
+        <div class="metric-label">Streak</div>
+        <div class="metric-value">47 days</div>
+        <div style="font-size:11px; color:#888;">Personal best!</div>
+      </div><div class="state-label">Streak</div></div>
+    </div>
+  </div>
+
+  <!-- LIST ITEMS -->
+  <div class="section-card">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">List Items</div>
+    <div class="section-sub">All list item variants in a single container. Min 56px height, 16px horizontal padding. Inset divider at content edge.</div>
+
+    <div class="row" style="gap:32px; align-items:flex-start;">
+      <div class="col">
+        <div class="group-label">Basic + Icon Tile Variants</div>
+        <div class="list-container">
+          <!-- Single-line -->
+          <div class="list-item">
+            <div class="list-content"><div class="list-title">Single-line item</div></div>
+            <div class="list-chevron">›</div>
+          </div>
+          <!-- Two-line -->
+          <div class="list-item">
+            <div class="list-content">
+              <div class="list-title">Two-line item</div>
+              <div class="list-sub">Secondary text with more detail</div>
+            </div>
+            <div class="list-chevron">›</div>
+          </div>
+          <!-- With icon tile -->
+          <div class="list-item">
+            <div class="list-icon-tile" style="background:rgba(245,200,66,0.12);">⭐</div>
+            <div class="list-content">
+              <div class="list-title">With icon tile</div>
+              <div class="list-sub">40×40 tinted tile</div>
+            </div>
+            <div class="list-chevron">›</div>
+          </div>
+          <!-- With avatar -->
+          <div class="list-item">
+            <div class="list-avatar">PR</div>
+            <div class="list-content">
+              <div class="list-title">Paddy Raghavan</div>
+              <div class="list-sub">paddy@example.com</div>
+            </div>
+            <div class="list-chevron">›</div>
+          </div>
+          <!-- With color dot -->
+          <div class="list-item">
+            <div class="list-dot" style="background:#00D4AA;"></div>
+            <div class="list-content">
+              <div class="list-title">With left colour dot</div>
+              <div class="list-sub">Status indicator</div>
+            </div>
+            <div class="list-value">₹1,200</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="group-label">Settings &amp; Action Rows</div>
+        <div class="list-container">
+          <!-- Settings toggle -->
+          <div class="list-item">
+            <div class="list-content">
+              <div class="list-title">Auto-invest</div>
+              <div class="list-sub">Round-up spare change</div>
+            </div>
+            <div class="toggle-inline"><div class="toggle-inline-knob"></div></div>
+          </div>
+          <!-- Settings toggle off -->
+          <div class="list-item">
+            <div class="list-content">
+              <div class="list-title">Push Notifications</div>
+              <div class="list-sub">Deals and cashback alerts</div>
+            </div>
+            <div style="width:44px; height:26px; border-radius:999px; background:#E0E0E0; position:relative; flex-shrink:0;">
+              <div style="position:absolute; left:3px; top:3px; width:20px; height:20px; border-radius:999px; background:#FFFFFF;"></div>
+            </div>
+          </div>
+          <!-- Settings chevron -->
+          <div class="list-item">
+            <div class="list-icon-tile" style="background:rgba(74,159,255,0.12);">🔒</div>
+            <div class="list-content"><div class="list-title">Security &amp; Privacy</div></div>
+            <div class="list-chevron">›</div>
+          </div>
+          <!-- Settings with value -->
+          <div class="list-item">
+            <div class="list-icon-tile" style="background:rgba(0,212,170,0.12);">🌐</div>
+            <div class="list-content"><div class="list-title">Language</div></div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="font-size:14px; color:#888;">English</span>
+              <span class="list-chevron">›</span>
+            </div>
+          </div>
+          <!-- Destructive -->
+          <div class="list-item destructive">
+            <div class="list-icon-tile" style="background:rgba(255,107,107,0.1);">🗑</div>
+            <div class="list-content"><div class="list-title" style="color:#FF6B6B;">Delete Account</div></div>
+            <div class="list-chevron" style="color:#FF6B6B;">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSACTION LIST -->
+  <div class="section-card">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">Transaction List</div>
+    <div class="section-sub">Brand gradient tile + name + category tag + date + amount. Grouped by date header. Credit = tealText, Debit = txMid. Optional cashback chip.</div>
+
+    <div class="row">
+      <div class="col">
+        <div class="txn-list">
+          <div class="txn-date-header">TODAY · 18 Feb</div>
+          <div class="txn-item">
+            <div class="brand-tile" style="background:linear-gradient(135deg, #E23744, #B31B25);">Z</div>
+            <div class="txn-content">
+              <div class="txn-name">Zomato</div>
+              <div class="txn-meta">
+                <span class="cat-tag cat-food">Food</span>
+                <span class="txn-date">2:34 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount">
+              <div class="txn-debit">-₹349</div>
+              <div class="cashback-chip">★ ₹8.72</div>
+            </div>
+          </div>
+          <div class="txn-item">
+            <div class="brand-tile" style="background:linear-gradient(135deg, #2D2D2D, #1A1A1A);">A</div>
+            <div class="txn-content">
+              <div class="txn-name">Amazon</div>
+              <div class="txn-meta">
+                <span class="cat-tag cat-shopping">Shopping</span>
+                <span class="txn-date">10:15 AM</span>
+              </div>
+            </div>
+            <div class="txn-amount">
+              <div class="txn-debit">-₹1,299</div>
+              <div class="cashback-chip">★ ₹32.48</div>
+            </div>
+          </div>
+          <div class="txn-date-header">YESTERDAY · 17 Feb</div>
+          <div class="txn-item">
+            <div class="brand-tile" style="background:linear-gradient(135deg, #FC8019, #E25F01);">S</div>
+            <div class="txn-content">
+              <div class="txn-name">Swiggy</div>
+              <div class="txn-meta">
+                <span class="cat-tag cat-food">Food</span>
+                <span class="txn-date">8:20 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount">
+              <div class="txn-debit">-₹280</div>
+              <div class="cashback-chip">★ ₹7.00</div>
+            </div>
+          </div>
+          <div class="txn-item">
+            <div class="brand-tile" style="background:linear-gradient(135deg, #1A1A2E, #16213E);">O</div>
+            <div class="txn-content">
+              <div class="txn-name">Ola</div>
+              <div class="txn-meta">
+                <span class="cat-tag cat-cabs">Cabs</span>
+                <span class="txn-date">7:45 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount">
+              <div class="txn-debit">-₹156</div>
+            </div>
+          </div>
+          <div class="txn-item">
+            <div class="brand-tile" style="background:linear-gradient(135deg, #00D4AA, #008B72);">C</div>
+            <div class="txn-content">
+              <div class="txn-name">Cashback Credited</div>
+              <div class="txn-meta">
+                <span class="txn-date">Auto-credited</span>
+              </div>
+            </div>
+            <div class="txn-amount">
+              <div class="txn-credit">+₹47.20</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION LIST -->
+  <div class="section-card">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Notification List</div>
+    <div class="section-sub">Unread = bold title + gold left border + gold dot. Read = normal weight, no border. Grouped by recency.</div>
+
+    <div class="row">
+      <div class="col">
+        <div class="notif-list">
+          <!-- Unread -->
+          <div class="notif-item unread">
+            <div class="unread-dot"></div>
+            <div class="notif-icon" style="background:rgba(245,200,66,0.12);">💰</div>
+            <div class="notif-content">
+              <div class="notif-title bold">Cashback of ₹47.20 credited!</div>
+              <div class="notif-body">Your Zomato, Swiggy and Ola cashbacks have been credited to your wallet.</div>
+              <div class="notif-time">2 minutes ago</div>
+            </div>
+          </div>
+          <!-- Unread -->
+          <div class="notif-item unread">
+            <div class="unread-dot"></div>
+            <div class="notif-icon" style="background:rgba(74,159,255,0.12);">📈</div>
+            <div class="notif-content">
+              <div class="notif-title bold">Portfolio hit a new high</div>
+              <div class="notif-body">Your portfolio crossed ₹1.24 lakh. Keep it up!</div>
+              <div class="notif-time">1 hour ago</div>
+            </div>
+          </div>
+          <!-- Read -->
+          <div class="notif-item">
+            <div class="notif-icon" style="background:#F5F5F5;">🛍</div>
+            <div class="notif-content">
+              <div class="notif-title">New brand added — Myntra</div>
+              <div class="notif-body">Earn up to 5% cashback on all Myntra purchases.</div>
+              <div class="notif-time">Yesterday at 3:00 PM</div>
+            </div>
+          </div>
+          <!-- Read -->
+          <div class="notif-item">
+            <div class="notif-icon" style="background:#F5F5F5;">⚠️</div>
+            <div class="notif-content">
+              <div class="notif-title">KYC verification pending</div>
+              <div class="notif-body">Complete your KYC to keep investing without limits.</div>
+              <div class="notif-time">2 days ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

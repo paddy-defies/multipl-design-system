@@ -1,0 +1,420 @@
+/* ============================================================
+   Multipl Design System v2.0 — Shared Layout Utilities
+   ============================================================ */
+
+/* ── Reset & Base ────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  color: var(--brandBlack);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Phone Frame ─────────────────────────────────────────── */
+.phone-frame {
+  width: 375px;
+  min-height: 812px;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Status Bar ──────────────────────────────────────────── */
+.status-bar {
+  height: var(--safeTop);
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 var(--pagePadding) 12px;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.status-bar .time {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.status-bar .indicators {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Dynamic Island pill */
+.dynamic-island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 126px;
+  height: 37px;
+  background: #000;
+  border-radius: 20px;
+}
+
+/* ── App Bar ─────────────────────────────────────────────── */
+.app-bar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--pagePadding);
+  flex-shrink: 0;
+}
+
+.app-bar .back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bgWhite);
+  border: 1px solid var(--neutral300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.app-bar .bar-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.app-bar .trailing {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Page Content ────────────────────────────────────────── */
+.page-content {
+  flex: 1;
+  padding: 0 var(--pagePadding);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Bottom Nav Bar ──────────────────────────────────────── */
+.bottom-nav {
+  height: var(--navBarHeight);
+  background: var(--bgWhite);
+  border-top: 1px solid var(--neutral200);
+  display: flex;
+  align-items: flex-start;
+  padding-top: 8px;
+  flex-shrink: 0;
+}
+
+.nav-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  min-height: 44px;
+  justify-content: center;
+}
+
+.nav-icon-wrap {
+  width: 32px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-tab.active .nav-icon-wrap {
+  background: rgba(245, 200, 66, 0.15);
+}
+
+.nav-tab .nav-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--neutral500);
+  letter-spacing: 0.2px;
+}
+
+.nav-tab.active .nav-label {
+  font-weight: 600;
+  color: var(--brandBlack);
+}
+
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--neutral500);
+}
+
+.nav-tab.active .nav-icon {
+  color: var(--brandBlack);
+}
+
+/* ── Cards ───────────────────────────────────────────────── */
+.card {
+  background: var(--bgWhite);
+  border-radius: var(--radiusL);
+  padding: var(--cardPadding);
+  box-shadow: var(--shadowLow);
+}
+
+.card-dark {
+  background: var(--brandBlack);
+  border-radius: var(--radiusL);
+  padding: var(--cardPadding);
+  color: white;
+}
+
+/* ── Primary Button ──────────────────────────────────────── */
+.btn-primary {
+  width: 100%;
+  height: var(--btnHeight);
+  background: var(--brandYellow);
+  border: none;
+  border-radius: var(--radiusFull);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--brandBlack);
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--inlineGap);
+}
+
+/* ── Secondary Button ────────────────────────────────────── */
+.btn-secondary {
+  width: 100%;
+  height: var(--btnHeight);
+  background: var(--bgWhite);
+  border: 1px solid var(--neutral300);
+  border-radius: var(--radiusFull);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--brandBlack);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Chip / Pill ─────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: var(--chipHeight);
+  padding: 0 var(--s12);
+  border-radius: var(--radiusFull);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+
+/* ── Savings Banner ──────────────────────────────────────── */
+.savings-banner {
+  background: var(--brandYellow);
+  padding: var(--s12) var(--pagePadding);
+  display: flex;
+  align-items: center;
+  gap: var(--rowGap);
+}
+
+.savings-banner .banner-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brandBlack);
+  flex: 1;
+}
+
+/* ── Section Header ──────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.section-header .section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brandBlack);
+  letter-spacing: -0.2px;
+}
+
+.section-header .see-all {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brandBlack);
+  text-decoration: underline;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Backdrop ────────────────────────────────────────────── */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 26, 26, 0.40);
+  z-index: 20;
+}
+
+/* ── Bottom Sheet ────────────────────────────────────────── */
+.bottom-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bgWhite);
+  border-radius: var(--sheetTop) var(--sheetTop) 0 0;
+  box-shadow: var(--shadowHigh);
+  padding: 8px var(--s16) calc(var(--s16) + var(--safeBottom));
+  z-index: 30;
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--neutral300);
+  border-radius: var(--radiusFull);
+  margin: 0 auto 20px;
+}
+
+/* ── Typography Classes ──────────────────────────────────── */
+.displayLarge  { font-size: 36px; font-weight: 700; line-height: 1.1; letter-spacing: -0.5px; }
+.displayMedium { font-size: 28px; font-weight: 600; line-height: 1.2; letter-spacing: -0.3px; }
+.displaySmall  { font-size: 24px; font-weight: 600; line-height: 1.2; letter-spacing: -0.2px; }
+.headlineLarge { font-size: 22px; font-weight: 600; line-height: 1.3; }
+.headlineMedium{ font-size: 20px; font-weight: 600; line-height: 1.3; }
+.headlineSmall { font-size: 18px; font-weight: 600; line-height: 1.3; }
+.titleMedium   { font-size: 16px; font-weight: 500; line-height: 1.4; }
+.titleSmall    { font-size: 14px; font-weight: 500; line-height: 1.4; }
+.bodyLarge     { font-size: 16px; font-weight: 400; line-height: 1.5; }
+.bodyMedium    { font-size: 14px; font-weight: 400; line-height: 1.5; }
+.bodySmall     { font-size: 12px; font-weight: 400; line-height: 1.5; }
+.labelLarge    { font-size: 14px; font-weight: 600; line-height: 1.2; letter-spacing: 0.1px; }
+.labelMedium   { font-size: 12px; font-weight: 500; line-height: 1.2; letter-spacing: 0.1px; }
+.labelSmall    { font-size: 10px; font-weight: 500; line-height: 1.2; letter-spacing: 0.2px; }
+
+/* ── Special Amount Styles ───────────────────────────────── */
+.amountLarge  { font-size: 36px; font-weight: 700; line-height: 1.1; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.amountMedium { font-size: 24px; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.voucherCode  { font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: 700; letter-spacing: 2px; color: var(--brandYellow); font-variant-numeric: tabular-nums; }
+.wealthDisplayHeading { font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1.2; color: var(--semanticNavy); }
+.wealthSubHeading     { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 600; line-height: 1.3; color: var(--semanticNavy); }
+
+/* ── Growth Chip ─────────────────────────────────────────── */
+.growth-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 8px;
+  border-radius: var(--radiusFull);
+  background: rgba(45, 179, 122, 0.15);
+  color: var(--semanticSuccess);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Category Tag ────────────────────────────────────────── */
+.cat-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--radiusFull);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ── App Badge ───────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radiusXS);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+.badge-most-opted { background: var(--brandYellow); color: var(--brandBlack); }
+.badge-discount   { background: rgba(45,179,122,0.15); color: var(--semanticSuccess); }
+.badge-coming-soon{ background: var(--neutral200); color: var(--neutral600); }
+
+/* ── Tab Selector ────────────────────────────────────────── */
+.tab-selector {
+  background: var(--neutral100);
+  border-radius: var(--radiusFull);
+  padding: 4px;
+  display: flex;
+  gap: 0;
+}
+
+.tab-option {
+  flex: 1;
+  height: 36px;
+  border-radius: var(--radiusFull);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neutral500);
+  cursor: pointer;
+}
+
+.tab-option.active {
+  background: var(--bgWhite);
+  color: var(--brandBlack);
+  font-weight: 600;
+  box-shadow: var(--shadowLow);
+}
+
+/* ── Flex & Layout Helpers ───────────────────────────────── */
+.flex        { display: flex; }
+.flex-col    { flex-direction: column; }
+.items-center{ align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.justify-center  { justify-content: center; }
+.gap-4   { gap: var(--s4); }
+.gap-8   { gap: var(--s8); }
+.gap-12  { gap: var(--s12); }
+.gap-16  { gap: var(--s16); }
+.gap-20  { gap: var(--s20); }
+.gap-24  { gap: var(--s24); }
+.gap-32  { gap: var(--s32); }
+.mt-8    { margin-top: var(--s8); }
+.mt-12   { margin-top: var(--s12); }
+.mt-16   { margin-top: var(--s16); }
+.mt-20   { margin-top: var(--s20); }
+.mt-24   { margin-top: var(--s24); }
+.mt-32   { margin-top: var(--s32); }
+.mb-8    { margin-bottom: var(--s8); }
+.mb-12   { margin-bottom: var(--s12); }
+.mb-16   { margin-bottom: var(--s16); }
+.mb-24   { margin-bottom: var(--s24); }
+.w-full  { width: 100%; }
+.text-center { text-align: center; }
+
+/* ── SVG Icon Helpers ────────────────────────────────────── */
+svg { display: block; }

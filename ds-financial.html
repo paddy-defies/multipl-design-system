@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=1400"/>
+  <title>Multipl DS v4 — Financial Components</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="stylesheet" href="tokens-v3.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 1400px; font-family: 'DM Sans', sans-serif; background: #EBEBEB; color: #1A1A1A; -webkit-font-smoothing: antialiased; }
+    .page { width: 1400px; padding: 48px; display: flex; flex-direction: column; gap: 32px; }
+    .section-card { background: #FFFFFF; border-radius: 24px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 24px; }
+    .section-title { font-size: 22px; font-weight: 800; color: #0C1220; letter-spacing: -0.4px; margin-bottom: 8px; }
+    .section-sub { font-size: 14px; color: #6B6B6B; margin-bottom: 32px; }
+    .divider-line { height: 1px; background: #F0F0F0; margin: 28px 0; }
+    .group-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #AAAAAA; margin-bottom: 16px; }
+    .row { display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: 6px; }
+    .state-label { font-size: 10px; color: #AAAAAA; font-weight: 600; letter-spacing: 0.5px; text-align: center; margin-top: 8px; }
+    .spec-box { background: #F8F8F8; border-radius: 12px; padding: 16px 20px; font-size: 13px; color: #555; line-height: 1.6; border-left: 3px solid #F5C842; }
+    .tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+    /* Header */
+    .ds-header { background: #0C1220; border-radius: 24px; padding: 48px; position: relative; overflow: hidden; }
+    .hdr-glow-gold { position: absolute; top: -60px; left: 200px; width: 400px; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.18) 0%, transparent 70%); pointer-events: none; }
+    .hdr-glow-blue { position: absolute; top: -80px; right: 0; width: 500px; height: 400px; border-radius: 50%; background: radial-gradient(ellipse, rgba(74,159,255,0.14) 0%, transparent 70%); pointer-events: none; }
+    .hdr-inner { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; }
+    .hdr-wordmark { font-size: 48px; font-weight: 800; color: #FFFFFF; letter-spacing: -1px; line-height: 1; }
+    .hdr-wordmark span { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hdr-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .hdr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); border-radius: 999px; font-size: 12px; font-weight: 700; color: #F5C842; letter-spacing: 1px; }
+    .hdr-meta p { font-size: 13px; color: rgba(255,255,255,0.45); }
+    .hdr-pills { display: flex; gap: 12px; margin-top: 32px; position: relative; z-index: 2; }
+    .hdr-pill { padding: 10px 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+
+    /* ── Amount Chip Selector ────────────────────────────── */
+    .chip-grid { display: flex; flex-wrap: wrap; gap: 10px; width: 335px; }
+    .amount-chip {
+      flex: 1 1 calc(33% - 10px); min-width: 90px; height: 48px;
+      border-radius: 14px; border: 1.5px solid #E0E0E0; background: #FAFAFA;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 600; color: #555; cursor: pointer;
+    }
+    .amount-chip.selected {
+      border-color: #F5C842; background: rgba(245,200,66,0.08); color: #0C1220;
+      box-shadow: 0 0 0 3px rgba(245,200,66,0.15);
+    }
+    .amount-chip.custom {
+      background: transparent; border-style: dashed; color: #888;
+    }
+    .amount-input-combo {
+      width: 335px; height: 56px; border-radius: 16px; border: 2px solid #F5C842;
+      background: #FFFFFF; display: flex; align-items: center; gap: 8px; padding: 0 16px;
+      box-shadow: 0 0 0 4px rgba(245,200,66,0.12);
+    }
+    .combo-currency { font-size: 22px; font-weight: 700; color: #0C1220; }
+    .combo-input { flex: 1; font-size: 24px; font-weight: 700; color: #0C1220; font-variant-numeric: tabular-nums; background: none; border: none; outline: none; font-family: 'DM Sans', sans-serif; }
+
+    /* ── Goal Progress Card ──────────────────────────────── */
+    .goal-card {
+      width: 335px; background: #FFFFFF; border-radius: 20px; padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #F0F0F0;
+    }
+    .goal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .goal-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .goal-name { font-size: 16px; font-weight: 700; color: #0C1220; }
+    .goal-target { font-size: 12px; color: #888; }
+    .goal-amounts { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
+    .goal-current { font-size: 24px; font-weight: 800; color: #0C1220; font-variant-numeric: tabular-nums; }
+    .goal-of { font-size: 13px; color: #888; }
+    .goal-of-val { font-size: 16px; font-weight: 700; color: #0C1220; font-variant-numeric: tabular-nums; }
+    .goal-track { height: 8px; border-radius: 999px; background: #F0F0F0; overflow: hidden; margin-bottom: 10px; }
+    .goal-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #F7D464 0%, #F0A832 100%); }
+    .goal-meta { display: flex; justify-content: space-between; font-size: 12px; color: #888; }
+    .goal-pct { font-weight: 700; color: #0C1220; }
+    .goal-days { color: #888; }
+
+    /* ── Interest / Earning Display ──────────────────────── */
+    .earnings-card {
+      width: 335px; background: #0C1220; border-radius: 24px; padding: 24px;
+      position: relative; overflow: hidden;
+    }
+    .earn-glow-gold { position: absolute; top: -30px; right: -30px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.15) 0%, transparent 70%); }
+    .earn-title { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+    .earn-rate { font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-variant-numeric: tabular-nums; }
+    .earn-subtitle { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 20px; }
+    .earn-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .earn-row:last-child { border-bottom: none; }
+    .earn-row-label { font-size: 13px; color: rgba(255,255,255,0.55); }
+    .earn-row-value { font-size: 15px; font-weight: 700; color: #FFFFFF; font-variant-numeric: tabular-nums; }
+    .earn-row-value.teal { color: #00D4AA; }
+    .earn-row-value.gold { color: #F5C842; }
+
+    /* ── Voucher Card ────────────────────────────────────── */
+    .voucher-card {
+      width: 335px; background: #FFFFFF; border-radius: 20px;
+      border: 2px dashed #E0E0E0; overflow: hidden; position: relative;
+    }
+    .voucher-notch-left { position: absolute; left: -12px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; border-radius: 999px; background: #EBEBEB; }
+    .voucher-notch-right { position: absolute; right: -12px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; border-radius: 999px; background: #EBEBEB; }
+    .voucher-top { padding: 20px; display: flex; align-items: center; gap: 16px; }
+    .voucher-logo { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #E23744, #B31B25); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; color: #FFFFFF; flex-shrink: 0; }
+    .voucher-info { flex: 1; }
+    .voucher-brand { font-size: 17px; font-weight: 800; color: #0C1220; }
+    .voucher-offer { font-size: 13px; color: #888; }
+    .voucher-expiry { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.25); font-size: 11px; font-weight: 600; color: #C0392B; margin-top: 6px; }
+    .voucher-divider { height: 1px; background: #F0F0F0; margin: 0 20px; }
+    .voucher-bottom { padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+    .voucher-code { flex: 1; font-size: 20px; font-weight: 800; color: #0C1220; letter-spacing: 2px; font-family: 'Courier New', monospace; }
+    .voucher-copy-btn {
+      padding: 10px 18px; border-radius: 999px; background: rgba(245,200,66,0.12); border: 1.5px solid rgba(245,200,66,0.3);
+      font-size: 13px; font-weight: 700; color: #8B6A00; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── KYC Status ──────────────────────────────────────── */
+    .kyc-card {
+      width: 335px; background: #FFFFFF; border-radius: 20px; padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid;
+    }
+    .kyc-card.pending { border-color: rgba(245,200,66,0.3); }
+    .kyc-card.verified { border-color: rgba(0,212,170,0.3); }
+    .kyc-card.failed { border-color: rgba(255,107,107,0.3); }
+    .kyc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .kyc-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .kyc-icon.pending { background: rgba(245,200,66,0.12); }
+    .kyc-icon.verified { background: rgba(0,212,170,0.12); }
+    .kyc-icon.failed { background: rgba(255,107,107,0.12); }
+    .kyc-title { font-size: 16px; font-weight: 700; color: #0C1220; }
+    .kyc-status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; margin-top: 2px; }
+    .kyc-status-pill.pending { background: rgba(245,200,66,0.12); color: #8B6A00; }
+    .kyc-status-pill.verified { background: rgba(0,212,170,0.12); color: #006B55; }
+    .kyc-status-pill.failed { background: rgba(255,107,107,0.12); color: #C0392B; }
+    .kyc-body { font-size: 13px; color: #888; line-height: 1.5; margin-bottom: 16px; }
+    .kyc-docs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .kyc-doc-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .kyc-doc-check { font-size: 14px; }
+    .kyc-doc-label { color: #555; font-weight: 500; }
+
+    /* ── Cashback Summary ────────────────────────────────── */
+    .cashback-card {
+      width: 335px; background: #FFFFFF; border-radius: 20px; padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #F0F0F0;
+    }
+    .cashback-total { text-align: center; padding: 20px 0; }
+    .cashback-total-label { font-size: 13px; color: #888; margin-bottom: 4px; }
+    .cashback-total-value { font-size: 36px; font-weight: 800; color: #006B55; font-variant-numeric: tabular-nums; }
+    .cashback-total-sub { font-size: 12px; color: #AAAAAA; margin-top: 4px; }
+    .cashback-brand-list { display: flex; flex-direction: column; gap: 0; border-top: 1px solid #F5F5F5; margin-top: 12px; }
+    .cashback-brand-row { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #F5F5F5; }
+    .cashback-brand-row:last-child { border-bottom: none; }
+    .cb-brand-tile { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #FFFFFF; }
+    .cb-brand-name { flex: 1; font-size: 14px; font-weight: 600; color: #0C1220; }
+    .cb-brand-amount { font-size: 14px; font-weight: 700; color: #006B55; font-variant-numeric: tabular-nums; }
+
+    /* ── Spending Insights ───────────────────────────────── */
+    .spending-card {
+      width: 335px; background: #FFFFFF; border-radius: 20px; padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #F0F0F0;
+    }
+    .spend-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .spend-title { font-size: 16px; font-weight: 700; color: #0C1220; }
+    .mom-chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .mom-chip.up { background: rgba(255,107,107,0.1); color: #C0392B; }
+    .mom-chip.down { background: rgba(0,212,170,0.1); color: #006B55; }
+    .spend-bar-list { display: flex; flex-direction: column; gap: 14px; }
+    .spend-bar-item { display: flex; flex-direction: column; gap: 6px; }
+    .spend-bar-top { display: flex; justify-content: space-between; font-size: 13px; }
+    .spend-bar-label { color: #555; font-weight: 500; }
+    .spend-bar-value { font-weight: 700; color: #0C1220; font-variant-numeric: tabular-nums; }
+    .spend-track { height: 8px; border-radius: 999px; background: #F0F0F0; }
+    .spend-fill { height: 100%; border-radius: 999px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="ds-header">
+    <div class="hdr-glow-gold"></div>
+    <div class="hdr-glow-blue"></div>
+    <div class="hdr-inner">
+      <div>
+        <div class="hdr-wordmark">Multipl <span>Design System</span></div>
+        <div style="color:rgba(255,255,255,0.45); font-size:15px; margin-top:6px;">v4.0 — Page 7 of 7</div>
+      </div>
+      <div class="hdr-meta">
+        <div class="hdr-badge">FINANCIAL COMPONENTS</div>
+        <p>Amount Chips · Goals · Interest · Vouchers · KYC · Cashback · Insights</p>
+      </div>
+    </div>
+    <div class="hdr-pills">
+      <div class="hdr-pill">tabular-nums always</div>
+      <div class="hdr-pill">₹ denomination chips</div>
+      <div class="hdr-pill">Teal = positive money</div>
+      <div class="hdr-pill">Gold = brand/CTA</div>
+    </div>
+  </div>
+
+  <!-- AMOUNT CHIP SELECTOR -->
+  <div class="section-card">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">Amount Chip Selector</div>
+    <div class="section-sub">Quick denomination grid + custom input combined. Selected chip = gold border + tint + outer ring. Used in invest flows.</div>
+
+    <div class="row" style="gap:48px; align-items:flex-start;">
+      <div class="col">
+        <div class="group-label">Chip Grid Only</div>
+        <div class="chip-grid">
+          <div class="amount-chip">₹500</div>
+          <div class="amount-chip selected">₹1,000</div>
+          <div class="amount-chip">₹2,000</div>
+          <div class="amount-chip">₹5,000</div>
+          <div class="amount-chip">₹10,000</div>
+          <div class="amount-chip custom">+ Custom</div>
+        </div>
+        <div class="state-label">₹1K selected</div>
+      </div>
+      <div class="col">
+        <div class="group-label">Combined with Custom Input</div>
+        <div style="display:flex; flex-direction:column; gap:12px; width:335px;">
+          <div class="amount-input-combo">
+            <span class="combo-currency">₹</span>
+            <input class="combo-input tnum" value="3,500" type="text" readonly/>
+          </div>
+          <div class="chip-grid">
+            <div class="amount-chip">₹500</div>
+            <div class="amount-chip">₹1,000</div>
+            <div class="amount-chip">₹2,000</div>
+            <div class="amount-chip">₹5,000</div>
+            <div class="amount-chip">₹10,000</div>
+            <div class="amount-chip custom selected" style="border-style:solid;">✎ Custom</div>
+          </div>
+        </div>
+        <div class="state-label">Custom amount (₹3,500)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOAL PROGRESS CARD -->
+  <div class="section-card">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">Goal Progress Card</div>
+    <div class="section-sub">Name + target + current value + linear progress bar + % complete + days left. Used in savings goals feature.</div>
+
+    <div class="row" style="gap:24px;">
+      <div class="col">
+        <div class="goal-card">
+          <div class="goal-header">
+            <div class="goal-icon" style="background:rgba(245,200,66,0.12);">🏠</div>
+            <div>
+              <div class="goal-name">Home Renovation</div>
+              <div class="goal-target">Target: ₹2,00,000</div>
+            </div>
+          </div>
+          <div class="goal-amounts">
+            <div>
+              <div class="goal-current tnum">₹1,38,000</div>
+              <div class="goal-of">saved so far</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="goal-of-val tnum">₹62,000</div>
+              <div class="goal-of">remaining</div>
+            </div>
+          </div>
+          <div class="goal-track"><div class="goal-fill" style="width:69%;"></div></div>
+          <div class="goal-meta">
+            <span class="goal-pct">69% complete</span>
+            <span class="goal-days">⏱ 47 days left</span>
+          </div>
+        </div>
+        <div class="state-label">69% — on track</div>
+      </div>
+
+      <div class="col">
+        <div class="goal-card">
+          <div class="goal-header">
+            <div class="goal-icon" style="background:rgba(74,159,255,0.12);">✈️</div>
+            <div>
+              <div class="goal-name">Europe Trip</div>
+              <div class="goal-target">Target: ₹5,00,000</div>
+            </div>
+          </div>
+          <div class="goal-amounts">
+            <div>
+              <div class="goal-current tnum">₹1,25,000</div>
+              <div class="goal-of">saved so far</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="goal-of-val tnum">₹3,75,000</div>
+              <div class="goal-of">remaining</div>
+            </div>
+          </div>
+          <div class="goal-track"><div class="goal-fill" style="width:25%; background:linear-gradient(90deg,#4A9FFF,#1A6FDF);"></div></div>
+          <div class="goal-meta">
+            <span class="goal-pct" style="color:#4A9FFF;">25% complete</span>
+            <span class="goal-days">⏱ 180 days left</span>
+          </div>
+        </div>
+        <div class="state-label">25% — early stage</div>
+      </div>
+
+      <div class="col">
+        <div class="goal-card" style="border:1px solid rgba(0,212,170,0.3);">
+          <div class="goal-header">
+            <div class="goal-icon" style="background:rgba(0,212,170,0.12);">🎓</div>
+            <div>
+              <div class="goal-name">Child's Education</div>
+              <div class="goal-target">Target: ₹10,00,000</div>
+            </div>
+          </div>
+          <div class="goal-amounts">
+            <div>
+              <div class="goal-current tnum" style="color:#006B55;">₹10,02,450</div>
+              <div class="goal-of">saved</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="goal-of-val tnum" style="color:#006B55;">✓ Complete!</div>
+            </div>
+          </div>
+          <div class="goal-track"><div class="goal-fill" style="width:100%; background:linear-gradient(90deg,#00D4AA,#009980);"></div></div>
+          <div class="goal-meta">
+            <span class="goal-pct" style="color:#006B55;">✓ Goal Achieved</span>
+            <span style="font-size:12px; color:#00D4AA;">🎉 Congratulations!</span>
+          </div>
+        </div>
+        <div class="state-label">100% — goal achieved</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTEREST / EARNINGS DISPLAY -->
+  <div class="section-card">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">Interest &amp; Earning Display</div>
+    <div class="section-sub">Dark card with gold rate highlight. Daily, monthly, and annual earning projections. Used in portfolio and investment detail screens.</div>
+
+    <div class="row" style="gap:24px;">
+      <div class="col">
+        <div class="earnings-card">
+          <div class="earn-glow-gold"></div>
+          <div style="position:relative; z-index:1;">
+            <div class="earn-title">Annual Earning Rate</div>
+            <div class="earn-rate">8.4%</div>
+            <div class="earn-subtitle">Compounded daily on invested balance</div>
+            <div class="earn-row">
+              <span class="earn-row-label">Daily earnings</span>
+              <span class="earn-row-value teal tnum">+₹28.75</span>
+            </div>
+            <div class="earn-row">
+              <span class="earn-row-label">This month</span>
+              <span class="earn-row-value teal tnum">+₹862.50</span>
+            </div>
+            <div class="earn-row">
+              <span class="earn-row-label">Annual projection</span>
+              <span class="earn-row-value gold tnum">+₹10,500</span>
+            </div>
+            <div class="earn-row">
+              <span class="earn-row-label">Current balance</span>
+              <span class="earn-row-value tnum">₹1,24,350</span>
+            </div>
+          </div>
+        </div>
+        <div class="state-label">Full earnings breakdown</div>
+      </div>
+
+      <!-- Inline rate display -->
+      <div class="col">
+        <div style="display:flex; flex-direction:column; gap:12px; width:280px;">
+          <div style="background:#0C1220; border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:12px;">
+            <div style="flex:1;">
+              <div style="font-size:12px; color:rgba(255,255,255,0.45); margin-bottom:4px;">You earn today</div>
+              <div style="font-size:22px; font-weight:800; color:#00D4AA; font-variant-numeric:tabular-nums;">+₹28.75</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:12px; color:rgba(255,255,255,0.45);">Rate</div>
+              <div style="font-size:18px; font-weight:800; background:linear-gradient(135deg,#F7D464,#F0A832); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">8.4%</div>
+            </div>
+          </div>
+          <div style="background:#FFFFFF; border-radius:16px; padding:16px 20px; border:1px solid #F0F0F0; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div style="font-size:12px; color:#888; margin-bottom:4px;">Monthly projection</div>
+            <div style="display:flex; align-items:baseline; gap:6px;">
+              <div style="font-size:24px; font-weight:800; color:#006B55; font-variant-numeric:tabular-nums;">₹862</div>
+              <div style="font-size:13px; color:#888;">/ month</div>
+            </div>
+            <div style="font-size:12px; color:#AAAAAA; margin-top:4px;">Based on ₹1,24,350 balance</div>
+          </div>
+        </div>
+        <div class="state-label">Compact display variants</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOUCHER / COUPON CARD -->
+  <div class="section-card">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Voucher / Coupon Card</div>
+    <div class="section-sub">Dashed border, notch cutouts on sides, QR or code display, expiry badge. Copy button uses gold tint CTA style.</div>
+
+    <div class="row" style="gap:32px; align-items:flex-start;">
+      <div class="col">
+        <div class="group-label">Standard Voucher</div>
+        <div class="voucher-card">
+          <div class="voucher-notch-left"></div>
+          <div class="voucher-notch-right"></div>
+          <div class="voucher-top">
+            <div class="voucher-logo">Z</div>
+            <div class="voucher-info">
+              <div class="voucher-brand">Zomato</div>
+              <div class="voucher-offer">20% off · Max ₹100 · Min order ₹299</div>
+              <div class="voucher-expiry">⏱ Expires 28 Feb 2026</div>
+            </div>
+          </div>
+          <div class="voucher-divider"></div>
+          <div class="voucher-bottom">
+            <div class="voucher-code">MULTIPL20</div>
+            <button class="voucher-copy-btn">Copy Code</button>
+          </div>
+        </div>
+        <div class="state-label">Active voucher</div>
+      </div>
+
+      <div class="col">
+        <div class="group-label">Expired Voucher</div>
+        <div class="voucher-card" style="opacity:0.55;">
+          <div class="voucher-notch-left"></div>
+          <div class="voucher-notch-right"></div>
+          <div class="voucher-top">
+            <div class="voucher-logo" style="background:linear-gradient(135deg,#888,#555);">S</div>
+            <div class="voucher-info">
+              <div class="voucher-brand">Swiggy</div>
+              <div class="voucher-offer">15% off · Max ₹75 · Min order ₹199</div>
+              <div class="voucher-expiry" style="background:rgba(0,0,0,0.06); border-color:rgba(0,0,0,0.1); color:#888;">✕ Expired 15 Jan 2026</div>
+            </div>
+          </div>
+          <div class="voucher-divider"></div>
+          <div class="voucher-bottom">
+            <div class="voucher-code" style="color:#AAAAAA;">SWGY15OFF</div>
+            <button class="voucher-copy-btn" style="opacity:0.5; cursor:not-allowed;">Expired</button>
+          </div>
+        </div>
+        <div class="state-label">Expired state</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KYC STATUS -->
+  <div class="section-card">
+    <div class="section-label">Section 05</div>
+    <div class="section-title">KYC / Verification Status</div>
+    <div class="section-sub">Three states: Pending (gold), Verified (teal ✓), Failed (coral + retry). Each shows document checklist inline.</div>
+
+    <div class="row" style="gap:24px;">
+      <!-- Pending -->
+      <div class="col">
+        <div class="kyc-card pending">
+          <div class="kyc-header">
+            <div class="kyc-icon pending">⏳</div>
+            <div>
+              <div class="kyc-title">KYC Under Review</div>
+              <div class="kyc-status-pill pending">● Pending</div>
+            </div>
+          </div>
+          <div class="kyc-body">Your documents have been submitted and are being verified. This usually takes 1–2 business days.</div>
+          <div class="kyc-docs">
+            <div class="kyc-doc-row"><span class="kyc-doc-check" style="color:#006B55;">✓</span><span class="kyc-doc-label">PAN Card verified</span></div>
+            <div class="kyc-doc-row"><span class="kyc-doc-check" style="color:#F5C842;">⏳</span><span class="kyc-doc-label">Aadhaar under review</span></div>
+            <div class="kyc-doc-row"><span class="kyc-doc-check" style="color:#AAAAAA;">○</span><span class="kyc-doc-label" style="color:#BBBBBB;">Bank account pending</span></div>
+          </div>
+        </div>
+        <div class="state-label">Pending (2/3 done)</div>
+      </div>
+
+      <!-- Verified -->
+      <div class="col">
+        <div class="kyc-card verified">
+          <div class="kyc-header">
+            <div class="kyc-icon verified">✓</div>
+            <div>
+              <div class="kyc-title">KYC Complete</div>
+              <div class="kyc-status-pill verified">✓ Verified</div>
+            </div>
+          </div>
+          <div class="kyc-body">Your identity has been verified. You can now invest without any limits.</div>
+          <div class="kyc-docs">
+            <div class="kyc-doc-row"><span class="kyc-doc-check" style="color:#006B55;">✓</span><span class="kyc-doc-label">PAN Card</span></div>
+            <div class="kyc-doc-row"><span class="kyc-doc-check" style="color:#006B55;">✓</span><span class="kyc-doc-label">Aadhaar Card</span></div>
+            <div class="kyc-doc-row"><span class="kyc-doc-check" style="color:#006B55;">✓</span><span class="kyc-doc-label">Bank Account</span></div>
+          </div>
+        </div>
+        <div class="state-label">Verified ✓</div>
+      </div>
+
+      <!-- Failed -->
+      <div class="col">
+        <div class="kyc-card failed">
+          <div class="kyc-header">
+            <div class="kyc-icon failed">✕</div>
+            <div>
+              <div class="kyc-title">Verification Failed</div>
+              <div class="kyc-status-pill failed">✕ Failed</div>
+            </div>
+          </div>
+          <div class="kyc-body">We couldn't verify your Aadhaar details. The name doesn't match our records. Please resubmit.</div>
+          <div class="kyc-docs">
+            <div class="kyc-doc-row"><span class="kyc-doc-check" style="color:#006B55;">✓</span><span class="kyc-doc-label">PAN Card</span></div>
+            <div class="kyc-doc-row"><span class="kyc-doc-check" style="color:#FF6B6B;">✕</span><span class="kyc-doc-label" style="color:#FF6B6B;">Aadhaar — name mismatch</span></div>
+            <div class="kyc-doc-row"><span class="kyc-doc-check" style="color:#AAAAAA;">○</span><span class="kyc-doc-label" style="color:#BBBBBB;">Bank Account</span></div>
+          </div>
+          <button style="width:100%; height:44px; border-radius:999px; background:rgba(255,107,107,0.1); border:1.5px solid rgba(255,107,107,0.3); color:#FF6B6B; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif;">Retry Verification</button>
+        </div>
+        <div class="state-label">Failed — with retry</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASHBACK SUMMARY -->
+  <div class="section-card">
+    <div class="section-label">Section 06</div>
+    <div class="section-title">Cashback Summary Card</div>
+    <div class="section-sub">Total earned in teal, per-brand breakdown list, Redeem CTA. Used in wallet and rewards screens.</div>
+
+    <div class="row" style="gap:32px;">
+      <div class="col">
+        <div class="cashback-card">
+          <div class="cashback-total">
+            <div class="cashback-total-label">Total Cashback Earned</div>
+            <div class="cashback-total-value tnum">₹4,230.50</div>
+            <div class="cashback-total-sub">Since you joined · 8 brands</div>
+          </div>
+          <div class="cashback-brand-list">
+            <div class="cashback-brand-row">
+              <div class="cb-brand-tile" style="background:linear-gradient(135deg,#E23744,#B31B25);">Z</div>
+              <div class="cb-brand-name">Zomato</div>
+              <div class="cb-brand-amount tnum">₹1,420.00</div>
+            </div>
+            <div class="cashback-brand-row">
+              <div class="cb-brand-tile" style="background:linear-gradient(135deg,#FC8019,#E25F01);">S</div>
+              <div class="cb-brand-name">Swiggy</div>
+              <div class="cb-brand-amount tnum">₹980.50</div>
+            </div>
+            <div class="cashback-brand-row">
+              <div class="cb-brand-tile" style="background:linear-gradient(135deg,#2D2D2D,#1A1A1A);">A</div>
+              <div class="cb-brand-name">Amazon</div>
+              <div class="cb-brand-amount tnum">₹830.00</div>
+            </div>
+            <div class="cashback-brand-row">
+              <div class="cb-brand-tile" style="background:linear-gradient(135deg,#0078D4,#005CA8);">F</div>
+              <div class="cb-brand-name">Flipkart</div>
+              <div class="cb-brand-amount tnum">₹590.00</div>
+            </div>
+          </div>
+          <div style="margin-top:16px; padding-top:16px; border-top:1px solid #F5F5F5;">
+            <button style="width:100%; height:48px; border-radius:999px; background:linear-gradient(135deg,#F7D464,#F0A832); border:none; color:#0C1220; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif;">Redeem ₹4,230.50</button>
+          </div>
+        </div>
+        <div class="state-label">Full cashback summary</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPENDING INSIGHTS -->
+  <div class="section-card">
+    <div class="section-label">Section 07</div>
+    <div class="section-title">Spending Insights Card</div>
+    <div class="section-sub">Top 3 spend categories with horizontal bars. MoM chip shows increase/decrease. Used in analytics and home screen widgets.</div>
+
+    <div class="row" style="gap:32px;">
+      <div class="col">
+        <div class="spending-card">
+          <div class="spend-header">
+            <div class="spend-title">Top Spending</div>
+            <div class="mom-chip up">↑ 18% vs last month</div>
+          </div>
+          <div class="spend-bar-list">
+            <div class="spend-bar-item">
+              <div class="spend-bar-top">
+                <span class="spend-bar-label">🍕 Food &amp; Dining</span>
+                <span class="spend-bar-value tnum">₹3,840</span>
+              </div>
+              <div class="spend-track"><div class="spend-fill" style="width:100%; background:linear-gradient(90deg,#FF8A50,#E55A10);"></div></div>
+            </div>
+            <div class="spend-bar-item">
+              <div class="spend-bar-top">
+                <span class="spend-bar-label">🛍 Shopping</span>
+                <span class="spend-bar-value tnum">₹2,450</span>
+              </div>
+              <div class="spend-track"><div class="spend-fill" style="width:64%; background:linear-gradient(90deg,#7B8FFF,#4A5EE0);"></div></div>
+            </div>
+            <div class="spend-bar-item">
+              <div class="spend-bar-top">
+                <span class="spend-bar-label">🚕 Cabs &amp; Travel</span>
+                <span class="spend-bar-value tnum">₹1,180</span>
+              </div>
+              <div class="spend-track"><div class="spend-fill" style="width:31%; background:linear-gradient(90deg,#00D4AA,#009980);"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:16px; padding-top:12px; border-top:1px solid #F5F5F5; font-size:12px; color:#AAAAAA; text-align:center;">February 2026 · Based on linked brands only</div>
+        </div>
+        <div class="state-label">Month over month ↑18%</div>
+      </div>
+
+      <div class="col">
+        <div class="spending-card">
+          <div class="spend-header">
+            <div class="spend-title">Top Spending</div>
+            <div class="mom-chip down">↓ 8% vs last month</div>
+          </div>
+          <div class="spend-bar-list">
+            <div class="spend-bar-item">
+              <div class="spend-bar-top">
+                <span class="spend-bar-label">🍕 Food &amp; Dining</span>
+                <span class="spend-bar-value tnum">₹2,210</span>
+              </div>
+              <div class="spend-track"><div class="spend-fill" style="width:80%; background:linear-gradient(90deg,#FF8A50,#E55A10);"></div></div>
+            </div>
+            <div class="spend-bar-item">
+              <div class="spend-bar-top">
+                <span class="spend-bar-label">👗 Apparel</span>
+                <span class="spend-bar-value tnum">₹1,650</span>
+              </div>
+              <div class="spend-track"><div class="spend-fill" style="width:60%; background:linear-gradient(90deg,#FF6B9D,#CC3370);"></div></div>
+            </div>
+            <div class="spend-bar-item">
+              <div class="spend-bar-top">
+                <span class="spend-bar-label">🛍 Shopping</span>
+                <span class="spend-bar-value tnum">₹920</span>
+              </div>
+              <div class="spend-track"><div class="spend-fill" style="width:33%; background:linear-gradient(90deg,#7B8FFF,#4A5EE0);"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:16px; padding-top:12px; border-top:1px solid #F5F5F5; font-size:12px; color:#AAAAAA; text-align:center;">January 2026 · Based on linked brands only</div>
+        </div>
+        <div class="state-label">Month over month ↓8%</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

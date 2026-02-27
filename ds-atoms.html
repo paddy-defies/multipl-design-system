@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=1400"/>
+  <title>Multipl DS v4 — Atoms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="stylesheet" href="tokens-v3.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 1400px;
+      font-family: 'DM Sans', sans-serif;
+      background: #EBEBEB;
+      color: #1A1A1A;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page { width: 1400px; padding: 48px; display: flex; flex-direction: column; gap: 32px; }
+    .section-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: #888; margin-bottom: 24px;
+    }
+    .section-title { font-size: 22px; font-weight: 800; color: #0C1220; letter-spacing: -0.4px; margin-bottom: 8px; }
+    .section-sub { font-size: 14px; color: #6B6B6B; margin-bottom: 32px; }
+    .divider-line { height: 1px; background: #F0F0F0; margin: 28px 0; }
+    .group-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #AAAAAA; margin-bottom: 16px; }
+    .row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: 12px; }
+    .state-label { font-size: 10px; color: #AAAAAA; font-weight: 600; letter-spacing: 0.5px; text-align: center; margin-top: 6px; }
+
+    /* ── Page Header ─────────────────────────────────────── */
+    .ds-header {
+      background: #0C1220; border-radius: 24px; padding: 48px;
+      position: relative; overflow: hidden;
+    }
+    .hdr-glow-gold { position: absolute; top: -60px; left: 200px; width: 400px; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.18) 0%, transparent 70%); pointer-events: none; }
+    .hdr-glow-blue { position: absolute; top: -80px; right: 0; width: 500px; height: 400px; border-radius: 50%; background: radial-gradient(ellipse, rgba(74,159,255,0.14) 0%, transparent 70%); pointer-events: none; }
+    .hdr-glow-teal { position: absolute; bottom: -40px; right: 100px; width: 300px; height: 200px; border-radius: 50%; background: radial-gradient(ellipse, rgba(0,212,170,0.12) 0%, transparent 70%); pointer-events: none; }
+    .hdr-inner { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; }
+    .hdr-wordmark { font-size: 48px; font-weight: 800; color: #FFFFFF; letter-spacing: -1px; line-height: 1; }
+    .hdr-wordmark span { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hdr-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .hdr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); border-radius: 999px; font-size: 12px; font-weight: 700; color: #F5C842; letter-spacing: 1px; }
+    .hdr-meta p { font-size: 13px; color: rgba(255,255,255,0.45); }
+    .hdr-pills { display: flex; gap: 12px; margin-top: 32px; position: relative; z-index: 2; }
+    .hdr-pill { padding: 10px 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 56px; padding: 0 32px; border-radius: 999px;
+      background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%);
+      color: #0C1220; font-size: 16px; font-weight: 700; border: none; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(245,200,66,0.35);
+      font-family: 'DM Sans', sans-serif; letter-spacing: -0.2px;
+    }
+    .btn-primary.loading { opacity: 0.85; position: relative; }
+    .btn-primary.disabled { opacity: 0.38; cursor: not-allowed; box-shadow: none; }
+    .btn-secondary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 56px; padding: 0 32px; border-radius: 999px;
+      background: transparent; color: #0C1220;
+      border: 2px solid #0C1220; font-size: 16px; font-weight: 700; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-secondary.disabled { opacity: 0.38; cursor: not-allowed; }
+    .btn-tertiary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      height: 48px; padding: 0 24px; border-radius: 999px;
+      background: transparent; color: #0C1220;
+      border: none; font-size: 15px; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; text-decoration: underline; text-underline-offset: 3px;
+    }
+    .btn-destructive {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 56px; padding: 0 32px; border-radius: 999px;
+      background: rgba(255,107,107,0.12); color: #FF6B6B;
+      border: 1.5px solid rgba(255,107,107,0.3); font-size: 16px; font-weight: 700; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-icon {
+      width: 44px; height: 44px; border-radius: 999px;
+      background: #F5F5F5; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .btn-icon.gold { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); }
+    .btn-icon.outline { background: transparent; border: 1.5px solid #DADADA; }
+    .fab {
+      width: 56px; height: 56px; border-radius: 999px;
+      background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%);
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 24px; box-shadow: 0 6px 24px rgba(245,200,66,0.45);
+    }
+    .fab.extended {
+      width: auto; padding: 0 24px; gap: 8px;
+      font-size: 15px; font-weight: 700; color: #0C1220; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-group {
+      display: inline-flex; border-radius: 12px; overflow: hidden;
+      border: 1.5px solid #E0E0E0; background: #F5F5F5;
+    }
+    .btn-seg {
+      padding: 10px 20px; font-size: 14px; font-weight: 600; color: #888;
+      border: none; cursor: pointer; background: transparent; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-seg.active { background: #FFFFFF; color: #0C1220; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-radius: 10px; }
+    .spinner-ring {
+      width: 20px; height: 20px; border: 2.5px solid rgba(12,18,32,0.2);
+      border-top-color: #0C1220; border-radius: 50%;
+      animation: spin 0.7s linear infinite; display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Dark button surface ──────────────────────────────── */
+    .dark-surface {
+      background: #0C1220; border-radius: 20px; padding: 32px;
+      display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+    }
+    .btn-primary-dark {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 56px; padding: 0 32px; border-radius: 999px;
+      background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%);
+      color: #0C1220; font-size: 16px; font-weight: 700; border: none; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(245,200,66,0.35); font-family: 'DM Sans', sans-serif;
+    }
+    .btn-secondary-dark {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 56px; padding: 0 32px; border-radius: 999px;
+      background: rgba(255,255,255,0.08); color: #FFFFFF;
+      border: 1.5px solid rgba(255,255,255,0.2); font-size: 16px; font-weight: 700; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-ghost-dark {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 48px; padding: 0 24px; border-radius: 999px;
+      background: transparent; color: rgba(255,255,255,0.65);
+      border: none; font-size: 15px; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── Avatars ──────────────────────────────────────────── */
+    .avatar {
+      border-radius: 999px; background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #0C1220; flex-shrink: 0; position: relative;
+    }
+    .avatar.xs { width: 24px; height: 24px; font-size: 9px; }
+    .avatar.sm { width: 32px; height: 32px; font-size: 11px; }
+    .avatar.md { width: 40px; height: 40px; font-size: 14px; }
+    .avatar.lg { width: 48px; height: 48px; font-size: 16px; }
+    .avatar.xl { width: 64px; height: 64px; font-size: 20px; }
+    .avatar.blue { background: linear-gradient(135deg, #4A9FFF 0%, #1A6FDF 100%); color: #FFFFFF; }
+    .avatar.teal { background: linear-gradient(135deg, #00D4AA 0%, #009980 100%); color: #FFFFFF; }
+    .avatar.coral { background: linear-gradient(135deg, #FF6B6B 0%, #E04040 100%); color: #FFFFFF; }
+    .status-dot {
+      position: absolute; bottom: 0; right: 0; border: 2px solid #FFFFFF;
+      border-radius: 999px;
+    }
+    .status-dot.online { width: 10px; height: 10px; background: #00D4AA; }
+    .status-dot.offline { width: 10px; height: 10px; background: #AAAAAA; }
+    .status-dot.away { width: 10px; height: 10px; background: #F5C842; }
+    .avatar-stack { display: flex; }
+    .avatar-stack .avatar { border: 2px solid #FFFFFF; margin-left: -8px; }
+    .avatar-stack .avatar:first-child { margin-left: 0; }
+    .avatar-overflow {
+      width: 36px; height: 36px; border-radius: 999px;
+      background: #F0F0F0; border: 2px solid #FFFFFF;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #666; margin-left: -8px;
+    }
+
+    /* ── Badges ───────────────────────────────────────────── */
+    .badge-dot { width: 8px; height: 8px; border-radius: 999px; background: #FF6B6B; }
+    .badge-num {
+      min-width: 20px; height: 20px; border-radius: 999px; background: #FF6B6B;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #FFFFFF; padding: 0 6px;
+    }
+    .badge-lg {
+      min-width: 24px; height: 24px; border-radius: 999px; background: #FF6B6B;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #FFFFFF; padding: 0 7px;
+    }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    }
+    .status-pill.active { background: rgba(0,212,170,0.12); color: #006B55; border: 1px solid rgba(0,212,170,0.3); }
+    .status-pill.inactive { background: #F5F5F5; color: #888; border: 1px solid #E5E5E5; }
+    .status-pill.pending { background: rgba(245,200,66,0.12); color: #8B6A00; border: 1px solid rgba(245,200,66,0.3); }
+    .status-pill.error { background: rgba(255,107,107,0.12); color: #C0392B; border: 1px solid rgba(255,107,107,0.3); }
+    .status-dot-sm { width: 6px; height: 6px; border-radius: 999px; }
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.3);
+      font-size: 11px; font-weight: 700; color: #FF6B6B; letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 999px; background: #FF6B6B; animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
+
+    /* ── Dividers ─────────────────────────────────────────── */
+    .divider-full { height: 1px; background: #E8E8E8; width: 100%; }
+    .divider-inset { height: 1px; background: #E8E8E8; width: calc(100% - 16px); margin-left: 16px; }
+    .divider-labeled {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .divider-labeled::before, .divider-labeled::after {
+      content: ''; flex: 1; height: 1px; background: #E8E8E8;
+    }
+    .divider-labeled span { font-size: 12px; color: #AAAAAA; font-weight: 600; white-space: nowrap; }
+
+    /* ── Spinners ─────────────────────────────────────────── */
+    .spinner-gold {
+      width: 40px; height: 40px; border: 3px solid rgba(245,200,66,0.2);
+      border-top-color: #F5C842; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .spinner-sm {
+      width: 16px; height: 16px; border: 2px solid rgba(12,18,32,0.15);
+      border-top-color: #0C1220; border-radius: 50%;
+      animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle;
+    }
+    .spinner-overlay {
+      width: 280px; height: 160px; border-radius: 20px;
+      background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.6);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    }
+    .spinner-overlay p { font-size: 13px; color: #555; font-weight: 500; }
+    .spinner-page {
+      width: 56px; height: 56px; border: 3px solid rgba(245,200,66,0.2);
+      border-top-color: #F5C842; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* ── Icon Grid ────────────────────────────────────────── */
+    .icon-grid { display: flex; flex-wrap: wrap; gap: 0; }
+    .icon-cell {
+      width: 64px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 8px;
+      border-radius: 12px;
+    }
+    .icon-cell:hover { background: #F5F5F5; }
+    .icon-box {
+      width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; border-radius: 10px;
+    }
+    .icon-box.gold { color: #F5C842; }
+    .icon-box.mid { color: rgba(12,18,32,0.55); }
+    .icon-box.light { color: rgba(12,18,32,0.28); }
+    .icon-box.teal-c { color: #006B55; }
+    .icon-box.coral-c { color: #FF6B6B; }
+    .icon-box.blue-c { color: #4A9FFF; }
+    .icon-name { font-size: 9px; color: #BBBBBB; text-align: center; line-height: 1.2; }
+
+    /* Spec annotation */
+    .spec-box {
+      background: #F8F8F8; border-radius: 12px; padding: 16px 20px;
+      font-size: 13px; color: #555; line-height: 1.6; border-left: 3px solid #F5C842;
+    }
+    .spec-box strong { color: #0C1220; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="ds-header">
+    <div class="hdr-glow-gold"></div>
+    <div class="hdr-glow-blue"></div>
+    <div class="hdr-glow-teal"></div>
+    <div class="hdr-inner">
+      <div>
+        <div class="hdr-wordmark">Multipl <span>Design System</span></div>
+        <div style="color:rgba(255,255,255,0.45); font-size:15px; margin-top:6px;">v4.0 — Page 1 of 7</div>
+      </div>
+      <div class="hdr-meta">
+        <div class="hdr-badge">ATOMS</div>
+        <p>Buttons · Avatars · Badges · Dividers · Spinners · Icons</p>
+      </div>
+    </div>
+    <div class="hdr-pills">
+      <div class="hdr-pill">44×44pt min touch target</div>
+      <div class="hdr-pill">375pt canvas</div>
+      <div class="hdr-pill">8px spacing grid</div>
+      <div class="hdr-pill">DM Sans · Playfair Display</div>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="section-card">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">Buttons — Full Library</div>
+    <div class="section-sub">All variants, states, and surfaces. Height: Primary/Secondary = 56px, Tertiary = 48px. Min touch target = 44×44pt.</div>
+
+    <div class="group-label">Primary Button — Light Surface</div>
+    <div class="row" style="align-items:flex-start;">
+      <div class="col" style="align-items:center;">
+        <button class="btn-primary">Invest Now</button>
+        <div class="state-label">Default</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-primary loading">
+          <span class="spinner-ring"></span> Loading…
+        </button>
+        <div class="state-label">Loading</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-primary disabled" disabled>Invest Now</button>
+        <div class="state-label">Disabled</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-primary" style="height:44px; padding: 0 24px; font-size:14px;">Continue</button>
+        <div class="state-label">Small (44px)</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Secondary &amp; Tertiary — Light Surface</div>
+    <div class="row" style="align-items:flex-start;">
+      <div class="col" style="align-items:center;">
+        <button class="btn-secondary">Add Funds</button>
+        <div class="state-label">Secondary Default</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-secondary disabled" disabled>Add Funds</button>
+        <div class="state-label">Secondary Disabled</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-tertiary">Learn More</button>
+        <div class="state-label">Tertiary / Ghost</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-destructive">Delete Account</button>
+        <div class="state-label">Destructive</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Buttons on Dark Surface</div>
+    <div class="dark-surface">
+      <div class="col" style="align-items:center;">
+        <button class="btn-primary-dark">Invest Now</button>
+        <div class="state-label" style="color:rgba(255,255,255,0.4);">Primary</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-secondary-dark">View Details</button>
+        <div class="state-label" style="color:rgba(255,255,255,0.4);">Secondary</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-ghost-dark">Skip</button>
+        <div class="state-label" style="color:rgba(255,255,255,0.4);">Ghost</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Icon-Only Buttons &amp; FAB</div>
+    <div class="row" style="align-items:flex-start;">
+      <div class="col" style="align-items:center;">
+        <button class="btn-icon gold">+</button>
+        <div class="state-label">Icon Gold</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-icon">←</button>
+        <div class="state-label">Icon Filled</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="btn-icon outline">✕</button>
+        <div class="state-label">Icon Outline</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="fab">+</button>
+        <div class="state-label">FAB (56px)</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <button class="fab extended">✦ Add Money</button>
+        <div class="state-label">FAB Extended</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Segmented / Button Group</div>
+    <div class="row">
+      <div class="btn-group">
+        <button class="btn-seg active">1M</button>
+        <button class="btn-seg">3M</button>
+        <button class="btn-seg">6M</button>
+        <button class="btn-seg">1Y</button>
+        <button class="btn-seg">All</button>
+      </div>
+      <div class="btn-group">
+        <button class="btn-seg">Daily</button>
+        <button class="btn-seg active">Weekly</button>
+        <button class="btn-seg">Monthly</button>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="spec-box">
+      <strong>Button Tokens:</strong> Primary = goldGrad bg, #0C1220 text, glowGold shadow, radiusFull, height 56px.<br/>
+      Secondary = transparent bg, borderStrong, same height. Tertiary = text-only with underline.<br/>
+      Disabled = opacity 0.38 on any variant. Loading = spinner replaces label. Min touch = 44×44pt.
+    </div>
+  </div>
+
+  <!-- AVATARS -->
+  <div class="section-card">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">Avatars</div>
+    <div class="section-sub">Circular user representations with initials fallback, status dot, and stack variants. Sizes: XS(24) S(32) M(40) L(48) XL(64).</div>
+
+    <div class="group-label">Size Scale — Initials Fallback</div>
+    <div class="row" style="align-items:flex-end;">
+      <div class="col" style="align-items:center;">
+        <div class="avatar xs">PR</div>
+        <div class="state-label">XS · 24px</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="avatar sm">PR</div>
+        <div class="state-label">S · 32px</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="avatar md">PR</div>
+        <div class="state-label">M · 40px</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="avatar lg">PR</div>
+        <div class="state-label">L · 48px</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="avatar xl">PR</div>
+        <div class="state-label">XL · 64px</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Color Variants (M size)</div>
+    <div class="row">
+      <div class="col" style="align-items:center;"><div class="avatar md">PR</div><div class="state-label">Gold</div></div>
+      <div class="col" style="align-items:center;"><div class="avatar md blue">AK</div><div class="state-label">Blue</div></div>
+      <div class="col" style="align-items:center;"><div class="avatar md teal">SK</div><div class="state-label">Teal</div></div>
+      <div class="col" style="align-items:center;"><div class="avatar md coral">RB</div><div class="state-label">Coral</div></div>
+      <div class="col" style="align-items:center;"><div class="avatar md" style="background:#E8E8E8; color:#555;">+5</div><div class="state-label">Overflow</div></div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Status Dot Indicator</div>
+    <div class="row">
+      <div class="col" style="align-items:center;">
+        <div class="avatar lg" style="position:relative;">PR<div class="status-dot online"></div></div>
+        <div class="state-label">Online</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="avatar lg" style="position:relative;">AK<div class="status-dot offline"></div></div>
+        <div class="state-label">Offline</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="avatar lg" style="position:relative;">SK<div class="status-dot away"></div></div>
+        <div class="state-label">Away</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Avatar Stack</div>
+    <div class="row">
+      <div class="avatar-stack">
+        <div class="avatar md">PR</div>
+        <div class="avatar md blue">AK</div>
+        <div class="avatar md teal">SK</div>
+        <div class="avatar md coral">RB</div>
+        <div class="avatar-overflow">+8</div>
+      </div>
+      <div style="font-size:12px; color:#888; margin-left:8px;">Members (stacked, -8px overlap)</div>
+    </div>
+  </div>
+
+  <!-- BADGES & STATUS -->
+  <div class="section-card">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">Badges &amp; Status</div>
+    <div class="section-sub">Notification dots, numbered badges, status pills, and live badge. Used to convey counts and system states.</div>
+
+    <div class="group-label">Notification &amp; Count Badges</div>
+    <div class="row">
+      <div class="col" style="align-items:center;">
+        <div class="badge-dot"></div>
+        <div class="state-label">Notif Dot</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="badge-num">3</div>
+        <div class="state-label">Badge (small)</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="badge-num">12</div>
+        <div class="state-label">Badge (2-digit)</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="badge-lg">99+</div>
+        <div class="state-label">Badge (large)</div>
+      </div>
+      <div class="col" style="align-items:center; position:relative;">
+        <div style="position:relative; display:inline-block;">
+          <button class="btn-icon">🔔</button>
+          <div class="badge-num" style="position:absolute; top:-4px; right:-4px;">5</div>
+        </div>
+        <div class="state-label">On Icon Button</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Status Pills</div>
+    <div class="row">
+      <div class="col" style="align-items:center;">
+        <div class="status-pill active"><span class="status-dot-sm" style="background:#00D4AA;"></span>Active</div>
+        <div class="state-label">Active</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="status-pill inactive"><span class="status-dot-sm" style="background:#AAAAAA;"></span>Inactive</div>
+        <div class="state-label">Inactive</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="status-pill pending"><span class="status-dot-sm" style="background:#F5C842;"></span>Pending</div>
+        <div class="state-label">Pending</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="status-pill error"><span class="status-dot-sm" style="background:#FF6B6B;"></span>Failed</div>
+        <div class="state-label">Failed</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+        <div class="state-label">Live Badge</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVIDERS -->
+  <div class="section-card">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Dividers</div>
+    <div class="section-sub">Three divider patterns: full-bleed, inset (16px from left), and labeled (centered text).</div>
+
+    <div class="group-label">Full-Bleed Divider</div>
+    <div style="padding: 12px 0;">
+      <div class="divider-full"></div>
+    </div>
+    <div style="font-size: 12px; color: #AAAAAA; margin-top: 4px;">1px height · #E8E8E8 · width 100%</div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Inset Divider (16px left margin)</div>
+    <div style="padding: 12px 0;">
+      <div class="divider-inset"></div>
+    </div>
+    <div style="font-size: 12px; color: #AAAAAA; margin-top: 4px;">Used in list items — aligns content edge to right</div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Labeled Divider</div>
+    <div style="padding: 12px 0;">
+      <div class="divider-labeled"><span>This month</span></div>
+    </div>
+    <div style="padding: 8px 0;">
+      <div class="divider-labeled"><span>OR</span></div>
+    </div>
+    <div style="font-size: 12px; color: #AAAAAA; margin-top: 4px;">Centered label with equal-weight lines — used in lists and auth flows</div>
+  </div>
+
+  <!-- SPINNERS -->
+  <div class="section-card">
+    <div class="section-label">Section 05</div>
+    <div class="section-title">Spinners &amp; Loading States</div>
+    <div class="section-sub">Three spinner sizes for different contexts. Gold ring = Multipl brand. Page-level spinner uses frosted overlay.</div>
+
+    <div class="row" style="align-items:flex-start; gap:40px;">
+      <div class="col" style="align-items:center;">
+        <div class="spinner-sm"></div>
+        <div class="state-label">Inline (16px)</div>
+        <div style="font-size:11px; color:#AAAAAA; text-align:center; max-width:80px; margin-top:4px;">Inside buttons, form fields</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="spinner-gold"></div>
+        <div class="state-label">Standard (40px)</div>
+        <div style="font-size:11px; color:#AAAAAA; text-align:center; max-width:80px; margin-top:4px;">Card and section loading</div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="spinner-overlay">
+          <div class="spinner-page"></div>
+          <p>Loading your portfolio…</p>
+        </div>
+        <div class="state-label">Page-Level (frosted overlay)</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="spec-box">
+      <strong>Spinner Spec:</strong> Gold (#F5C842) ring with rgba(245,200,66,0.2) track · 3px stroke · CSS spin animation 0.8s linear.<br/>
+      Dark spinner: #0C1220 ring on rgba(12,18,32,0.15) track · 2.5px stroke. Page overlay: white 70% opacity + blur(12px).
+    </div>
+  </div>
+
+  <!-- ICONS -->
+  <div class="section-card">
+    <div class="section-label">Section 06</div>
+    <div class="section-title">Icon Usage Rules</div>
+    <div class="section-sub">24px grid, 5 semantic color variants. Always pair with a minimum 44×44pt touch target. Never use icons alone without labels for critical actions.</div>
+
+    <div class="group-label">Color Variants (24px baseline)</div>
+    <div class="icon-grid">
+      <div class="icon-cell"><div class="icon-box gold">★</div><div class="icon-name">Gold<br/>CTA/brand</div></div>
+      <div class="icon-cell"><div class="icon-box gold">💰</div><div class="icon-name">Gold<br/>Finance</div></div>
+      <div class="icon-cell"><div class="icon-box gold">📈</div><div class="icon-name">Gold<br/>Growth</div></div>
+      <div class="icon-cell"><div class="icon-box mid">🏠</div><div class="icon-name">Mid<br/>Nav</div></div>
+      <div class="icon-cell"><div class="icon-box mid">⚙️</div><div class="icon-name">Mid<br/>Settings</div></div>
+      <div class="icon-cell"><div class="icon-box mid">👤</div><div class="icon-name">Mid<br/>Profile</div></div>
+      <div class="icon-cell"><div class="icon-box mid">🔔</div><div class="icon-name">Mid<br/>Notif</div></div>
+      <div class="icon-cell"><div class="icon-box light">📅</div><div class="icon-name">Light<br/>Metadata</div></div>
+      <div class="icon-cell"><div class="icon-box light">📍</div><div class="icon-name">Light<br/>Location</div></div>
+      <div class="icon-cell"><div class="icon-box light">ℹ️</div><div class="icon-name">Light<br/>Info</div></div>
+      <div class="icon-cell"><div class="icon-box teal-c">✓</div><div class="icon-name">Teal<br/>Success</div></div>
+      <div class="icon-cell"><div class="icon-box teal-c">↑</div><div class="icon-name">Teal<br/>Credit</div></div>
+      <div class="icon-cell"><div class="icon-box coral-c">✕</div><div class="icon-name">Coral<br/>Error</div></div>
+      <div class="icon-cell"><div class="icon-box coral-c">↓</div><div class="icon-name">Coral<br/>Debit</div></div>
+      <div class="icon-cell"><div class="icon-box blue-c">🔗</div><div class="icon-name">Blue<br/>Link/Info</div></div>
+      <div class="icon-cell"><div class="icon-box blue-c">🛡</div><div class="icon-name">Blue<br/>Security</div></div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="row" style="gap:24px; align-items:flex-start;">
+      <div class="spec-box" style="flex:1;">
+        <strong>Size rules:</strong> 24px icon within 44×44pt tap target · 20px icon in compact rows (40px target) · 16px inline in text.
+      </div>
+      <div class="spec-box" style="flex:1;">
+        <strong>Color rules:</strong> Gold = primary action only. Teal = positive/credit. Coral = error/debit. Mid = navigation/secondary. Light = metadata.
+      </div>
+      <div class="spec-box" style="flex:1;">
+        <strong>Do/Don't:</strong> DO use icons + labels for bottom nav. DON'T use gold icons for decoration — reserve for CTA emphasis.
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

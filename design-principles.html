@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multipl — Design Principles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400;1,9..40,500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Print config ───────────────────────────────────────── */
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    /* ── Base ───────────────────────────────────────────────── */
+    :root {
+      --midnight: #0C1220;
+      --gold: #F5C842;
+      --goldWarm: #F0A832;
+      --goldBright: #F7D464;
+      --teal: #00D4AA;
+      --tealDark: #006B55;
+      --coral: #FF6B6B;
+      --blue: #4A9FFF;
+      --cream: #FDFAF0;
+      --warmWhite: #FAFAF8;
+      --ink: #0C1220;
+      --inkMid: #3D3D3D;
+      --inkLight: #6B6B6B;
+      --inkFaint: #AAAAAA;
+      --border: #E8E8E8;
+      --borderLight: #F2F2F2;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      background: #FFFFFF;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    /* ── Cover page ─────────────────────────────────────────── */
+    .cover {
+      width: 210mm;
+      height: 297mm;
+      background: var(--midnight);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      page-break-after: always;
+    }
+
+    .cover-glow-gold {
+      position: absolute; top: -80px; left: 100px;
+      width: 500px; height: 400px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(245,200,66,0.2) 0%, transparent 65%);
+    }
+    .cover-glow-blue {
+      position: absolute; top: -60px; right: -60px;
+      width: 480px; height: 380px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(74,159,255,0.15) 0%, transparent 65%);
+    }
+    .cover-glow-teal {
+      position: absolute; bottom: 80px; right: 60px;
+      width: 320px; height: 240px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(0,212,170,0.12) 0%, transparent 65%);
+    }
+
+    .cover-brand-strip {
+      position: absolute; top: 52px; left: 60px; right: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 2;
+    }
+    .cover-wordmark {
+      font-size: 28px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px;
+    }
+    .cover-wordmark span {
+      background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .cover-tag {
+      font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.35);
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+
+    .cover-body {
+      position: relative; z-index: 2;
+      padding: 0 60px 72px;
+    }
+    .cover-eyebrow {
+      font-size: 12px; font-weight: 600; color: var(--gold);
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px;
+    }
+    .cover-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 56px; font-weight: 700; color: #FFFFFF;
+      line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 24px;
+    }
+    .cover-title em {
+      font-style: italic; color: var(--gold);
+      background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .cover-subtitle {
+      font-size: 17px; color: rgba(255,255,255,0.55); line-height: 1.5;
+      max-width: 440px; margin-bottom: 52px;
+    }
+    .cover-meta {
+      display: flex; gap: 40px; padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+    .cover-meta-item {}
+    .cover-meta-label { font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .cover-meta-value { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); }
+
+    .cover-color-strip {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+      display: flex;
+    }
+    .strip-seg { flex: 1; }
+
+    /* ── Content pages ──────────────────────────────────────── */
+    .content-page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 72px 64px;
+      position: relative;
+      page-break-after: always;
+    }
+    .content-page:last-child { page-break-after: auto; }
+
+    /* Page header running */
+    .page-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 60px; padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header-logo {
+      font-size: 14px; font-weight: 800; color: var(--midnight); letter-spacing: -0.2px;
+    }
+    .page-header-logo span { color: var(--goldWarm); }
+    .page-header-chapter { font-size: 11px; color: var(--inkFaint); font-weight: 500; letter-spacing: 0.5px; }
+
+    /* Section heading */
+    .section-number {
+      font-size: 11px; font-weight: 700; color: var(--gold);
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px; font-weight: 700; color: var(--midnight);
+      line-height: 1.15; letter-spacing: -0.8px; margin-bottom: 16px;
+    }
+    .section-heading em { font-style: italic; color: var(--goldWarm); }
+    .section-intro {
+      font-size: 16px; color: var(--inkMid); line-height: 1.7;
+      margin-bottom: 40px; max-width: 520px;
+    }
+
+    /* Pull quote */
+    .pull-quote {
+      border-left: 3px solid var(--gold);
+      padding: 20px 28px;
+      background: linear-gradient(135deg, rgba(245,200,66,0.06) 0%, rgba(240,168,50,0.03) 100%);
+      border-radius: 0 12px 12px 0;
+      margin: 32px 0;
+    }
+    .pull-quote p {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-style: italic; color: var(--midnight);
+      line-height: 1.5;
+    }
+    .pull-quote cite { display: block; font-size: 12px; color: var(--inkFaint); margin-top: 10px; font-style: normal; font-family: 'DM Sans', sans-serif; }
+
+    /* Body copy */
+    .body-text { font-size: 15px; color: var(--inkMid); line-height: 1.75; margin-bottom: 20px; }
+    .body-text strong { color: var(--midnight); font-weight: 700; }
+    .body-text em { font-style: italic; }
+
+    /* Principle card */
+    .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 32px 0; }
+    .principle-card {
+      padding: 24px; border-radius: 16px;
+      border: 1px solid var(--border); background: var(--warmWhite);
+    }
+    .principle-card.gold-accent { border-color: rgba(245,200,66,0.4); background: rgba(245,200,66,0.04); }
+    .principle-card.teal-accent { border-color: rgba(0,212,170,0.3); background: rgba(0,212,170,0.04); }
+    .principle-card.coral-accent { border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.04); }
+    .principle-card.blue-accent { border-color: rgba(74,159,255,0.3); background: rgba(74,159,255,0.04); }
+    .principle-num { font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+    .principle-title { font-size: 17px; font-weight: 800; color: var(--midnight); margin-bottom: 8px; letter-spacing: -0.2px; }
+    .principle-body { font-size: 13px; color: var(--inkLight); line-height: 1.65; }
+
+    /* Do/don't pair */
+    .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+    .do-box, .dont-box {
+      padding: 18px 20px; border-radius: 12px; font-size: 14px; line-height: 1.6;
+    }
+    .do-box { background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.25); }
+    .dont-box { background: rgba(255,107,107,0.06); border: 1px solid rgba(255,107,107,0.2); }
+    .do-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--tealDark); text-transform: uppercase; margin-bottom: 8px; }
+    .dont-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--coral); text-transform: uppercase; margin-bottom: 8px; }
+    .do-box p { color: var(--inkMid); font-size: 13px; }
+    .dont-box p { color: var(--inkMid); font-size: 13px; }
+
+    /* Color swatch row */
+    .swatch-row { display: flex; gap: 12px; margin: 24px 0; flex-wrap: wrap; }
+    .swatch-item { display: flex; flex-direction: column; gap: 8px; }
+    .swatch-block { width: 80px; height: 56px; border-radius: 10px; }
+    .swatch-name { font-size: 11px; font-weight: 700; color: var(--midnight); }
+    .swatch-hex { font-size: 10px; color: var(--inkFaint); font-family: 'Courier New', monospace; }
+    .swatch-use { font-size: 10px; color: var(--inkLight); line-height: 1.4; }
+
+    /* Type specimen */
+    .type-specimen { margin: 28px 0; display: flex; flex-direction: column; gap: 0; }
+    .type-row { display: flex; align-items: baseline; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--borderLight); }
+    .type-row:last-child { border-bottom: none; }
+    .type-meta { width: 160px; flex-shrink: 0; }
+    .type-meta-name { font-size: 10px; font-weight: 700; color: var(--inkFaint); letter-spacing: 1.5px; text-transform: uppercase; }
+    .type-meta-spec { font-size: 10px; color: var(--inkFaint); font-family: 'Courier New', monospace; margin-top: 3px; }
+    .type-sample { color: var(--midnight); }
+
+    /* Token table */
+    .token-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px; }
+    .token-table th { font-size: 10px; font-weight: 700; color: var(--inkFaint); letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
+    .token-table td { padding: 11px 14px; border-bottom: 1px solid var(--borderLight); color: var(--inkMid); vertical-align: top; }
+    .token-table td:first-child { font-family: 'Courier New', monospace; font-size: 12px; color: var(--midnight); font-weight: 600; }
+    .token-table tr:last-child td { border-bottom: none; }
+    .token-table tr:nth-child(even) td { background: var(--warmWhite); }
+
+    /* Stat callout */
+    .stat-row { display: flex; gap: 24px; margin: 32px 0; }
+    .stat-box {
+      flex: 1; padding: 24px; border-radius: 16px; background: var(--midnight);
+      position: relative; overflow: hidden;
+    }
+    .stat-glow { position: absolute; top: -20px; right: -20px; width: 120px; height: 100px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.2) 0%, transparent 70%); }
+    .stat-value { font-size: 32px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px; margin-bottom: 4px; position: relative; z-index: 1; }
+    .stat-value.gold-text { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-value.teal-text { color: var(--teal); }
+    .stat-label { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500; position: relative; z-index: 1; }
+
+    /* Persona card */
+    .persona-card {
+      background: var(--midnight); border-radius: 20px; padding: 32px;
+      display: grid; grid-template-columns: auto 1fr; gap: 24px;
+      margin: 32px 0; position: relative; overflow: hidden;
+    }
+    .persona-avatar {
+      width: 72px; height: 72px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--goldBright) 0%, var(--goldWarm) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; font-weight: 800; color: var(--midnight);
+      flex-shrink: 0;
+    }
+    .persona-glow { position: absolute; top: -40px; right: -40px; width: 200px; height: 160px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.15) 0%, transparent 70%); }
+    .persona-info { position: relative; z-index: 1; }
+    .persona-name { font-size: 20px; font-weight: 800; color: #FFFFFF; margin-bottom: 2px; }
+    .persona-tag { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
+    .persona-quote {
+      font-size: 15px; font-style: italic; color: rgba(255,255,255,0.7); line-height: 1.5;
+      border-left: 3px solid var(--gold); padding-left: 14px;
+    }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--border); margin: 36px 0; }
+    .divider-gold { height: 2px; background: linear-gradient(90deg, var(--goldBright), var(--goldWarm), transparent); margin: 40px 0; border-radius: 999px; }
+
+    /* Page footer */
+    .page-footer {
+      position: absolute; bottom: 40px; left: 64px; right: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 11px; color: var(--inkFaint);
+    }
+    .page-footer-dot { width: 4px; height: 4px; border-radius: 999px; background: var(--gold); }
+
+    /* Inline callout */
+    .callout {
+      background: var(--cream); border-radius: 14px; padding: 20px 24px;
+      margin: 24px 0; border-left: 4px solid var(--gold);
+    }
+    .callout-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+    .callout p { font-size: 14px; color: var(--inkMid); line-height: 1.6; }
+    .callout strong { color: var(--midnight); }
+
+    /* Number list */
+    .num-list { counter-reset: numlist; display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+    .num-item { display: flex; gap: 16px; align-items: flex-start; }
+    .num-item::before {
+      counter-increment: numlist;
+      content: counter(numlist);
+      width: 28px; height: 28px; border-radius: 999px;
+      background: var(--midnight); color: #FFFFFF;
+      font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .num-item-content {}
+    .num-item-title { font-size: 15px; font-weight: 700; color: var(--midnight); margin-bottom: 4px; }
+    .num-item-body { font-size: 13px; color: var(--inkLight); line-height: 1.6; }
+
+    /* ── Print ───────────────────────────────────────────────── */
+    @media print {
+      body { background: #FFFFFF; }
+      .cover, .content-page { page-break-after: always; }
+      .cover { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .content-page { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     COVER
+════════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-glow-gold"></div>
+  <div class="cover-glow-blue"></div>
+  <div class="cover-glow-teal"></div>
+
+  <div class="cover-brand-strip">
+    <div class="cover-wordmark">Multipl <span>Design</span></div>
+    <div class="cover-tag">Confidential · February 2026</div>
+  </div>
+
+  <div class="cover-body">
+    <div class="cover-eyebrow">Design Principles</div>
+    <h1 class="cover-title">Why we<br/>design the way<br/>we <em>do.</em></h1>
+    <p class="cover-subtitle">The reasoning behind every colour, typeface, spacing rule, and component decision in the Multipl Golden Canvas design system.</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Audience</div>
+        <div class="cover-meta-value">Designers & PMs</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Version</div>
+        <div class="cover-meta-value">v4.0</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">System</div>
+        <div class="cover-meta-value">Golden Canvas</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Canvas</div>
+        <div class="cover-meta-value">375pt · iPhone 14</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-color-strip">
+    <div class="strip-seg" style="background:#F5C842;"></div>
+    <div class="strip-seg" style="background:#F0A832;"></div>
+    <div class="strip-seg" style="background:#00D4AA;"></div>
+    <div class="strip-seg" style="background:#4A9FFF;"></div>
+    <div class="strip-seg" style="background:#FF6B6B;"></div>
+    <div class="strip-seg" style="background:#0C1220;"></div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 1 — THE PERSON BEHIND EVERY DECISION
+════════════════════════════════════════════════════════════ -->
+<div class="content-page">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">01 — The Person Behind Every Decision</div>
+  </div>
+
+  <div class="section-number">Principle 01</div>
+  <h2 class="section-heading">Every decision<br/>starts with <em>Priya.</em></h2>
+  <p class="section-intro">Before we ask "does this look good?", we ask "does this feel right for Priya?" If those two answers ever conflict, Priya wins.</p>
+
+  <div class="persona-card">
+    <div class="persona-glow"></div>
+    <div class="persona-avatar">PR</div>
+    <div class="persona-info">
+      <div class="persona-name">Priya Sharma, 28</div>
+      <div class="persona-tag">Product Manager · Bengaluru · ₹18–24 LPA</div>
+      <div class="persona-quote">"Money disappears and I don't know how — I'm not even doing anything wrong."</div>
+    </div>
+  </div>
+
+  <p class="body-text">Priya earns well, spends freely, and has real financial goals — a Europe trip, maybe a down payment someday. The problem isn't her income or her intelligence. <strong>The problem is that every savings app she's tried has made her feel behind, judged, or bored.</strong></p>
+
+  <p class="body-text">She doesn't need to be lectured. She doesn't need another dashboard of red numbers telling her she's failing. She needs an app that's already working for her — even while she orders pizza on a Tuesday night.</p>
+
+  <div class="pull-quote">
+    <p>"She doesn't need another financial app that lectures her. She needs one that's already working — even while she orders pizza."</p>
+    <cite>— Multipl Design Brief, Brand Foundation</cite>
+  </div>
+
+  <p class="body-text">This shapes every design choice we make. The warm cream background instead of clinical white — because Priya's phone is also her entertainment, her social life, her camera. The gold sparkline showing growth in real time — because she needs to feel that her money is <em>doing something right now</em>, not sitting dormant. The teal credit colour — positive, alive, not aggressively green like a dashboard.</p>
+
+  <div class="callout">
+    <div class="callout-label">Design Test</div>
+    <p>Before shipping any screen, ask: <strong>Does this make Priya feel capable and rewarded, or does it make her feel behind and managed?</strong> If the latter, redesign it.</p>
+  </div>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>01</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 2 — COLOUR PHILOSOPHY
+════════════════════════════════════════════════════════════ -->
+<div class="content-page">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">02 — Colour Philosophy</div>
+  </div>
+
+  <div class="section-number">Principle 02</div>
+  <h2 class="section-heading">Colour that<br/><em>means</em> something.</h2>
+  <p class="section-intro">Every colour in our palette earns its place by doing a specific job. We don't use colour for decoration — we use it to communicate status, hierarchy, and emotion.</p>
+
+  <div class="divider-gold"></div>
+
+  <div class="principle-grid">
+    <div class="principle-card gold-accent">
+      <div class="principle-num">Gold — #F5C842</div>
+      <div class="principle-title">The Brand Signal</div>
+      <div class="principle-body">Gold is Multipl's voice. It appears on primary CTAs, the active nav indicator, and sparklines on the portfolio card. One gold element per screen — it always points to the most important action. Used sparingly, it retains its power. Used everywhere, it becomes noise.</div>
+    </div>
+    <div class="principle-card teal-accent">
+      <div class="principle-num">Teal — #00D4AA / #006B55</div>
+      <div class="principle-title">Growth & Credit</div>
+      <div class="principle-body">Teal means money coming <em>in</em>. Credit amounts, XIRR returns, and cashback earned are always teal. On dark surfaces we use the bright electric teal (#00D4AA). On light surfaces we use tealText (#006B55) — a darker shade that still passes 5.2:1 contrast. Never confuse teal with green — teal is our growth signal, not a traffic light.</div>
+    </div>
+    <div class="principle-card coral-accent">
+      <div class="principle-num">Coral — #FF6B6B</div>
+      <div class="principle-title">Attention, Not Alarm</div>
+      <div class="principle-body">Coral is our error and alert colour — but we chose coral deliberately over clinical red. Red says "you failed." Coral says "let's fix this together." It appears on error states, notification badges, and destructive actions. Always paired with calm, helpful copy — never with accusatory language.</div>
+    </div>
+    <div class="principle-card blue-accent">
+      <div class="principle-num">Blue — #4A9FFF</div>
+      <div class="principle-title">Information & Trust</div>
+      <div class="principle-body">Electric blue signals information, security, and market data. It's cooler and more rational than gold or teal — appropriate for KYC flows, market updates, and help content. It says "this is factual" rather than "this is exciting."</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="body-text"><strong>Why warm cream (#FDFAF0), not white?</strong> Pure white (#FFFFFF) is associated with clinical utility — hospitals, spreadsheets, banking apps of the 2010s. Our warm cream background is barely perceptible but emotionally significant: it reads as <em>premium</em> and <em>welcoming</em>, more like high-end stationery than software. Priya's portfolio sits on the same canvas as her favourite editorial content — it should feel equally considered.</p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-glow"></div>
+      <div class="stat-value gold-text">9.6:1</div>
+      <div class="stat-label">Gold contrast on midnight (#0C1220)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-glow" style="background:radial-gradient(ellipse,rgba(0,212,170,0.2) 0%,transparent 70%);"></div>
+      <div class="stat-value teal-text">5.2:1</div>
+      <div class="stat-label">TealText on cream — WCAG AA pass</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-glow" style="background:radial-gradient(ellipse,rgba(74,159,255,0.2) 0%,transparent 70%);"></div>
+      <div class="stat-value" style="color:#4A9FFF;">1</div>
+      <div class="stat-label">Gold CTA per screen — maximum</div>
+    </div>
+  </div>
+
+  <div class="do-dont">
+    <div class="do-box">
+      <div class="do-label">✓ Do</div>
+      <p>Use gold exclusively for the primary action. Use teal only to signal positive financial movement. Use coral only for errors and alerts.</p>
+    </div>
+    <div class="dont-box">
+      <div class="dont-label">✕ Don't</div>
+      <p>Don't use gold as a background wash or decoration. Don't put gold text on a light surface (1.6:1 — fails contrast). Don't use red for errors — it's too alarming for a wealth app.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>02</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 3 — TYPOGRAPHY
+════════════════════════════════════════════════════════════ -->
+<div class="content-page">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">03 — Typography</div>
+  </div>
+
+  <div class="section-number">Principle 03</div>
+  <h2 class="section-heading">Two fonts.<br/>One rule: <em>numbers matter.</em></h2>
+  <p class="section-intro">We use exactly two typefaces. Every deviation from this erodes the visual system. The choice of each is deliberate, with specific constraints on where each may and may not appear.</p>
+
+  <div class="type-specimen">
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">Display / Wealth</div>
+        <div class="type-meta-spec">Playfair Display · Serif</div>
+      </div>
+      <div class="type-sample" style="font-family:'Playfair Display',serif; font-size:32px; font-weight:700; letter-spacing:-0.5px;">₹1,24,350</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">All UI text</div>
+        <div class="type-meta-spec">DM Sans · 300–800</div>
+      </div>
+      <div class="type-sample" style="font-size:18px; font-weight:700; letter-spacing:-0.3px;">Your portfolio is working.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">Body / Labels</div>
+        <div class="type-meta-spec">DM Sans · 15px / 400</div>
+      </div>
+      <div class="type-sample" style="font-size:15px; font-weight:400; color:#3D3D3D;">You earned ₹47.20 in cashback from 3 brands this week.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">Metadata</div>
+        <div class="type-meta-spec">DM Sans · 12px / 500</div>
+      </div>
+      <div class="type-sample" style="font-size:12px; font-weight:500; color:#6B6B6B;">Feb 18, 2026 · 2:34 PM · Zomato · Food</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="body-text"><strong>Why Playfair Display for wealth headings only?</strong> Serif fonts carry centuries of association with editorial gravitas — The Economist, FT, long-form finance journalism. A single Playfair Display balance figure anchors the portfolio card in that tradition of weight and permanence, making the number feel more real, more significant. But we contain it strictly to this context — using it for UI labels would tip into pastiche.</p>
+
+  <p class="body-text"><strong>Why DM Sans everywhere else?</strong> DM Sans was designed specifically for digital interfaces at small sizes. It has a slightly wider, open letterform that reads cleanly at 12–15px on OLED screens without the weight compensation tricks other typefaces need. Its 300–800 weight range gives us an expressive palette: 800 for balance figures, 600 for list titles, 400 for body, 300 for whispered metadata.</p>
+
+  <div class="callout">
+    <div class="callout-label">The Numbers Rule</div>
+    <p><strong>Every monetary value must use <code style="font-family:'Courier New',monospace; background:rgba(245,200,66,0.15); padding:2px 6px; border-radius:4px;">font-variant-numeric: tabular-nums</code>.</strong> This forces all digits to occupy the same horizontal width, so amounts align perfectly in lists and don't shift in width as they update in real time. A portfolio value that "jumps" on screen as it refreshes destroys trust — tabular-nums prevents this.</p>
+  </div>
+
+  <div class="do-dont">
+    <div class="do-box">
+      <div class="do-label">✓ Do</div>
+      <p>Use Playfair Display only for hero balance figures in a wealth/portfolio context. Apply tabular-nums to every monetary value, always. Use DM Sans 700+ for interactive elements.</p>
+    </div>
+    <div class="dont-box">
+      <div class="dont-label">✕ Don't</div>
+      <p>Don't use Playfair Display for navigation, labels, or error messages — it signals gravity, not utility. Don't use a third typeface for "variety." Don't use proportional figures for currency (they misalign).</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>03</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 4 — SPACE, STRUCTURE & TOUCH
+════════════════════════════════════════════════════════════ -->
+<div class="content-page">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">04 — Space, Structure &amp; Touch</div>
+  </div>
+
+  <div class="section-number">Principle 04</div>
+  <h2 class="section-heading">Space is<br/>respect. Touch is<br/><em>trust.</em></h2>
+  <p class="section-intro">Our spacing and sizing rules are not aesthetic preferences. They are commitments to Priya's time, her attention, and her fingers.</p>
+
+  <div class="principle-grid">
+    <div class="principle-card">
+      <div class="principle-num">The 8px Grid</div>
+      <div class="principle-title">Every gap, every padding</div>
+      <div class="principle-body">All spacing values are multiples of 8px: 8, 16, 24, 32, 40, 48, 64. This isn't arbitrary — it matches sub-pixel rendering on both 2× and 3× screens common to iPhone 14 (the reference device). A 7px gap renders with anti-aliasing artefacts on 3× screens; 8px renders crisply. Consistent multiples also let engineers eyeball values without referencing specs — a card pad of 20px is immediately legible as "between 2 and 3 grid steps."</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-num">44×44pt Touch Target</div>
+      <div class="principle-title">Every interactive element</div>
+      <div class="principle-body">Apple HIG defines 44×44pt as the minimum touch target for comfortable tapping. We treat this as a hard floor, not a guideline. Priya uses this app one-handed, often while walking. If a button is 36pt tall, she'll mis-tap 20% of the time — and she'll blame the app, not herself. Icon-only buttons get 44×44pt hit areas even if the visual icon is 24pt.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-num">375pt Canvas</div>
+      <div class="principle-title">iPhone 14 as reference</div>
+      <div class="principle-body">All component specs are authored at 375pt logical width — the CSS/React Native width of an iPhone 14 standard. This is intentional: iPhone is Priya's primary device. We don't design for the average of all phones; we design brilliantly for the most common case. Android and larger iPhones scale up from this base.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-num">20px Page Padding</div>
+      <div class="principle-title">Content never touches edges</div>
+      <div class="principle-body">A fixed 20px horizontal padding ensures content is never within 20pt of the device edge. This matters because thumb reach is unpredictable at screen edges, and content abutting the edge reads as clipped or broken. The 20px rule also aligns with iOS's natural safe area conventions.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="body-text"><strong>Why a 20px card radius?</strong> Our primary card radius is 20px (radiusL). This is the intersection of two observations: at 375pt width, anything below 16px looks like a clipped rectangle, not a card. Anything above 24px on a full-width card begins to eat into content at the corners. 20px is the "warm, approachable" radius — rounded enough to feel considered, not so rounded it becomes bubble-like. Component radii scale down from here: 12px for compact rows, 8px for small chips.</p>
+
+  <div class="callout">
+    <div class="callout-label">Safe Areas</div>
+    <p>The system defines <strong>59px top</strong> (status bar + nav bar) and <strong>34px bottom</strong> safe areas. Bottom navigation always adds this 34px beneath its visible height — never clip content behind the home indicator bar. Bottom sheets add 34px to their footer padding for the same reason.</p>
+  </div>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>04</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 5 — THE HERO CARD & DARK SURFACES
+════════════════════════════════════════════════════════════ -->
+<div class="content-page">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">05 — The Hero Card &amp; Dark Surfaces</div>
+  </div>
+
+  <div class="section-number">Principle 05</div>
+  <h2 class="section-heading">Dark doesn't<br/>mean heavy —<br/>it means <em>focused.</em></h2>
+  <p class="section-intro">The portfolio hero card is the most important element in the app. It uses midnight as its canvas because contrast and drama serve a purpose: making the balance feel significant.</p>
+
+  <p class="body-text">When Priya opens the app, she should feel an immediate sense that something important is happening. A white card with a balance number on it communicates information. A midnight card with three glows — gold blooming from the top-centre, blue from the top-right, teal from the bottom-right — communicates <em>this is your wealth, and it's alive.</em></p>
+
+  <p class="body-text"><strong>The three-glow system is not decorative.</strong> Each glow carries semantic weight:</p>
+
+  <div class="num-list">
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Gold glow — top-centre</div>
+        <div class="num-item-body">The primary brand signal. Gold radiates from the balance figure itself, reinforcing that the gold number is the most important thing on this card. The eye is drawn there first.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Electric blue glow — top-right</div>
+        <div class="num-item-body">Blue signals the informational and data-driven nature of the product. It's cooler, recedes slightly behind the gold, and subliminally communicates "there's depth here — real data, real returns."</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Teal glow — bottom-right</div>
+        <div class="num-item-body">Teal bleeds from the edge where the growth sparkline lives. The glow and the sparkline reinforce each other — growth is emanating from the card itself. This is not a metaphor; it's a gut feeling that happens in under 200ms.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <p>"The best financial interfaces don't show you what your money is. They show you what your money is <em>doing.</em>"</p>
+  </div>
+
+  <p class="body-text"><strong>Why midnight (#0C1220), not pure black (#000000)?</strong> Pure black on screens creates harsh OLED flicker in peripheral vision and reads as "off" rather than "premium." Our midnight is a deep, warm navy — it has enough blue in it to feel digital and alive, not void-like. It's also perceptibly different from black, which helps the hero card feel intentionally coloured, not just dark.</p>
+
+  <div class="do-dont">
+    <div class="do-box">
+      <div class="do-label">✓ Do</div>
+      <p>Keep all three glows in the hero card. Use the gold sparkline for portfolio balance, teal sparkline for spending account. The dark card is the stage — the number is the performer.</p>
+    </div>
+    <div class="dont-box">
+      <div class="dont-label">✕ Don't</div>
+      <p>Don't add the hero dark card to secondary screens — its power comes from rarity. Don't change glow positions or colours without re-testing the emotional read. Don't use a flat midnight card without glows — it reads as a bug.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>05</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 6 — COMPONENT PHILOSOPHY
+════════════════════════════════════════════════════════════ -->
+<div class="content-page">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">06 — Component Philosophy</div>
+  </div>
+
+  <div class="section-number">Principle 06</div>
+  <h2 class="section-heading">Components serve<br/>the user, not<br/>the <em>designer.</em></h2>
+  <p class="section-intro">Our component library exists to make Priya's experience consistent and confident — not to showcase our design vocabulary. Every component decision starts from how Priya will interact with it, not how it looks in isolation.</p>
+
+  <div class="principle-grid">
+    <div class="principle-card gold-accent">
+      <div class="principle-num">Buttons</div>
+      <div class="principle-title">One gold CTA per view</div>
+      <div class="principle-body">Gold primary buttons are deliberately scarce. If every action is gold, nothing is important. We limit to one gold CTA per screen so Priya's eye always knows where to go. Secondary and ghost variants carry hierarchy without competing with the primary. Height 56px — not for aesthetics, but because 44pt is the minimum and 56px allows comfortable label padding.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-num">Bottom Sheet</div>
+      <div class="principle-title">The polite overlay</div>
+      <div class="principle-body">We prefer bottom sheets to modals for most interactions because they don't abandon context — Priya can still see the screen she came from peeking above. The handle bar (40×4px) signals dismissability without instructions. The 28px top radius makes the sheet feel like a card that emerged from the bottom, not a panel slapped over the screen.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-num">Empty States</div>
+      <div class="principle-title">Invitation, not failure</div>
+      <div class="principle-body">An empty transaction list is not an error — it's an opportunity to invite Priya into the product. Every empty state has an emoji (warmth), a headline (reframing the absence positively), a body (explaining what will appear), and a CTA (what to do next). We never show a blank screen with a spinner that never resolves.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-num">Skeletons</div>
+      <div class="principle-title">Perceived speed</div>
+      <div class="principle-body">Skeleton loaders always mirror the exact geometry of the content they replace — card skeleton for cards, list skeleton for list items. A generic spinner for a card area reads as broken. A card-shaped skeleton reads as "the content is coming — here's its shape." Perceived performance matters as much as actual performance.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="body-text"><strong>On toast positioning:</strong> Toasts (success/error/info messages) always appear 80px above the safe bottom edge — above the navigation bar, not below it. This is not a convention we inherited; it's one we chose because messages that appear at the bottom of the screen are obscured by the thumb resting position. Priya's thumb naturally rests at the bottom third of the screen when one-handing — messages must appear above that zone.</p>
+
+  <p class="body-text"><strong>On the dark toast surface:</strong> All toasts use midnight (#0C1220) as their background regardless of the screen's light or dark theme. This creates a consistent, recognisable system-level message surface. Priya learns quickly that midnight = system message. The semantic colour (teal/coral/gold/blue) only appears on the border and action button — the content surface stays neutral.</p>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>06</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 7 — FINANCIAL INTEGRITY
+════════════════════════════════════════════════════════════ -->
+<div class="content-page">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">07 — Financial Integrity</div>
+  </div>
+
+  <div class="section-number">Principle 07</div>
+  <h2 class="section-heading">Money deserves<br/><em>precision.</em></h2>
+  <p class="section-intro">Financial applications carry a unique responsibility: when a number is wrong — or merely <em>appears</em> wrong — trust is gone. Our financial-specific design rules exist to make every rupee feel exact and verifiable.</p>
+
+  <div class="num-list">
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Tabular numerals — everywhere, always</div>
+        <div class="num-item-body">All monetary values use <code style="font-size:12px; background:#F5F5F5; padding:1px 6px; border-radius:4px; font-family:'Courier New',monospace;">font-variant-numeric: tabular-nums</code>. This forces digit widths to be equal, so ₹1,000 and ₹9,999 occupy exactly the same horizontal space. In a transaction list, this means amounts align perfectly in a column without a single pixel of jitter as data loads or updates. It is a subtle detail that users will never consciously notice — but they will notice if it's absent.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Teal for credit, #0C1220 for debit</div>
+        <div class="num-item-body">In transaction lists, incoming amounts (credits, cashback) are always tealText (#006B55). Outgoing amounts (debits) are always the primary text colour (#0C1220) — not red, not grey. We don't visually punish spending. Spending is how Priya earns cashback. Making debit amounts red would feel like a rebuke every time she bought lunch.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">The ₹ denomination chip system</div>
+        <div class="num-item-body">Investment flows offer denomination chips (₹500, ₹1K, ₹2K, ₹5K, ₹10K) above a freeform input. This serves two purposes: it reduces decision fatigue by anchoring common amounts, and it shows Priya the range of what's normal — she's less likely to feel she "should" invest more than she planned. The selected chip uses gold border + subtle tint, not a filled gold button — the visual weight signals selection, not action.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Progress before destination</div>
+        <div class="num-item-body">Goal cards always show what Priya has achieved (current amount saved) before what remains. "₹1,38,000 saved" leads; "₹62,000 remaining" follows. This is not just positive framing — it's accurate framing. Progress exists. We show it first. The same principle applies to KYC flows: "2 of 3 documents verified" not "1 document missing."</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Earning displayed in real time</div>
+        <div class="num-item-body">The portfolio hero card shows daily earnings (e.g. "+₹28.75 today") alongside the annual rate. This is not a rounding — it's calculated on live balance. Seeing a specific daily figure makes the 8.4% p.a. rate feel real and immediate, not abstract. "8.4% per year" is forgettable. "₹28.75 today" is memorable and motivating.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Core Rule</div>
+    <p>If a user has to squint, guess, or calculate to understand a financial figure on screen — the design has failed. <strong>Every number should be instantly legible, correctly signed (+ / –), and contextually anchored</strong> (what it is, where it came from, what it means for Priya right now).</p>
+  </div>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>07</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 8 — VOICE, TONE & COPY
+════════════════════════════════════════════════════════════ -->
+<div class="content-page">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">08 — Voice, Tone &amp; Copy</div>
+  </div>
+
+  <div class="section-number">Principle 08</div>
+  <h2 class="section-heading">The app speaks<br/>like a brilliant<br/><em>friend.</em></h2>
+  <p class="section-intro">Visual design carries the structure. Copy carries the emotion. Our voice is warm, confident, and present — never corporate, never cautious, never hollow.</p>
+
+  <div class="pull-quote">
+    <p>"Not a financial advisor. Not a bank. Not a startup chatbot. A friend — one who's genuinely excited about your progress and tells you the truth plainly."</p>
+  </div>
+
+  <table class="token-table">
+    <thead>
+      <tr><th>Context</th><th>Tone</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Showing growth</td><td>Celebratory, specific</td><td>"Your ₹24,500 is earning ₹5.70 today"</td></tr>
+      <tr><td>Cashback earned</td><td>Delighted, immediate</td><td>"Nice — ₹40 from your Starbucks this morning"</td></tr>
+      <tr><td>Onboarding</td><td>Warm, jargon-free</td><td>"Add money. We take it from here."</td></tr>
+      <tr><td>Error states</td><td>Calm, no blame</td><td>"Something went sideways — let's try that again"</td></tr>
+      <tr><td>Empty states</td><td>Inviting, not judgmental</td><td>"Your brands list is empty. Let's find you some good ones."</td></tr>
+      <tr><td>Nudges</td><td>Friendly, never pushy</td><td>"Your ₹2,000 is just sitting here — want it working?"</td></tr>
+      <tr><td>Confirmations</td><td>Concise, warm</td><td>"Done. Your money's on the move."</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <p class="body-text"><strong>Six copy rules that apply to every screen:</strong></p>
+
+  <div class="num-list">
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Present tense, active voice</div>
+        <div class="num-item-body">"Your ₹24,500 is earning right now" not "Balance: ₹24,500". Money should feel like it's doing something this second.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Real numbers, always</div>
+        <div class="num-item-body">"You've earned ₹3,840 this month from 6 brands" not "You've saved a lot this month!" Specificity signals honesty.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Name the brand, name the category</div>
+        <div class="num-item-body">"12% back on every Zomato order" not "Earn cashback at partner restaurants." Priya knows Zomato. Speak her language.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Short sentences. No sub-clauses.</div>
+        <div class="num-item-body">Priya reads this between meetings. Every word must earn its place. If a sentence has a comma, consider splitting it in two.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Zero fear language</div>
+        <div class="num-item-body">Never "you're losing ₹1,200/month by not investing." Always "₹12,000 is ready to earn for you." Progress framing, always.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Celebrate small wins</div>
+        <div class="num-item-body">A ₹40 cashback from a coffee matters. Acknowledge it visually and in copy. Delight lives in small moments, not just milestone notifications.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>08</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 9 — ACCESSIBILITY & BRAND PERSONALITY
+════════════════════════════════════════════════════════════ -->
+<div class="content-page">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">09 — Accessibility &amp; Brand Personality</div>
+  </div>
+
+  <div class="section-number">Principle 09</div>
+  <h2 class="section-heading">Accessible design<br/>is <em>better</em> design.</h2>
+  <p class="section-intro">Accessibility constraints often produce our best decisions. The colour choices, touch targets, and type sizes that serve users with visual or motor impairments also make the experience measurably better for everyone.</p>
+
+  <table class="token-table">
+    <thead>
+      <tr><th>Decision</th><th>Accessibility Driver</th><th>Universal Benefit</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>44×44pt touch targets</td><td>Motor impairments, tremor</td><td>Faster, less frustrating for all users</td></tr>
+      <tr><td>Tabular-nums on all amounts</td><td>Cognitive load, dyscalculia</td><td>Cleaner visual alignment for all</td></tr>
+      <tr><td>5.2:1 min contrast (tealText)</td><td>Low vision, outdoor use</td><td>Better readability in bright sunlight</td></tr>
+      <tr><td>No colour-only status signals</td><td>Colour blindness</td><td>Clearer UX with icon + colour + text</td></tr>
+      <tr><td>Skeleton loaders over spinners</td><td>Anxiety, uncertainty</td><td>Perceived speed improvement for all</td></tr>
+      <tr><td>Empty state CTAs always present</td><td>Cognitive guidance</td><td>Reduces abandonment for all users</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <div class="section-number" style="margin-top:32px;">Brand Personality</div>
+  <h2 class="section-heading" style="font-size:28px;">Where Multipl sits<br/>on seven dimensions.</h2>
+
+  <table class="token-table">
+    <thead>
+      <tr><th>Dimension</th><th>Position</th><th>Design implication</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Elite ↔ Mass appeal</td><td>70% mass appeal</td><td>Aspirational but never exclusive — Priya always feels this is for her</td></tr>
+      <tr><td>Serious ↔ Playful</td><td>65% playful</td><td>Numbers are serious; the experience of engaging with them should be light</td></tr>
+      <tr><td>Conventional ↔ Rebel</td><td>60% rebel</td><td>Spending-as-saving is unconventional — the product should feel like it knows something others don't</td></tr>
+      <tr><td>Friend ↔ Authoritative</td><td>70% friend</td><td>A brilliant friend who knows finance — not a bank, not a robo-advisor</td></tr>
+      <tr><td>Classic ↔ Innovative</td><td>65% innovative</td><td>Familiar patterns (tabs, cards) executed with unexpected freshness</td></tr>
+      <tr><td>Rational ↔ Emotional</td><td>60% emotional</td><td>Lead with feeling (growth, delight); justify with logic (the numbers)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout-label">The Tiebreaker Rule</div>
+    <p>When two equally functional design choices exist, always choose the one that <strong>feels more like a friend said it</strong>, is more playful, and is more present. The rational option is rarely wrong — but the warm option is usually better.</p>
+  </div>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>09</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 10 — QUICK REFERENCE
+════════════════════════════════════════════════════════════ -->
+<div class="content-page" style="page-break-after:auto;">
+  <div class="page-header">
+    <div class="page-header-logo">Multipl <span>Design</span></div>
+    <div class="page-header-chapter">10 — Quick Reference</div>
+  </div>
+
+  <div class="section-number">Summary</div>
+  <h2 class="section-heading">Nine principles<br/>at a <em>glance.</em></h2>
+
+  <div class="num-list" style="margin-top:32px;">
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Design for Priya, always</div>
+        <div class="num-item-body">Every decision flows from one question: does this make Priya feel capable and rewarded?</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Colour means something</div>
+        <div class="num-item-body">Gold = CTA (1 per screen). Teal = money in. Coral = attention (not alarm). Blue = information. No decoration.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Two fonts, one rule</div>
+        <div class="num-item-body">Playfair Display for wealth headings only. DM Sans everywhere else. Tabular-nums on every monetary value, no exceptions.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Space and touch are respect</div>
+        <div class="num-item-body">8px grid, 44×44pt minimum touch, 20px page padding, 375pt reference canvas.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Dark cards command attention</div>
+        <div class="num-item-body">Midnight hero card + 3 glows (gold, blue, teal) signals this is where your wealth lives. Rare = powerful.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Components serve the user</div>
+        <div class="num-item-body">Bottom sheets over modals. Skeletons over spinners. Empty states as invitations, not failures.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Money demands precision</div>
+        <div class="num-item-body">Credits in teal, debits in midnight (never red). Progress before destination. Daily earnings > annual rate.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Write like a friend</div>
+        <div class="num-item-body">Present tense. Real numbers. Name the brand. Short sentences. Zero fear language. Celebrate small wins.</div>
+      </div>
+    </div>
+    <div class="num-item">
+      <div class="num-item-content">
+        <div class="num-item-title">Accessible = better for everyone</div>
+        <div class="num-item-body">Every accessibility constraint we honour — touch targets, contrast, no colour-only signals — makes the product measurably better for all users.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider-gold" style="margin-top:48px;"></div>
+
+  <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:32px;">
+    <div>
+      <div style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--midnight); letter-spacing:-0.3px; margin-bottom:6px;">Multipl Design System v4.0</div>
+      <div style="font-size:13px; color:var(--inkFaint);">Golden Canvas · February 2026 · 375pt · iPhone 14</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:11px; color:var(--inkFaint); margin-bottom:4px;">Full specification</div>
+      <div style="font-size:13px; font-weight:600; color:var(--midnight);">Multipl_Design_System_v4.md</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Multipl Design Principles · v4.0</span>
+    <div class="page-footer-dot"></div>
+    <span>10</span>
+  </div>
+</div>
+
+</body>
+</html>

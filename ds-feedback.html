@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=1400"/>
+  <title>Multipl DS v4 — Feedback &amp; States</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="stylesheet" href="tokens-v3.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 1400px; font-family: 'DM Sans', sans-serif; background: #EBEBEB; color: #1A1A1A; -webkit-font-smoothing: antialiased; }
+    .page { width: 1400px; padding: 48px; display: flex; flex-direction: column; gap: 32px; }
+    .section-card { background: #FFFFFF; border-radius: 24px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 24px; }
+    .section-title { font-size: 22px; font-weight: 800; color: #0C1220; letter-spacing: -0.4px; margin-bottom: 8px; }
+    .section-sub { font-size: 14px; color: #6B6B6B; margin-bottom: 32px; }
+    .divider-line { height: 1px; background: #F0F0F0; margin: 28px 0; }
+    .group-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #AAAAAA; margin-bottom: 16px; }
+    .row { display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: 6px; }
+    .state-label { font-size: 10px; color: #AAAAAA; font-weight: 600; letter-spacing: 0.5px; text-align: center; margin-top: 8px; }
+    .spec-box { background: #F8F8F8; border-radius: 12px; padding: 16px 20px; font-size: 13px; color: #555; line-height: 1.6; border-left: 3px solid #F5C842; }
+
+    /* Header */
+    .ds-header { background: #0C1220; border-radius: 24px; padding: 48px; position: relative; overflow: hidden; }
+    .hdr-glow-gold { position: absolute; top: -60px; left: 200px; width: 400px; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.18) 0%, transparent 70%); pointer-events: none; }
+    .hdr-glow-blue { position: absolute; top: -80px; right: 0; width: 500px; height: 400px; border-radius: 50%; background: radial-gradient(ellipse, rgba(74,159,255,0.14) 0%, transparent 70%); pointer-events: none; }
+    .hdr-inner { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; }
+    .hdr-wordmark { font-size: 48px; font-weight: 800; color: #FFFFFF; letter-spacing: -1px; line-height: 1; }
+    .hdr-wordmark span { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hdr-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .hdr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); border-radius: 999px; font-size: 12px; font-weight: 700; color: #F5C842; letter-spacing: 1px; }
+    .hdr-meta p { font-size: 13px; color: rgba(255,255,255,0.45); }
+    .hdr-pills { display: flex; gap: 12px; margin-top: 32px; position: relative; z-index: 2; }
+    .hdr-pill { padding: 10px 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+
+    /* ── Toast / Snackbar ────────────────────────────────── */
+    .toast {
+      display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+      border-radius: 16px; min-width: 300px; max-width: 360px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+    .toast-icon { font-size: 20px; flex-shrink: 0; }
+    .toast-text { flex: 1; font-size: 14px; font-weight: 600; line-height: 1.3; }
+    .toast-action { font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+    .toast.success { background: #0C1220; border: 1px solid rgba(0,212,170,0.3); }
+    .toast.success .toast-text { color: #FFFFFF; }
+    .toast.success .toast-action { color: #00D4AA; }
+    .toast.error { background: #0C1220; border: 1px solid rgba(255,107,107,0.3); }
+    .toast.error .toast-text { color: #FFFFFF; }
+    .toast.error .toast-action { color: #FF6B6B; }
+    .toast.info { background: #0C1220; border: 1px solid rgba(74,159,255,0.3); }
+    .toast.info .toast-text { color: #FFFFFF; }
+    .toast.info .toast-action { color: #4A9FFF; }
+    .toast.warning { background: #0C1220; border: 1px solid rgba(245,200,66,0.3); }
+    .toast.warning .toast-text { color: #FFFFFF; }
+    .toast.warning .toast-action { color: #F5C842; }
+
+    /* ── Alert Banners ───────────────────────────────────── */
+    .alert-banner {
+      display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+      border-radius: 14px; border: 1px solid; width: 100%; position: relative;
+    }
+    .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .alert-content { flex: 1; }
+    .alert-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .alert-body { font-size: 13px; line-height: 1.4; }
+    .alert-dismiss { position: absolute; top: 12px; right: 12px; font-size: 16px; cursor: pointer; color: #AAAAAA; }
+    .alert-info { background: rgba(74,159,255,0.06); border-color: rgba(74,159,255,0.25); }
+    .alert-info .alert-title { color: #1A5FAB; }
+    .alert-info .alert-body { color: #555; }
+    .alert-warning { background: rgba(245,200,66,0.06); border-color: rgba(245,200,66,0.3); }
+    .alert-warning .alert-title { color: #7A5500; }
+    .alert-warning .alert-body { color: #555; }
+    .alert-error { background: rgba(255,107,107,0.06); border-color: rgba(255,107,107,0.25); }
+    .alert-error .alert-title { color: #C0392B; }
+    .alert-error .alert-body { color: #555; }
+    .alert-success { background: rgba(0,212,170,0.06); border-color: rgba(0,212,170,0.25); }
+    .alert-success .alert-title { color: #006B55; }
+    .alert-success .alert-body { color: #555; }
+
+    /* ── Progress ────────────────────────────────────────── */
+    .progress-bar-wrap { width: 335px; display: flex; flex-direction: column; gap: 8px; }
+    .progress-track { height: 8px; border-radius: 999px; background: #F0F0F0; position: relative; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; }
+    .progress-fill.gold { background: linear-gradient(90deg, #F7D464 0%, #F0A832 100%); }
+    .progress-fill.teal { background: linear-gradient(90deg, #00D4AA 0%, #009980 100%); }
+    .progress-fill.blue { background: linear-gradient(90deg, #4A9FFF 0%, #1A6FDF 100%); }
+    .progress-fill.coral { background: linear-gradient(90deg, #FF6B6B 0%, #CC3333 100%); }
+    .progress-labels { display: flex; justify-content: space-between; font-size: 12px; color: #888; }
+    .progress-pct { font-size: 12px; font-weight: 700; color: #0C1220; text-align: right; }
+
+    /* Circular progress */
+    .ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .ring-svg { transform: rotate(-90deg); }
+
+    /* Step progress */
+    .step-progress { display: flex; gap: 12px; align-items: center; }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 999px; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .step-num.done { background: #0C1220; color: #FFFFFF; }
+    .step-num.current { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); color: #0C1220; }
+    .step-num.future { background: #F0F0F0; color: #AAAAAA; border: 2px solid #E0E0E0; }
+    .step-ptext { font-size: 13px; font-weight: 600; color: #0C1220; }
+    .step-ptext.muted { color: #AAAAAA; }
+    .step-line-h { flex: 1; height: 2px; background: #E0E0E0; }
+    .step-line-h.done { background: #0C1220; }
+
+    /* ── Skeleton Loaders ────────────────────────────────── */
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, #F0F0F0 25%, #E4E4E4 50%, #F0F0F0 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 8px;
+    }
+    .skel-card { width: 335px; padding: 20px; background: #FFFFFF; border-radius: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 12px; }
+    .skel-list-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #F5F5F5; }
+
+    /* ── Empty States ────────────────────────────────────── */
+    .empty-state {
+      width: 280px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;
+      padding: 32px 20px; background: #FFFFFF; border-radius: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .empty-icon { font-size: 48px; margin-bottom: 4px; }
+    .empty-title { font-size: 18px; font-weight: 800; color: #0C1220; letter-spacing: -0.3px; }
+    .empty-body { font-size: 14px; color: #888; line-height: 1.5; }
+    .empty-cta {
+      margin-top: 4px; padding: 12px 28px; border-radius: 999px;
+      background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%);
+      color: #0C1220; font-size: 15px; font-weight: 700; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+    .empty-retry {
+      margin-top: 4px; padding: 12px 28px; border-radius: 999px;
+      background: #F5F5F5; color: #0C1220; font-size: 15px; font-weight: 700; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── Full-Page Loader ────────────────────────────────── */
+    .page-loader {
+      width: 375px; height: 280px; background: #FDFAF0; border-radius: 32px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+    .loader-spinner { width: 56px; height: 56px; border: 3.5px solid rgba(245,200,66,0.2); border-top-color: #F5C842; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-text { font-size: 15px; color: #888; font-weight: 500; }
+    .loader-sub { font-size: 13px; color: #BBBBBB; }
+    .section-loader {
+      width: 335px; padding: 20px; background: #FFFFFF; border-radius: 20px;
+      display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .sm-spinner { width: 24px; height: 24px; border: 2.5px solid rgba(245,200,66,0.2); border-top-color: #F5C842; border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="ds-header">
+    <div class="hdr-glow-gold"></div>
+    <div class="hdr-glow-blue"></div>
+    <div class="hdr-inner">
+      <div>
+        <div class="hdr-wordmark">Multipl <span>Design System</span></div>
+        <div style="color:rgba(255,255,255,0.45); font-size:15px; margin-top:6px;">v4.0 — Page 5 of 7</div>
+      </div>
+      <div class="hdr-meta">
+        <div class="hdr-badge">FEEDBACK &amp; STATES</div>
+        <p>Toast · Alert · Progress · Skeletons · Empty States · Loaders</p>
+      </div>
+    </div>
+    <div class="hdr-pills">
+      <div class="hdr-pill">Gold = brand progress</div>
+      <div class="hdr-pill">Teal = success</div>
+      <div class="hdr-pill">Coral = error</div>
+      <div class="hdr-pill">Above bottom nav</div>
+    </div>
+  </div>
+
+  <!-- TOAST / SNACKBAR -->
+  <div class="section-card">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">Toast / Snackbar</div>
+    <div class="section-sub">Dark surface (midnight) with semantic border. Positioned 16px above bottom nav bar. Auto-dismiss after 4s. Action button optional.</div>
+
+    <div class="row" style="gap:24px;">
+      <div class="col">
+        <div class="toast success"><span class="toast-icon">✓</span><span class="toast-text">Investment confirmed! ₹1,000 invested in Zepto.</span></div>
+        <div class="state-label">Success — teal</div>
+      </div>
+      <div class="col">
+        <div class="toast error"><span class="toast-icon">✕</span><span class="toast-text">Payment failed. Please try again.</span><span class="toast-action">Retry</span></div>
+        <div class="state-label">Error — coral + action</div>
+      </div>
+      <div class="col">
+        <div class="toast info"><span class="toast-icon">ℹ</span><span class="toast-text">New offer available on Swiggy. Limited time only.</span><span class="toast-action">View</span></div>
+        <div class="state-label">Info — blue + action</div>
+      </div>
+      <div class="col">
+        <div class="toast warning"><span class="toast-icon">⚠</span><span class="toast-text">KYC pending — investing limit reduced.</span><span class="toast-action">Fix</span></div>
+        <div class="state-label">Warning — gold + action</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="spec-box">
+      <strong>Toast Spec:</strong> Background #0C1220 · Border 1px with 30% opacity semantic color · cornerRadius 16px · Min 300px wide, max 360px · Padding 14px 16px · Icon 20px · Text 14px/600 · Action 13px/700 semantic color · Position: fixed, 80px above bottom safe edge.
+    </div>
+  </div>
+
+  <!-- ALERT BANNERS -->
+  <div class="section-card">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">Alert Banners (Inline)</div>
+    <div class="section-sub">Inline alerts within page content. Dismissible variant has ✕ button top-right. Semantic color coding consistent with toasts.</div>
+
+    <div class="col" style="gap:12px; max-width:600px;">
+      <div class="alert-banner alert-info">
+        <div class="alert-icon">ℹ</div>
+        <div class="alert-content">
+          <div class="alert-title">Market is closed today</div>
+          <div class="alert-body">Orders placed now will execute when markets open at 9:15 AM on the next trading day.</div>
+        </div>
+      </div>
+      <div class="alert-banner alert-warning">
+        <div class="alert-icon">⚠</div>
+        <div class="alert-content">
+          <div class="alert-title">KYC expires in 7 days</div>
+          <div class="alert-body">Renew your documents to avoid investment limits. <a href="#" style="color:#7A5500; font-weight:700;">Renew now</a></div>
+        </div>
+        <div class="alert-dismiss">✕</div>
+      </div>
+      <div class="alert-banner alert-error">
+        <div class="alert-icon">✕</div>
+        <div class="alert-content">
+          <div class="alert-title">Bank account verification failed</div>
+          <div class="alert-body">The account number or IFSC you entered doesn't match our records. Please check and try again.</div>
+        </div>
+        <div class="alert-dismiss">✕</div>
+      </div>
+      <div class="alert-banner alert-success">
+        <div class="alert-icon">✓</div>
+        <div class="alert-content">
+          <div class="alert-title">PAN verified successfully</div>
+          <div class="alert-body">Your PAN card has been verified. You can now invest up to ₹2 lakh.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="section-card">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">Progress Indicators</div>
+    <div class="section-sub">Linear bars for goals and loading. Circular ring for goal tracking. Step progress for onboarding flows.</div>
+
+    <div class="group-label">Linear Progress Bars</div>
+    <div class="col" style="gap:20px; max-width:500px;">
+      <div class="progress-bar-wrap">
+        <div class="progress-labels"><span>Emergency Fund</span><span style="font-weight:700; color:#0C1220;">₹34,500 / ₹50,000</span></div>
+        <div class="progress-track"><div class="progress-fill gold" style="width:69%;"></div></div>
+        <div class="progress-pct">69% complete</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-labels"><span>Monthly target</span><span style="font-weight:700; color:#006B55;">₹8,200 / ₹10,000</span></div>
+        <div class="progress-track" style="height:10px;"><div class="progress-fill teal" style="width:82%;"></div></div>
+        <div class="progress-pct" style="color:#006B55;">82%</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-labels"><span>KYC documents</span><span style="font-weight:700; color:#4A9FFF;">3 / 5</span></div>
+        <div class="progress-track"><div class="progress-fill blue" style="width:60%;"></div></div>
+        <div class="progress-pct" style="color:#4A9FFF;">60%</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-labels"><span>Loading</span></div>
+        <div class="progress-track"><div class="progress-fill gold" style="width:35%; animation: progressLoad 2s ease-in-out infinite alternate;"></div></div>
+        @keyframes progressLoad { from { width:15%; } to { width:85%; } }
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Circular Ring Progress</div>
+    <div class="row" style="gap:40px; align-items:center;">
+      <div class="ring-wrap">
+        <svg width="100" height="100" class="ring-svg">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#F0F0F0" stroke-width="8"/>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="url(#gold-grad)" stroke-width="8" stroke-dasharray="264" stroke-dashoffset="82" stroke-linecap="round"/>
+          <defs><linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#F7D464"/><stop offset="100%" style="stop-color:#F0A832"/></linearGradient></defs>
+        </svg>
+        <div style="text-align:center; margin-top:-8px;">
+          <div style="font-size:22px; font-weight:800; color:#0C1220; font-variant-numeric:tabular-nums;">69%</div>
+          <div style="font-size:11px; color:#888;">Emergency Fund</div>
+        </div>
+        <div class="state-label">Goal ring (gold)</div>
+      </div>
+      <div class="ring-wrap">
+        <svg width="100" height="100" class="ring-svg">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#F0F0F0" stroke-width="8"/>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#00D4AA" stroke-width="8" stroke-dasharray="264" stroke-dashoffset="48" stroke-linecap="round"/>
+        </svg>
+        <div style="text-align:center; margin-top:-8px;">
+          <div style="font-size:22px; font-weight:800; color:#006B55; font-variant-numeric:tabular-nums;">82%</div>
+          <div style="font-size:11px; color:#888;">Monthly Target</div>
+        </div>
+        <div class="state-label">Goal ring (teal)</div>
+      </div>
+      <div class="ring-wrap">
+        <svg width="120" height="120" class="ring-svg">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#F0F0F0" stroke-width="10"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#FF6B6B" stroke-width="10" stroke-dasharray="327" stroke-dashoffset="229" stroke-linecap="round"/>
+        </svg>
+        <div style="text-align:center; margin-top:-10px;">
+          <div style="font-size:24px; font-weight:800; color:#C0392B; font-variant-numeric:tabular-nums;">30%</div>
+          <div style="font-size:11px; color:#888;">Portfolio drop</div>
+        </div>
+        <div class="state-label">Alert ring (coral)</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">3-Step Progress (numbered)</div>
+    <div style="width:400px; background:#FDFAF0; border-radius:20px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+      <div style="font-size:13px; color:#888; margin-bottom:16px;">KYC Verification</div>
+      <div class="step-progress">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <div class="step-num done">✓</div>
+          <div style="font-size:11px; color:#0C1220; font-weight:600;">Mobile</div>
+        </div>
+        <div class="step-line-h done"></div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <div class="step-num current">2</div>
+          <div style="font-size:11px; color:#0C1220; font-weight:700;">Documents</div>
+        </div>
+        <div class="step-line-h"></div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <div class="step-num future">3</div>
+          <div style="font-size:11px; color:#AAAAAA;">Bank</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKELETON LOADERS -->
+  <div class="section-card">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Skeleton Loaders</div>
+    <div class="section-sub">Shimmer animation (1.5s, ease-in-out, infinite). Shapes mirror the real content geometry. Never use spinners alone for content areas — prefer skeletons.</div>
+
+    <div class="row" style="gap:32px; align-items:flex-start;">
+      <!-- Card skeleton -->
+      <div class="col">
+        <div class="group-label">Card Skeleton</div>
+        <div class="skel-card">
+          <div class="skeleton" style="height:14px; width:100px; border-radius:6px;"></div>
+          <div class="skeleton" style="height:32px; width:180px; border-radius:8px;"></div>
+          <div style="height:1px; background:#F5F5F5; margin:4px 0;"></div>
+          <div style="display:flex; justify-content:space-between;">
+            <div class="skeleton" style="height:14px; width:80px; border-radius:6px;"></div>
+            <div class="skeleton" style="height:14px; width:80px; border-radius:6px;"></div>
+            <div class="skeleton" style="height:14px; width:80px; border-radius:6px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- List skeleton -->
+      <div class="col">
+        <div class="group-label">List Item Skeleton</div>
+        <div style="background:#FFFFFF; border-radius:20px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.06); width:335px; padding:0 16px;">
+          <div class="skel-list-item">
+            <div class="skeleton" style="width:40px; height:40px; border-radius:12px; flex-shrink:0;"></div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+              <div class="skeleton" style="height:14px; width:140px; border-radius:6px;"></div>
+              <div class="skeleton" style="height:12px; width:100px; border-radius:6px;"></div>
+            </div>
+            <div class="skeleton" style="height:14px; width:60px; border-radius:6px;"></div>
+          </div>
+          <div class="skel-list-item">
+            <div class="skeleton" style="width:40px; height:40px; border-radius:12px; flex-shrink:0;"></div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+              <div class="skeleton" style="height:14px; width:120px; border-radius:6px;"></div>
+              <div class="skeleton" style="height:12px; width:80px; border-radius:6px;"></div>
+            </div>
+            <div class="skeleton" style="height:14px; width:50px; border-radius:6px;"></div>
+          </div>
+          <div class="skel-list-item" style="border-bottom:none;">
+            <div class="skeleton" style="width:40px; height:40px; border-radius:12px; flex-shrink:0;"></div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+              <div class="skeleton" style="height:14px; width:160px; border-radius:6px;"></div>
+              <div class="skeleton" style="height:12px; width:90px; border-radius:6px;"></div>
+            </div>
+            <div class="skeleton" style="height:14px; width:70px; border-radius:6px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatar + amount skeleton -->
+      <div class="col">
+        <div class="group-label">Avatar &amp; Amount</div>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="skeleton" style="width:48px; height:48px; border-radius:999px; flex-shrink:0;"></div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="skeleton" style="height:14px; width:120px; border-radius:6px;"></div>
+              <div class="skeleton" style="height:12px; width:80px; border-radius:6px;"></div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div class="skeleton" style="height:14px; width:100px; border-radius:6px;"></div>
+            <div class="skeleton" style="height:36px; width:180px; border-radius:10px;"></div>
+            <div class="skeleton" style="height:12px; width:120px; border-radius:6px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPTY STATES -->
+  <div class="section-card">
+    <div class="section-label">Section 05</div>
+    <div class="section-title">Empty States</div>
+    <div class="section-sub">Every major list/content area needs an empty state. Icon + title + body + optional CTA. Tone matches context (neutral for no results, encouraging for first-use).</div>
+
+    <div class="row">
+      <div class="col">
+        <div class="empty-state">
+          <div class="empty-icon">📄</div>
+          <div class="empty-title">No transactions yet</div>
+          <div class="empty-body">Your spending history will appear here once you shop with a Multipl brand.</div>
+          <button class="empty-cta">Explore Brands</button>
+        </div>
+        <div class="state-label">No transactions</div>
+      </div>
+      <div class="col">
+        <div class="empty-state">
+          <div class="empty-icon">🏷</div>
+          <div class="empty-title">No brands added</div>
+          <div class="empty-body">Link your favourite brands to start earning cashback automatically.</div>
+          <button class="empty-cta">Add a Brand</button>
+        </div>
+        <div class="state-label">No brands linked</div>
+      </div>
+      <div class="col">
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <div class="empty-title">No results found</div>
+          <div class="empty-body">We couldn't find anything matching "zepto2". Try a different search term.</div>
+          <button class="empty-retry">Clear Search</button>
+        </div>
+        <div class="state-label">Search — no results</div>
+      </div>
+      <div class="col">
+        <div class="empty-state">
+          <div class="empty-icon">😕</div>
+          <div class="empty-title">Something went wrong</div>
+          <div class="empty-body">We're having trouble loading your data. This is on us — please try again.</div>
+          <button class="empty-cta">Try Again</button>
+        </div>
+        <div class="state-label">Error / server failure</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING SCREENS -->
+  <div class="section-card">
+    <div class="section-label">Section 06</div>
+    <div class="section-title">Loading Screens</div>
+    <div class="section-sub">Full-page loader for initial app load or blocking operations. Inline section loader for partial content refresh.</div>
+
+    <div class="row" style="gap:40px; align-items:flex-start;">
+      <div class="col">
+        <div class="group-label">Full-Page Loader</div>
+        <div class="page-loader">
+          <div class="loader-spinner"></div>
+          <div style="text-align:center;">
+            <div class="loader-text">Loading your portfolio…</div>
+            <div class="loader-sub">This usually takes 2–3 seconds</div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="group-label">Inline Section Loader</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="section-loader">
+            <div class="sm-spinner"></div>
+            <div style="font-size:14px; color:#888; font-weight:500;">Refreshing transactions…</div>
+          </div>
+          <div class="section-loader">
+            <div class="sm-spinner"></div>
+            <div style="font-size:14px; color:#888; font-weight:500;">Syncing portfolio data…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

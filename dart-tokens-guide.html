@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1440, initial-scale=1" />
+  <title>Multipl — Dart Tokens Guide v4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500&family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #F0EDE4;
+      color: #0C1220;
+      padding: 48px;
+      width: 1440px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .doc { max-width: 1344px; margin: 0 auto; }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    .hdr {
+      background: #0C1220;
+      border-radius: 24px;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .hdr-glow-gold {
+      position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+      width: 400px; height: 240px;
+      background: radial-gradient(circle, rgba(245,200,66,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hdr-glow-blue {
+      position: absolute; top: -50px; right: -40px;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(74,159,255,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hdr-glow-teal {
+      position: absolute; bottom: -40px; right: 80px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,212,170,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hdr-content { position: relative; z-index: 1; }
+    .hdr-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px;
+      background: rgba(245,200,66,0.15);
+      border: 1px solid rgba(245,200,66,0.30);
+      border-radius: 999px;
+      font-size: 11px; font-weight: 700; color: #F5C842;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hdr-title {
+      font-size: 48px; font-weight: 800; color: #FFFFFF;
+      letter-spacing: -1.5px; line-height: 1; margin-bottom: 8px;
+    }
+    .hdr-title span { color: #F5C842; }
+    .hdr-sub {
+      font-size: 16px; color: rgba(255,255,255,0.50); margin-bottom: 32px;
+    }
+    .hdr-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hdr-pill {
+      padding: 8px 18px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.70);
+    }
+    .hdr-pill.teal  { color: #00D4AA; border-color: rgba(0,212,170,0.30); background: rgba(0,212,170,0.10); }
+    .hdr-pill.gold  { color: #F5C842; border-color: rgba(245,200,66,0.30); background: rgba(245,200,66,0.10); }
+
+    /* ── Section ─────────────────────────────────────────────── */
+    .section { margin-bottom: 40px; }
+    .section-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 36px 40px;
+      box-shadow: 0 2px 12px rgba(12,18,32,0.07);
+    }
+    .section-title {
+      font-size: 22px; font-weight: 800; color: #0C1220;
+      letter-spacing: -0.4px; margin-bottom: 6px;
+    }
+    .section-sub {
+      font-size: 14px; color: rgba(12,18,32,0.50); margin-bottom: 28px;
+    }
+    .divider { height: 1px; background: #F0F0F0; margin: 24px 0; }
+
+    .group-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #AAAAAA; margin-bottom: 14px;
+    }
+
+    /* ── Two-column layout ───────────────────────────────────── */
+    .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .col3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+    /* ── Change diff table ───────────────────────────────────── */
+    .diff-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .diff-table th {
+      text-align: left; padding: 8px 14px;
+      background: #F8F8F8; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; color: #AAAAAA;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .diff-table th:first-child { border-radius: 8px 0 0 0; }
+    .diff-table th:last-child { border-radius: 0 8px 0 0; }
+    .diff-table td { padding: 10px 14px; border-bottom: 1px solid #F5F5F5; color: #0C1220; }
+    .diff-table tr:last-child td { border-bottom: none; }
+    .diff-table td:first-child { font-family: 'DM Mono', monospace; font-size: 12px; color: #006B55; }
+    .diff-old { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(229,57,53,0.80); text-decoration: line-through; }
+    .diff-new { font-family: 'DM Mono', monospace; font-size: 11px; color: #006B55; font-weight: 500; }
+    .diff-tag {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    }
+    .tag-fix  { background: rgba(229,57,53,0.08); color: #E53935; }
+    .tag-add  { background: rgba(0,180,140,0.10); color: #006B55; }
+    .tag-new  { background: rgba(245,200,66,0.15); color: #9A7500; }
+
+    /* ── Color swatch rows ───────────────────────────────────── */
+    .swatch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .swatch-item { display: flex; flex-direction: column; gap: 6px; }
+    .swatch-block {
+      height: 48px; border-radius: 10px;
+      border: 1px solid rgba(12,18,32,0.08);
+    }
+    .swatch-name {
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      color: #0C1220; font-weight: 500; line-height: 1.3;
+    }
+    .swatch-val {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      color: rgba(12,18,32,0.45);
+    }
+
+    /* ── Token row (name + code) ─────────────────────────────── */
+    .token-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 0; border-bottom: 1px solid #F5F5F5;
+      font-size: 13px;
+    }
+    .token-row:last-child { border-bottom: none; }
+    .tok-swatch {
+      width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+      border: 1px solid rgba(12,18,32,0.10);
+    }
+    .tok-name { font-family: 'DM Mono', monospace; font-size: 12px; color: #0C1220; font-weight: 500; flex: 1; }
+    .tok-val  { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(12,18,32,0.45); }
+    .tok-note { font-size: 11px; color: rgba(12,18,32,0.40); margin-left: auto; white-space: nowrap; }
+
+    /* ── Code block ──────────────────────────────────────────── */
+    .code-block {
+      background: #0C1220;
+      border-radius: 14px;
+      padding: 24px;
+      overflow-x: auto;
+      position: relative;
+    }
+    .code-block pre {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; line-height: 1.7;
+      color: rgba(255,255,255,0.80);
+      white-space: pre;
+    }
+    .code-lang {
+      position: absolute; top: 14px; right: 16px;
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      color: rgba(255,255,255,0.25); text-transform: uppercase;
+    }
+    .kw  { color: #C792EA; } /* keyword */
+    .cls { color: #82AAFF; } /* class name */
+    .str { color: #F5C842; } /* string / gold */
+    .num { color: #00D4AA; } /* number / teal */
+    .cmt { color: rgba(255,255,255,0.30); font-style: italic; }
+    .fn  { color: #80CBC4; } /* function */
+    .con { color: #FFCB6B; } /* const */
+
+    /* ── Spec box ─────────────────────────────────────────────── */
+    .spec-box {
+      background: #F8F8F8;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 13px; color: rgba(12,18,32,0.65);
+      line-height: 1.6;
+      border-left: 3px solid #F5C842;
+    }
+    .spec-box strong { color: #0C1220; }
+
+    /* ── Radius demo ─────────────────────────────────────────── */
+    .radius-demo {
+      display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+    }
+    .radius-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .radius-box {
+      background: #0C1220;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .radius-label { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(12,18,32,0.55); text-align: center; }
+    .radius-val   { font-family: 'DM Mono', monospace; font-size: 12px; color: #0C1220; font-weight: 600; text-align: center; }
+
+    /* ── Motion table ─────────────────────────────────────────── */
+    .motion-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .motion-table th {
+      text-align: left; padding: 8px 12px;
+      background: #F8F8F8; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; color: #AAAAAA;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .motion-table td { padding: 10px 12px; border-bottom: 1px solid #F5F5F5; }
+    .motion-table tr:last-child td { border-bottom: none; }
+    .motion-table td:first-child { font-family: 'DM Mono', monospace; font-size: 12px; color: #0C1220; font-weight: 500; }
+    .motion-table td:nth-child(2) { font-family: 'DM Mono', monospace; font-size: 12px; color: #006B55; }
+    .motion-bar {
+      height: 6px; border-radius: 999px; background: rgba(245,200,66,0.25);
+      overflow: hidden; min-width: 40px;
+    }
+    .motion-fill { height: 100%; border-radius: 999px; background: #F5C842; }
+
+    /* ── Coverage matrix ──────────────────────────────────────── */
+    .matrix-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .matrix-table th {
+      text-align: left; padding: 8px 12px;
+      background: #F8F8F8; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; color: #AAAAAA;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .matrix-table th:first-child { border-radius: 8px 0 0 0; width: 28%; }
+    .matrix-table td { padding: 9px 12px; border-bottom: 1px solid #F5F5F5; vertical-align: top; }
+    .matrix-table td:first-child { font-weight: 600; color: #0C1220; }
+    .matrix-table td:last-child { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(12,18,32,0.55); }
+    .matrix-table tr:last-child td { border-bottom: none; }
+    .matrix-group-row td {
+      background: #FAFAFA;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: #AAAAAA; padding: 6px 12px;
+    }
+
+    /* ── Opacity ref table ────────────────────────────────────── */
+    .opacity-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .opacity-table th {
+      text-align: center; padding: 7px 10px;
+      background: #F8F8F8; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; color: #AAAAAA;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .opacity-table td { padding: 8px 10px; border-bottom: 1px solid #F5F5F5; text-align: center; }
+    .opacity-table tr:last-child td { border-bottom: none; }
+    .opacity-table td:nth-child(2) { font-family: 'DM Mono', monospace; font-size: 12px; color: #006B55; font-weight: 500; }
+    .opacity-bar-wrap { display: flex; align-items: center; justify-content: center; }
+    .opacity-bar { height: 10px; border-radius: 999px; background: #0C1220; }
+
+    /* ── Footnote ─────────────────────────────────────────────── */
+    .footnote { font-size: 12px; color: rgba(12,18,32,0.38); text-align: center; margin-top: 40px; }
+  </style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- ══ HEADER ══════════════════════════════════════════════ -->
+  <div class="hdr">
+    <div class="hdr-glow-gold"></div>
+    <div class="hdr-glow-blue"></div>
+    <div class="hdr-glow-teal"></div>
+    <div class="hdr-content">
+      <div class="hdr-badge">Developer Handoff · Design Tokens</div>
+      <div class="hdr-title">Dart Tokens Guide <span>v4</span></div>
+      <div class="hdr-sub">Golden Canvas Design System · Flutter Implementation · February 2026</div>
+      <div class="hdr-pills">
+        <div class="hdr-pill">lib/design/app_colors.dart</div>
+        <div class="hdr-pill">app_radius.dart</div>
+        <div class="hdr-pill">app_text_styles.dart</div>
+        <div class="hdr-pill teal">app_motion.dart — NEW</div>
+        <div class="hdr-pill gold">11 Delight Components Covered</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ WHAT CHANGED ════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">What Changed in v4</div>
+      <div class="section-sub">Breaking fixes + additions required for the full component library</div>
+      <table class="diff-table">
+        <thead>
+          <tr><th>Token / File</th><th>Type</th><th>Was</th><th>Now</th><th>Reason</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AppRadius.rXS / rS / rM</td>
+            <td><span class="diff-tag tag-fix">Fix</span></td>
+            <td><span class="diff-old">6 / 10 / 14</span></td>
+            <td><span class="diff-new">4 / 8 / 12</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Sync with tokens-v3.css source of truth</td>
+          </tr>
+          <tr>
+            <td>AppColors.electricBlue</td>
+            <td><span class="diff-tag tag-fix">Fix</span></td>
+            <td><span class="diff-old">#2563EB</span></td>
+            <td><span class="diff-new">#4A9FFF</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Matches CSS --electricBlue; #2563EB kept as electricBlueText for readable text</td>
+          </tr>
+          <tr>
+            <td>AppColors.txMid</td>
+            <td><span class="diff-tag tag-fix">Fix</span></td>
+            <td><span class="diff-old">Color(0xFF4A566E)</span></td>
+            <td><span class="diff-new">Color(0x8C0C1220)</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Opacity-based (55% midnight) renders correctly on cream bgBase</td>
+          </tr>
+          <tr>
+            <td>AppColors.txLight</td>
+            <td><span class="diff-tag tag-fix">Fix</span></td>
+            <td><span class="diff-old">Color(0xFF8695B0)</span></td>
+            <td><span class="diff-new">Color(0x590C1220)</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Opacity-based (35% midnight), same reason</td>
+          </tr>
+          <tr>
+            <td>AppColors.btnPrimaryText</td>
+            <td><span class="diff-tag tag-add">Add</span></td>
+            <td><span class="diff-old">—</span></td>
+            <td><span class="diff-new">#1A1200 (near-black)</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Text on gold buttons; 18.3:1 contrast. Not midnight #0C1220.</td>
+          </tr>
+          <tr>
+            <td>DM Mono typeface</td>
+            <td><span class="diff-tag tag-add">Add</span></td>
+            <td><span class="diff-old">Courier New (vouchers only)</span></td>
+            <td><span class="diff-new">DM Mono — counters, scores, vouchers</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Heartbeat, Total Return, Lifetime Score all use DM Mono</td>
+          </tr>
+          <tr>
+            <td>AppRadius.rSheet</td>
+            <td><span class="diff-tag tag-add">Add</span></td>
+            <td><span class="diff-old">—</span></td>
+            <td><span class="diff-new">28pt — bottom sheet top corners</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Bottom sheets use 28pt not rXL (24pt)</td>
+          </tr>
+          <tr>
+            <td>AppShadows.focusRingGold</td>
+            <td><span class="diff-tag tag-add">Add</span></td>
+            <td><span class="diff-old">—</span></td>
+            <td><span class="diff-new">0 0 0 3px rgba(245,200,66,0.12)</span></td>
+            <td style="color:rgba(12,18,32,0.55);">All focused inputs, PIN boxes, dropdowns</td>
+          </tr>
+          <tr>
+            <td>app_motion.dart</td>
+            <td><span class="diff-tag tag-new">New</span></td>
+            <td><span class="diff-old">—</span></td>
+            <td><span class="diff-new">Durations, curves, stagger, press scale</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Delight components require specific spring curve + 60ms stagger</td>
+          </tr>
+          <tr>
+            <td>Form state tokens</td>
+            <td><span class="diff-tag tag-add">Add</span></td>
+            <td><span class="diff-old">—</span></td>
+            <td><span class="diff-new">formBorder*, formFocusRing, formBg</span></td>
+            <td style="color:rgba(12,18,32,0.55);">ds-forms.html component library</td>
+          </tr>
+          <tr>
+            <td>Neutral tokens</td>
+            <td><span class="diff-tag tag-add">Add</span></td>
+            <td><span class="diff-old">—</span></td>
+            <td><span class="diff-new">neutralTrack #F0F0F0, neutralBorder #E0E0E0</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Progress bars, skeleton loaders, voucher dashed border</td>
+          </tr>
+          <tr>
+            <td>New gradients</td>
+            <td><span class="diff-tag tag-add">Add</span></td>
+            <td><span class="diff-old">—</span></td>
+            <td><span class="diff-new">progressTeal, progressScore, chartBarActive, carouselSlide, scoreHeader</span></td>
+            <td style="color:rgba(12,18,32,0.55);">Delight + financial components</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ COLOR TOKENS ════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">Color Tokens — AppColors</div>
+      <div class="section-sub">All token names are static const on AppColors class · import 'package:multipl/design/design.dart'</div>
+
+      <div class="group-label">Canvas</div>
+      <div class="swatch-grid" style="grid-template-columns: repeat(5,1fr); margin-bottom:28px;">
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#FDFAF0;"></div>
+          <div class="swatch-name">bgBase</div>
+          <div class="swatch-val">#FDFAF0</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#FFFFFF;"></div>
+          <div class="swatch-name">bgCard</div>
+          <div class="swatch-val">#FFFFFF</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#0C1220;"></div>
+          <div class="swatch-name">bgDark</div>
+          <div class="swatch-val">#0C1220</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#141B2D;"></div>
+          <div class="swatch-name">bgDark02</div>
+          <div class="swatch-val">#141B2D</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:rgba(255,255,255,0.06); background-color:#0C1220; background-image: linear-gradient(rgba(255,255,255,0.06),rgba(255,255,255,0.06));"></div>
+          <div class="swatch-name">bgGlass</div>
+          <div class="swatch-val">rgba(255,255,255,0.06)</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="group-label">Brand Gold · CTA only · one per screen</div>
+      <div class="swatch-grid" style="grid-template-columns: repeat(5,1fr); margin-bottom:28px;">
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#F5C842;"></div>
+          <div class="swatch-name">gold</div>
+          <div class="swatch-val">#F5C842</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:linear-gradient(135deg,#F7D464,#F0A832);"></div>
+          <div class="swatch-name">goldGradStart/End</div>
+          <div class="swatch-val">#F7D464 → #F0A832</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:rgba(245,200,66,0.25);"></div>
+          <div class="swatch-name">goldGlow</div>
+          <div class="swatch-val">25% gold</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#1A1200;"></div>
+          <div class="swatch-name">btnPrimaryText ★</div>
+          <div class="swatch-val">#1A1200 · 18.3:1 ✅</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:rgba(245,200,66,0.15);"></div>
+          <div class="swatch-name">navActiveIconBg</div>
+          <div class="swatch-val">18% gold</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="group-label">Teal — Growth signal · surface-aware rule</div>
+      <div class="swatch-grid" style="grid-template-columns: repeat(4,1fr); margin-bottom:28px;">
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#0C1220; display:flex; align-items:center; justify-content:center;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#00D4AA;"></div>
+          </div>
+          <div class="swatch-name">teal #00D4AA</div>
+          <div class="swatch-val">On dark surfaces only</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#FDFAF0; display:flex; align-items:center; justify-content:center;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#006B55;"></div>
+          </div>
+          <div class="swatch-name">tealText #006B55</div>
+          <div class="swatch-val">On light · 5.2:1 ✅</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#FDFAF0; border: 1.5px solid rgba(0,180,140,0.22);">
+            <div style="height:100%;background:rgba(0,180,140,0.09);border-radius:9px;"></div>
+          </div>
+          <div class="swatch-name">tealBgLt / tealBdrLt</div>
+          <div class="swatch-val">9% bg · 22% border</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#0C1220; border: 1px solid rgba(0,212,170,0.25);">
+            <div style="height:100%;background:rgba(0,212,170,0.14);border-radius:9px;"></div>
+          </div>
+          <div class="swatch-name">tealChipBg / tealChipBdr</div>
+          <div class="swatch-val">14% bg · 25% border</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="group-label">Electric Blue · Info accent</div>
+      <div class="swatch-grid" style="grid-template-columns: repeat(4,1fr); margin-bottom:28px;">
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#4A9FFF;"></div>
+          <div class="swatch-name">electricBlue ★</div>
+          <div class="swatch-val">#4A9FFF · glows & decorative</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:#2563EB;"></div>
+          <div class="swatch-name">electricBlueText</div>
+          <div class="swatch-val">#2563EB · text on light · 4.8:1 ✅</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:rgba(74,159,255,0.12);border:1.5px solid rgba(74,159,255,0.30);"></div>
+          <div class="swatch-name">blueBgLt / blueBdrLt</div>
+          <div class="swatch-val">12% bg · 30% border</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:rgba(74,159,255,0.18);"></div>
+          <div class="swatch-name">blueGlow</div>
+          <div class="swatch-val">18% electricBlue</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="col2">
+        <div>
+          <div class="group-label">Text — Light surfaces ★ Opacity-based</div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:#0C1220;"></div>
+            <div class="tok-name">txDark</div>
+            <div class="tok-val">Color(0xFF0C1220)</div>
+            <div class="tok-note">17.5:1 ✅</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:rgba(12,18,32,0.55);"></div>
+            <div class="tok-name">txMid ★</div>
+            <div class="tok-val">Color(0x8C0C1220)</div>
+            <div class="tok-note">55%</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:rgba(12,18,32,0.35);"></div>
+            <div class="tok-name">txLight ★</div>
+            <div class="tok-val">Color(0x590C1220)</div>
+            <div class="tok-note">35%</div>
+          </div>
+        </div>
+        <div>
+          <div class="group-label">Text — Dark surfaces</div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:#FFFFFF; border:1px solid #E0E0E0;"></div>
+            <div class="tok-name">txWhite</div>
+            <div class="tok-val">Color(0xFFFFFFFF)</div>
+            <div class="tok-note">primary</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:rgba(255,255,255,0.65);"></div>
+            <div class="tok-name">txWhiteMd</div>
+            <div class="tok-val">Color(0xA6FFFFFF)</div>
+            <div class="tok-note">65% secondary</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:rgba(255,255,255,0.38);"></div>
+            <div class="tok-name">txWhiteDm</div>
+            <div class="tok-val">Color(0x61FFFFFF)</div>
+            <div class="tok-note">38% tertiary</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:rgba(255,255,255,0.22);"></div>
+            <div class="tok-name">txWhiteMt</div>
+            <div class="tok-val">Color(0x38FFFFFF)</div>
+            <div class="tok-note">22% muted</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="col2">
+        <div>
+          <div class="group-label">Semantic</div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:#E53935;"></div>
+            <div class="tok-name">coral</div>
+            <div class="tok-val">Color(0xFFE53935)</div>
+            <div class="tok-note">error, debit, PIN error</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:rgba(229,57,53,0.08);"></div>
+            <div class="tok-name">coralBg</div>
+            <div class="tok-val">Color(0x14E53935)</div>
+            <div class="tok-note">8%</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:#FFB347;"></div>
+            <div class="tok-name">warning ★</div>
+            <div class="tok-val">Color(0xFFFFB347)</div>
+            <div class="tok-note">new in v4</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:rgba(255,179,71,0.10);"></div>
+            <div class="tok-name">warningBg ★</div>
+            <div class="tok-val">Color(0x1AFFB347)</div>
+            <div class="tok-note">10%</div>
+          </div>
+        </div>
+        <div>
+          <div class="group-label">Form states ★ New</div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:rgba(12,18,32,0.12); border:1px solid rgba(12,18,32,0.12);"></div>
+            <div class="tok-name">formBorderNormal</div>
+            <div class="tok-val">Color(0x1F0C1220)</div>
+            <div class="tok-note">12% midnight</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:#F5C842;"></div>
+            <div class="tok-name">formBorderFocus</div>
+            <div class="tok-val">Color(0xFFF5C842)</div>
+            <div class="tok-note">gold</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:#E53935;"></div>
+            <div class="tok-name">formBorderError</div>
+            <div class="tok-val">Color(0xFFE53935)</div>
+            <div class="tok-note">coral</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:rgba(245,200,66,0.12); border:1px solid rgba(245,200,66,0.30);"></div>
+            <div class="tok-name">formFocusRing</div>
+            <div class="tok-val">Color(0x1FF5C842)</div>
+            <div class="tok-note">3px spread shadow</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:#F0F0F0;"></div>
+            <div class="tok-name">neutralTrack</div>
+            <div class="tok-val">Color(0xFFF0F0F0)</div>
+            <div class="tok-note">progress / skeleton</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-swatch" style="background:#E0E0E0;"></div>
+            <div class="tok-name">neutralBorder</div>
+            <div class="tok-val">Color(0xFFE0E0E0)</div>
+            <div class="tok-note">voucher dashed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RADIUS ══════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">Border Radius — AppRadius</div>
+      <div class="section-sub">★ XS/S/M corrected in v4 to match tokens-v3.css</div>
+      <div class="radius-demo">
+        <div class="radius-item">
+          <div class="radius-box" style="width:48px;height:48px;border-radius:4px;"></div>
+          <div class="radius-val">rXS ★</div>
+          <div class="radius-label">4pt<br>badges</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="width:56px;height:56px;border-radius:8px;"></div>
+          <div class="radius-val">rS ★</div>
+          <div class="radius-label">8pt<br>icons</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="width:64px;height:64px;border-radius:12px;"></div>
+          <div class="radius-val">rM ★</div>
+          <div class="radius-label">12pt<br>inputs</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="width:80px;height:72px;border-radius:20px;"></div>
+          <div class="radius-val">rL</div>
+          <div class="radius-label">20pt<br>cards</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="width:88px;height:80px;border-radius:24px;"></div>
+          <div class="radius-val">rXL</div>
+          <div class="radius-label">24pt<br>hero cards</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="width:88px;height:80px;border-radius:28px 28px 0 0;"></div>
+          <div class="radius-val">rSheet ★</div>
+          <div class="radius-label">28pt top<br>bottom sheets</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="width:100px;height:48px;border-radius:999px;"></div>
+          <div class="radius-val">rFull</div>
+          <div class="radius-label">999pt<br>pills, CTAs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TYPOGRAPHY ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">Typography — AppTextStyles</div>
+      <div class="section-sub">DM Sans (default) · Playfair Display (wealth headings only) · DM Mono (counters, voucher codes) ★ new in v4</div>
+
+      <div class="col2">
+        <div>
+          <div class="group-label">DM Mono — Numeric Display ★ New typeface</div>
+          <div style="background:#0C1220; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
+            <div style="font-family:'DM Mono',monospace; font-size:34px; color:#00D4AA; font-variant-numeric:tabular-nums; margin-bottom:6px;">₹0.004/sec</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.35); font-weight:600; letter-spacing:1px; text-transform:uppercase;">counterLarge · 34px · Heartbeat</div>
+          </div>
+          <div style="background:#FFFFFF; border-radius:14px; padding:20px 22px; border:1px solid #F0F0F0; margin-bottom:16px;">
+            <div style="font-family:'DM Mono',monospace; font-size:36px; color:#006B55; font-variant-numeric:tabular-nums; margin-bottom:6px;">₹1,368</div>
+            <div style="font-size:10px; color:rgba(12,18,32,0.40); font-weight:600; letter-spacing:1px; text-transform:uppercase;">counterDisplay · 36px · Total Return Card</div>
+          </div>
+          <div style="background:#FDFAF0; border-radius:14px; padding:20px 22px; border:1px solid #E8E4D8; margin-bottom:16px;">
+            <div style="font-family:'DM Mono',monospace; font-size:44px; color:#0C1220; font-variant-numeric:tabular-nums; margin-bottom:6px;">682<span style="font-size:18px; color:rgba(12,18,32,0.35);">/1000</span></div>
+            <div style="font-size:10px; color:rgba(12,18,32,0.40); font-weight:600; letter-spacing:1px; text-transform:uppercase;">scoreDisplay · 44px · Lifetime Score</div>
+          </div>
+          <div style="background:#0C1220; border-radius:14px; padding:16px 22px;">
+            <div style="font-family:'DM Mono',monospace; font-size:18px; color:#F5C842; letter-spacing:3px; font-variant-numeric:tabular-nums; margin-bottom:6px;">STAR-X4K9-2025</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.30); font-weight:600; letter-spacing:1px; text-transform:uppercase;">voucherCode · 18px · ls 3px</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="group-label">DM Sans — UI Scale</div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div><div style="font-size:48px; font-weight:800; color:#FFFFFF; background:#0C1220; border-radius:10px; padding:8px 16px; letter-spacing:-1.5px; font-variant-numeric:tabular-nums;">₹42,840</div><div style="font-size:10px;color:#AAAAAA;margin-top:4px;">amountHero · 48/800</div></div>
+            <div><div style="font-size:36px; font-weight:700; color:#0C1220; letter-spacing:-0.8px; font-variant-numeric:tabular-nums;">₹12,450</div><div style="font-size:10px;color:#AAAAAA;margin-top:2px;">amountLarge · 36/700</div></div>
+            <div><div style="font-size:28px; font-weight:700; color:#0C1220; font-family:'Playfair Display',serif; letter-spacing:-0.3px;">Spend smarter,<br>build wealth.</div><div style="font-size:10px;color:#AAAAAA;margin-top:2px;">wealthHeading · Playfair 28/700</div></div>
+            <div><div style="font-size:22px; font-weight:700; color:#0C1220; letter-spacing:-0.4px;">Your Money Worked!</div><div style="font-size:10px;color:#AAAAAA;margin-top:2px;">headlineLarge · 22/700</div></div>
+            <div><div style="font-size:16px; font-weight:700; color:#0C1220;">Set Up Wealth Goals</div><div style="font-size:10px;color:#AAAAAA;margin-top:2px;">titleMedium · 16/700</div></div>
+            <div><div style="font-size:14px; color:rgba(12,18,32,0.55); line-height:1.5;">Your spending account already earns 8.4% p.a. Set a goal and watch every rupee work harder.</div><div style="font-size:10px;color:#AAAAAA;margin-top:2px;">bodyMedium · 14/400 · txMid</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MOTION ═══════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">Motion Tokens — AppMotion ★ New file</div>
+      <div class="section-sub">import 'package:multipl/design/design.dart' · Principle: motion communicates meaning, not decoration</div>
+
+      <div class="col2">
+        <div>
+          <div class="group-label">Duration Scale</div>
+          <table class="motion-table">
+            <thead><tr><th>Token</th><th>Value</th><th>Use case</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>micro</td>
+                <td>150ms</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="motion-bar"><div class="motion-fill" style="width:8%;"></div></div>
+                    <span style="font-size:12px;color:rgba(12,18,32,0.55);">Press, toggle, icon swap</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>standard</td>
+                <td>300ms</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="motion-bar"><div class="motion-fill" style="width:16%;"></div></div>
+                    <span style="font-size:12px;color:rgba(12,18,32,0.55);">Chip select, nav transition</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>entrance</td>
+                <td>500ms</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="motion-bar"><div class="motion-fill" style="width:27%;"></div></div>
+                    <span style="font-size:12px;color:rgba(12,18,32,0.55);">Card entrances, staggered lists</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>spring</td>
+                <td>600ms</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="motion-bar"><div class="motion-fill" style="width:33%;"></div></div>
+                    <span style="font-size:12px;color:rgba(12,18,32,0.55);">Bottom sheet open (spring curve)</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>celebration</td>
+                <td>800ms</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="motion-bar"><div class="motion-fill" style="width:44%;"></div></div>
+                    <span style="font-size:12px;color:rgba(12,18,32,0.55);">Celebration card reveal + confetti</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>counter</td>
+                <td>1500ms</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="motion-bar"><div class="motion-fill" style="width:82%;"></div></div>
+                    <span style="font-size:12px;color:rgba(12,18,32,0.55);">Earnings count-up, score rollup</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>pulseLoop</td>
+                <td>1500ms</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="motion-bar"><div class="motion-fill" style="width:82%; background:#00D4AA;"></div></div>
+                    <span style="font-size:12px;color:rgba(12,18,32,0.55);">Teal heartbeat ring, infinite</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div class="group-label">Easing Curves</div>
+          <div class="spec-box" style="margin-bottom:12px;">
+            <strong>easeOut</strong> — Curves.easeOut<br>
+            Standard entrances, chip selection, nav transitions
+          </div>
+          <div class="spec-box" style="margin-bottom:12px; border-left-color:#00D4AA;">
+            <strong>springCurve</strong> — Cubic(0.34, 1.56, 0.64, 1.0)<br>
+            Bottom sheet open · Celebration card reveal · Subtle overshoot = feels alive
+          </div>
+          <div class="spec-box" style="margin-bottom:12px; border-left-color:rgba(12,18,32,0.20);">
+            <strong>linear</strong> — Curves.linear<br>
+            Counter run-up, progress bar fill
+          </div>
+          <div class="spec-box" style="margin-bottom:24px; border-left-color:#4A9FFF;">
+            <strong>easeInOut</strong> — Curves.easeInOut<br>
+            Looping animations: pulse ring, skeleton shimmer
+          </div>
+          <div class="group-label">Other constants</div>
+          <div class="token-row">
+            <div class="tok-name">staggerItem</div>
+            <div class="tok-val">Duration(60ms)</div>
+            <div class="tok-note">per list item</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-name">pressScale</div>
+            <div class="tok-val">0.95</div>
+            <div class="tok-note">all interactive elements</div>
+          </div>
+          <div class="token-row">
+            <div class="tok-name">shimmer</div>
+            <div class="tok-val">Duration(1200ms)</div>
+            <div class="tok-note">skeleton loader sweep</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GRADIENTS ════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">Gradients — AppGradients</div>
+      <div class="section-sub">All static const · New gradients added for delight + financial components</div>
+      <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:16px;">
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:linear-gradient(135deg,#F7D464,#F0A832); height:60px;"></div>
+          <div class="swatch-name">gold</div>
+          <div class="swatch-val">CTA button · 1 per screen</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:linear-gradient(135deg,#1B3A8C,#2857C4,#1E4FAD); height:60px;"></div>
+          <div class="swatch-name">spendingAccount</div>
+          <div class="swatch-val">Spending account card</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:linear-gradient(90deg,#00D4AA,#4A9FFF); height:60px;"></div>
+          <div class="swatch-name">progressTeal ★</div>
+          <div class="swatch-val">Goal bars, total return</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:linear-gradient(90deg,#F5C842,#00D4AA); height:60px;"></div>
+          <div class="swatch-name">progressScore ★</div>
+          <div class="swatch-val">Lifetime Savings Score</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:linear-gradient(180deg,#00D4AA,rgba(0,212,170,0.35)); height:60px;"></div>
+          <div class="swatch-name">chartBarActive ★</div>
+          <div class="swatch-val">Routine map bars</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:linear-gradient(135deg,rgba(245,200,66,0.08),rgba(0,212,170,0.04)); background-color:#fff; height:60px;"></div>
+          <div class="swatch-name">carouselSlide ★</div>
+          <div class="swatch-val">Relatable carousel bg</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:linear-gradient(135deg,#FDFAF0,rgba(245,200,66,0.12)); height:60px;"></div>
+          <div class="swatch-name">scoreHeader ★</div>
+          <div class="swatch-val">Lifetime Score card top</div>
+        </div>
+        <div class="swatch-item">
+          <div class="swatch-block" style="background:linear-gradient(135deg,#FF5569,#C42032); height:60px;"></div>
+          <div class="swatch-name">brandFood</div>
+          <div class="swatch-val">Brand tile · food</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SHADOWS ══════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">Shadows — AppShadows</div>
+      <div class="section-sub">★ focusRingGold added for all form interactions</div>
+      <div class="col3">
+        <div>
+          <div class="group-label">Card shadows</div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+              <div style="width:100%;height:48px;background:#fff;border-radius:12px;box-shadow:0 2px 14px rgba(12,18,32,0.07),0 0 0 1px rgba(12,18,32,0.04);"></div>
+              <div style="font-size:11px;color:#AAAAAA;margin-top:8px;">card · default white card</div>
+            </div>
+            <div>
+              <div style="width:100%;height:48px;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(12,18,32,0.09),0 0 0 1px rgba(12,18,32,0.04);"></div>
+              <div style="font-size:11px;color:#AAAAAA;margin-top:8px;">cardMd · modals, dropdowns</div>
+            </div>
+            <div>
+              <div style="width:100%;height:48px;background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(12,18,32,0.13);"></div>
+              <div style="font-size:11px;color:#AAAAAA;margin-top:8px;">cardHigh · overlays, celebration</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="group-label">Glow shadows</div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+              <div style="width:100%;height:48px;background:linear-gradient(135deg,#F7D464,#F0A832);border-radius:999px;box-shadow:0 4px 24px rgba(245,200,66,0.40),0 1px 4px rgba(245,200,66,0.26);"></div>
+              <div style="font-size:11px;color:#AAAAAA;margin-top:8px;">glowGold · CTA button</div>
+            </div>
+            <div style="background:#0C1220;border-radius:12px;padding:12px 16px;">
+              <div style="display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:999px;background:rgba(0,212,170,0.14);border:1px solid rgba(0,212,170,0.25);box-shadow:0 0 14px rgba(0,212,170,0.12);">
+                <span style="color:#00D4AA;font-size:13px;font-weight:600;">↑ 8.4%</span>
+              </div>
+            </div>
+            <div style="font-size:11px;color:#AAAAAA;">glowTealChip · growth chips on dark</div>
+          </div>
+        </div>
+        <div>
+          <div class="group-label">Focus ring ★ New</div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+              <div style="width:100%;height:48px;background:#fff;border-radius:12px;border:1.5px solid #F5C842;box-shadow:0 0 0 3px rgba(245,200,66,0.12);"></div>
+              <div style="font-size:11px;color:#AAAAAA;margin-top:8px;">focusRingGold · inputs, PIN, dropdown</div>
+            </div>
+            <div class="spec-box">
+              <strong>Usage:</strong> Apply as additional boxShadow entry when the field has focus. Combine with <code style="font-family:'DM Mono',monospace;font-size:11px;">formBorderFocus</code> border color.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COMPONENT COVERAGE ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">Component Coverage Matrix</div>
+      <div class="section-sub">Every component in the v4 library mapped to its primary tokens</div>
+      <table class="matrix-table">
+        <thead><tr><th>Component</th><th>Key tokens</th></tr></thead>
+        <tbody>
+          <tr class="matrix-group-row"><td colspan="2">Core Atoms</td></tr>
+          <tr><td>Gold CTA Button</td><td>gold · goldGradStart/End · glowGold · btnPrimaryText (#1A1200)</td></tr>
+          <tr><td>Secondary Button (glass)</td><td>bgGlass · borderDk · txWhite</td></tr>
+          <tr><td>Ghost Button</td><td>transparent · txMid · btnSmHeight</td></tr>
+          <tr><td>Growth chip (dark)</td><td>tealChipBg · tealChipBdr · teal · glowTealChip</td></tr>
+          <tr><td>Cashback chip (light)</td><td>tealBgLt · tealBdrLt · tealText</td></tr>
+          <tr><td>Badge (Most Opted)</td><td>gold gradient · btnPrimaryText · rXS</td></tr>
+          <tr><td>Badges (status)</td><td>tealBgLt · coralBg · warningBg · blueBgLt</td></tr>
+          <tr><td>Category tags — light</td><td>tagFoodBg/Text · tagApparelBg/Text · tagShopBg/Text · tagCabsBg/Text</td></tr>
+          <tr><td>Category tags — dark</td><td>tagDkFoodBg/Text · tagDkApparelBg/Text · tagDkShopBg/Text · tagDkCabsBg/Text</td></tr>
+          <tr class="matrix-group-row"><td colspan="2">Forms</td></tr>
+          <tr><td>Text input (normal / focus / error)</td><td>formBorderNormal · formBorderFocus · formBorderError · formFocusRing · focusRingGold shadow</td></tr>
+          <tr><td>Amount input</td><td>formBorderFocus · rM · txDark · tabularFigures</td></tr>
+          <tr><td>Search field</td><td>formBorderNormal → gold on focus · txLight placeholder</td></tr>
+          <tr><td>Dropdown (closed / open / focused)</td><td>formBorderNormal/Focus · formFocusRing · txDark / txLight</td></tr>
+          <tr><td>Checkbox · Radio</td><td>teal fill checked · formBorderNormal unchecked · coral error</td></tr>
+          <tr><td>Toggle switch</td><td>teal active · formBorderNormal inactive track</td></tr>
+          <tr><td>Slider</td><td>teal track · teal thumb · neutralTrack</td></tr>
+          <tr><td>PIN box (active / filled / error)</td><td>formBorderFocus + gold cursor · txDark dot · formBorderError + coral dot</td></tr>
+          <tr><td>OTP box</td><td>same as PIN</td></tr>
+          <tr><td>Verified label</td><td>tealText · checkmark icon</td></tr>
+          <tr class="matrix-group-row"><td colspan="2">Navigation</td></tr>
+          <tr><td>Top app bar</td><td>bgBase · txDark · rS back button</td></tr>
+          <tr><td>Bottom nav (frosted dark)</td><td>navBg (96% midnight) · navActiveIconBg · navActiveLabel (gold) · navInactiveLabel</td></tr>
+          <tr><td>Tab bar</td><td>txDark active · txLight inactive · gold underline indicator</td></tr>
+          <tr><td>Step progress</td><td>tealText completed · bgDark + gold text active · txLight pending</td></tr>
+          <tr class="matrix-group-row"><td colspan="2">Cards & Lists</td></tr>
+          <tr><td>Hero dark card</td><td>bgDark · 3 glows (gold/blue/teal) · amountHero · growth chip · sparkline</td></tr>
+          <tr><td>White card</td><td>bgCard · shadowCard · rL</td></tr>
+          <tr><td>Brand tile card</td><td>brandFood/Shop/Apparel/Cabs gradient header · category tag · cashback chip</td></tr>
+          <tr><td>Transaction row (credit)</td><td>tealText amount · txDark label</td></tr>
+          <tr><td>Transaction row (debit)</td><td>coral amount · txDark label</td></tr>
+          <tr class="matrix-group-row"><td colspan="2">Feedback</td></tr>
+          <tr><td>Success toast</td><td>tealBgLt · tealBdrLt · tealText · teal icon</td></tr>
+          <tr><td>Error toast / alert</td><td>coralBg · coral border · coral · coral icon</td></tr>
+          <tr><td>Info toast</td><td>blueBgLt · blueBdrLt · electricBlueText · electricBlue icon</td></tr>
+          <tr><td>Warning toast</td><td>warningBg · warning border · warning · warning icon</td></tr>
+          <tr><td>Progress bar (goal)</td><td>progressTeal gradient · neutralTrack · rFull</td></tr>
+          <tr><td>Skeleton loader</td><td>neutralTrack shimmer → shimmer duration (1200ms)</td></tr>
+          <tr class="matrix-group-row"><td colspan="2">Overlays</td></tr>
+          <tr><td>Bottom sheet</td><td>bgBase · rSheet (28pt) · shadowModal · handle: txLight</td></tr>
+          <tr><td>Modal dialog</td><td>bgCard · rXL · shadowCardHigh · bgDark 50% backdrop</td></tr>
+          <tr><td>Tooltip</td><td>bgDark · txWhiteMd · rM</td></tr>
+          <tr class="matrix-group-row"><td colspan="2">Financial</td></tr>
+          <tr><td>Voucher card</td><td>bgDark · 3 glows · voucherCode (DM Mono) · gold code · coral expiry · neutralBorder dashed</td></tr>
+          <tr><td>Goal progress widget</td><td>progressTeal · neutralTrack · tealText value · txMid label</td></tr>
+          <tr><td>Interest / earnings card</td><td>bgDark · teal on dark · tealText on light rows</td></tr>
+          <tr class="matrix-group-row"><td colspan="2">Delight Components</td></tr>
+          <tr><td>Earnings Toast</td><td>tealBgLt icon bg · teal icon · tealText value · gold sparkle</td></tr>
+          <tr><td>Earnings Heartbeat</td><td>bgDark header · 3 glows · counterLarge (DM Mono teal) · teal pulseLoop ring</td></tr>
+          <tr><td>Milestone Ticker</td><td>bgDark · teal separator dots · teal values</td></tr>
+          <tr><td>Relatable Carousel</td><td>carouselSlide gradient · gold active dot (rFull 18pt) · tealText inline stat</td></tr>
+          <tr><td>Double Dip Calculator</td><td>gold border/bg selected tile · tealText result values</td></tr>
+          <tr><td>Post-Deposit Celebration</td><td>bgBase sheet · rSheet · wealthHeadingSm (Playfair 22pt) · gold CTA · tealText stats</td></tr>
+          <tr><td>Post-Redemption Celebration</td><td>gold chip selected · gold CTA · tealText progress</td></tr>
+          <tr><td>Total Return Card</td><td>counterDisplay (DM Mono tealText) · progressTeal · gold brand dot</td></tr>
+          <tr><td>Spending Routine Map</td><td>chartBarActive gradient bars · tealText value + day labels</td></tr>
+          <tr><td>Lifetime Savings Score</td><td>scoreHeader gradient · scoreDisplay (DM Mono) · progressScore (gold→teal)</td></tr>
+          <tr><td>Weekly Scorecard</td><td>scorecardMultipl gradient · teal legend dot · neutralTrack bank bars</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ OPACITY REFERENCE ════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">Quick Reference — Opacity → Hex</div>
+      <div class="section-sub">CSS rgba opacity → Dart Color(0xAARRGGBB) alpha channel · multiply opacity × 255, convert to hex</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+        <table class="opacity-table">
+          <thead><tr><th>%</th><th>Hex</th><th>Visual</th></tr></thead>
+          <tbody>
+            <tr><td>4%</td><td>0x0A</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="width:4%;min-width:4px;opacity:1;background:rgba(12,18,32,0.04);border:1px solid #E0E0E0;width:80px;"></div></div></td></tr>
+            <tr><td>6%</td><td>0x0F</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.06);width:80px;"></div></div></td></tr>
+            <tr><td>8%</td><td>0x14</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.08);width:80px;"></div></div></td></tr>
+            <tr><td>9%</td><td>0x17</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.09);width:80px;"></div></div></td></tr>
+            <tr><td>10%</td><td>0x1A</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.10);width:80px;"></div></div></td></tr>
+            <tr><td>12%</td><td>0x1F</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.12);width:80px;"></div></div></td></tr>
+          </tbody>
+        </table>
+        <table class="opacity-table">
+          <thead><tr><th>%</th><th>Hex</th><th>Visual</th></tr></thead>
+          <tbody>
+            <tr><td>14%</td><td>0x24</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.14);width:80px;"></div></div></td></tr>
+            <tr><td>15%</td><td>0x26</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.15);width:80px;"></div></div></td></tr>
+            <tr><td>18%</td><td>0x2E</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.18);width:80px;"></div></div></td></tr>
+            <tr><td>22%</td><td>0x38</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.22);width:80px;"></div></div></td></tr>
+            <tr><td>25%</td><td>0x40</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.25);width:80px;"></div></div></td></tr>
+            <tr><td>30%</td><td>0x4D</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.30);width:80px;"></div></div></td></tr>
+          </tbody>
+        </table>
+        <table class="opacity-table">
+          <thead><tr><th>%</th><th>Hex</th><th>Visual</th></tr></thead>
+          <tbody>
+            <tr><td>35%</td><td>0x59</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.35);width:80px;"></div></div></td></tr>
+            <tr><td>38%</td><td>0x61</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.38);width:80px;"></div></div></td></tr>
+            <tr><td>55%</td><td>0x8C</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.55);width:80px;"></div></div></td></tr>
+            <tr><td>65%</td><td>0xA6</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.65);width:80px;"></div></div></td></tr>
+            <tr><td>96%</td><td>0xF5</td><td><div class="opacity-bar-wrap"><div class="opacity-bar" style="background:rgba(12,18,32,0.96);width:80px;"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+      <div class="spec-box">
+        <strong>Formula:</strong> Alpha byte = round(opacity × 255) → to hex &nbsp;·&nbsp;
+        <strong>Example:</strong> rgba(0,212,170,<strong>0.14</strong>) → 0.14 × 255 = 35.7 → <strong>0x24</strong> → <code style="font-family:'DM Mono',monospace;">Color(0x<strong>24</strong>00D4AA)</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FILE STRUCTURE ══════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-title">File Structure & Sync Workflow</div>
+      <div class="section-sub">Single import · lib/design/design.dart barrel re-exports everything</div>
+      <div class="col2">
+        <div>
+          <div class="group-label">lib/design/ — All token files</div>
+          <div class="code-block">
+            <div class="code-lang">dart</div>
+            <pre><span class="cmt">// Barrel export — single import for all widgets</span>
+<span class="kw">export</span> <span class="str">'app_colors.dart'</span>;     <span class="cmt">// Color tokens</span>
+<span class="kw">export</span> <span class="str">'app_gradients.dart'</span>;  <span class="cmt">// Gradients + BrandCategory</span>
+<span class="kw">export</span> <span class="str">'app_spacing.dart'</span>;    <span class="cmt">// Spacing + safe areas</span>
+<span class="kw">export</span> <span class="str">'app_radius.dart'</span>;     <span class="cmt">// Border radius objects</span>
+<span class="kw">export</span> <span class="str">'app_shadows.dart'</span>;    <span class="cmt">// Box shadows + glows</span>
+<span class="kw">export</span> <span class="str">'app_text_styles.dart'</span>;<span class="cmt">// Typography scale</span>
+<span class="kw">export</span> <span class="str">'app_motion.dart'</span>;     <span class="cmt">// ★ NEW — durations + curves</span>
+<span class="kw">export</span> <span class="str">'app_theme.dart'</span>;      <span class="cmt">// Flutter ThemeData</span>
+
+<span class="cmt">// In any widget file:</span>
+<span class="kw">import</span> <span class="str">'package:multipl/design/design.dart'</span>;</pre>
+          </div>
+        </div>
+        <div>
+          <div class="group-label">Figma → Code sync workflow</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:24px;height:24px;border-radius:50%;background:#0C1220;color:#F5C842;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+              <div><div style="font-size:13px;font-weight:600;color:#0C1220;">Designer updates variable in Figma</div><div style="font-size:12px;color:rgba(12,18,32,0.50);">File: TI3aVROhQNC4UzGxkJbCy1 · JoUVhWIbn3d3JW6aytyC3a</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:24px;height:24px;border-radius:50%;background:#0C1220;color:#F5C842;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+              <div><div style="font-size:13px;font-weight:600;color:#0C1220;">Fetch via REST API</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:#006B55;margin-top:4px;">curl -H "X-Figma-Token: $TOKEN" api.figma.com/v1/files/$KEY/variables/local</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:24px;height:24px;border-radius:50%;background:#0C1220;color:#F5C842;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+              <div><div style="font-size:13px;font-weight:600;color:#0C1220;">Run transform / update Dart files</div><div style="font-size:12px;color:rgba(12,18,32,0.50);">node design-tokens/transform.js or manual update</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:24px;height:24px;border-radius:50%;background:#0C1220;color:#F5C842;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
+              <div><div style="font-size:13px;font-weight:600;color:#0C1220;">Verify + commit</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:#006B55;margin-top:4px;">flutter analyze && git add design/ lib/design/</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">Multipl Design System v4.0 "Golden Canvas" · Dart Tokens Guide · February 2026 · lib/design/design.dart</div>
+
+</div>
+</body>
+</html>

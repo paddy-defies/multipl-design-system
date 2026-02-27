@@ -1,0 +1,265 @@
+/* ============================================================
+   Multipl v3.0 — Shared Dark-Mode Utilities
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 375px;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: var(--midnight);
+  color: var(--textPrimary);
+}
+
+/* ── Phone Frame ─────────────────────────────────────────── */
+.phone-frame {
+  width: 375px;
+  min-height: 812px;
+  background: var(--midnight);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Dynamic Island ──────────────────────────────────────── */
+.dynamic-island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 126px;
+  height: 37px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 20;
+}
+
+/* ── Status Bar ──────────────────────────────────────────── */
+.status-bar {
+  height: var(--safeTop);
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 var(--pagePadding) 12px;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.status-bar .time {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--textPrimary);
+}
+
+.status-bar .indicators {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Glass Card ──────────────────────────────────────────── */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glassBorder);
+  border-radius: var(--radiusL);
+}
+
+/* ── Primary Button — Gold Gradient ─────────────────────── */
+.btn-primary {
+  width: 100%;
+  height: var(--btnHeight);
+  background: var(--goldGrad);
+  border: none;
+  border-radius: var(--radiusFull);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1A1200;  /* near-black for contrast on gold */
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--inlineGap);
+  box-shadow: var(--glowGold);
+}
+
+/* ── Secondary Button ────────────────────────────────────── */
+.btn-secondary {
+  width: 100%;
+  height: var(--btnHeight);
+  background: var(--glass);
+  border: 1px solid var(--glassBorder);
+  border-radius: var(--radiusFull);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--textPrimary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Growth Chip ─────────────────────────────────────────── */
+.growth-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 12px;
+  border-radius: var(--radiusFull);
+  background: var(--tealBg);
+  border: 1px solid rgba(0, 212, 170, 0.25);
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 12px rgba(0, 212, 170, 0.12);
+}
+
+/* ── Section Header ──────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--textPrimary);
+  letter-spacing: -0.3px;
+}
+
+.see-all {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ── Bottom Navigation Bar ───────────────────────────────── */
+.bottom-nav {
+  height: var(--navBarHeight);
+  background: rgba(12, 18, 32, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--borderSubtle);
+  display: flex;
+  align-items: flex-start;
+  padding-top: 8px;
+  flex-shrink: 0;
+}
+
+.nav-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  min-height: 44px;
+  justify-content: center;
+}
+
+.nav-icon-wrap {
+  width: 36px;
+  height: 28px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 200ms ease;
+}
+
+.nav-tab.active .nav-icon-wrap {
+  background: rgba(245, 200, 66, 0.18);
+}
+
+.nav-tab .nav-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--textTertiary);
+  letter-spacing: 0.2px;
+}
+
+.nav-tab.active .nav-label {
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* ── Typography ──────────────────────────────────────────── */
+.displayLarge  { font-size: 36px; font-weight: 700; line-height: 1.1; letter-spacing: -0.5px; }
+.headlineLarge { font-size: 22px; font-weight: 700; line-height: 1.2; letter-spacing: -0.3px; }
+.headlineSmall { font-size: 18px; font-weight: 600; line-height: 1.3; }
+.titleMedium   { font-size: 16px; font-weight: 500; line-height: 1.4; }
+.titleSmall    { font-size: 14px; font-weight: 500; line-height: 1.4; }
+.bodyLarge     { font-size: 16px; font-weight: 400; line-height: 1.5; }
+.bodyMedium    { font-size: 14px; font-weight: 400; line-height: 1.5; }
+.bodySmall     { font-size: 12px; font-weight: 400; line-height: 1.5; }
+.labelLarge    { font-size: 14px; font-weight: 600; line-height: 1.2; letter-spacing: 0.1px; }
+.labelSmall    { font-size: 10px; font-weight: 500; line-height: 1.2; letter-spacing: 0.2px; }
+
+/* Special */
+.amountHero    { font-size: 48px; font-weight: 800; line-height: 1; letter-spacing: -1.5px; font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.amountLarge   { font-size: 36px; font-weight: 700; line-height: 1.1; letter-spacing: -0.8px; font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.amountMedium  { font-size: 24px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.wealthHeading { font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1.2; }
+.voucherCode   { font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: 700; letter-spacing: 2px; color: var(--gold); font-variant-numeric: tabular-nums; }
+
+/* ── Category Tags (dark variant) ────────────────────────── */
+.cat-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--radiusFull);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ── Badges ──────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: var(--radiusXS);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.badge-most-opted { background: var(--goldGrad); color: #1A1200; }
+.badge-discount   { background: var(--tealBg); color: var(--teal); border: 1px solid rgba(0,212,170,0.25); }
+
+/* ── Helpers ─────────────────────────────────────────────── */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.gap-4  { gap: var(--s4); }
+.gap-8  { gap: var(--s8); }
+.gap-12 { gap: var(--s12); }
+.gap-16 { gap: var(--s16); }
+.mt-8   { margin-top: var(--s8); }
+.mt-12  { margin-top: var(--s12); }
+.mt-16  { margin-top: var(--s16); }
+.mt-20  { margin-top: var(--s20); }
+.mt-24  { margin-top: var(--s24); }
+.mt-32  { margin-top: var(--s32); }
+.w-full { width: 100%; }
+svg { display: block; flex-shrink: 0; }

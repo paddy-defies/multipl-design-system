@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=1400"/>
+  <title>Multipl DS v4 — Navigation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <link rel="stylesheet" href="tokens-v3.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 1400px; font-family: 'DM Sans', sans-serif; background: #EBEBEB; color: #1A1A1A; -webkit-font-smoothing: antialiased; }
+    .page { width: 1400px; padding: 48px; display: flex; flex-direction: column; gap: 32px; }
+    .section-card { background: #FFFFFF; border-radius: 24px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 24px; }
+    .section-title { font-size: 22px; font-weight: 800; color: #0C1220; letter-spacing: -0.4px; margin-bottom: 8px; }
+    .section-sub { font-size: 14px; color: #6B6B6B; margin-bottom: 32px; }
+    .divider-line { height: 1px; background: #F0F0F0; margin: 28px 0; }
+    .group-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #AAAAAA; margin-bottom: 16px; }
+    .row { display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: 6px; }
+    .state-label { font-size: 10px; color: #AAAAAA; font-weight: 600; letter-spacing: 0.5px; text-align: center; margin-top: 8px; }
+    .spec-box { background: #F8F8F8; border-radius: 12px; padding: 16px 20px; font-size: 13px; color: #555; line-height: 1.6; border-left: 3px solid #F5C842; }
+
+    /* Header */
+    .ds-header { background: #0C1220; border-radius: 24px; padding: 48px; position: relative; overflow: hidden; }
+    .hdr-glow-gold { position: absolute; top: -60px; left: 200px; width: 400px; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, rgba(245,200,66,0.18) 0%, transparent 70%); pointer-events: none; }
+    .hdr-glow-blue { position: absolute; top: -80px; right: 0; width: 500px; height: 400px; border-radius: 50%; background: radial-gradient(ellipse, rgba(74,159,255,0.14) 0%, transparent 70%); pointer-events: none; }
+    .hdr-inner { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; }
+    .hdr-wordmark { font-size: 48px; font-weight: 800; color: #FFFFFF; letter-spacing: -1px; line-height: 1; }
+    .hdr-wordmark span { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hdr-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .hdr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.3); border-radius: 999px; font-size: 12px; font-weight: 700; color: #F5C842; letter-spacing: 1px; }
+    .hdr-meta p { font-size: 13px; color: rgba(255,255,255,0.45); }
+    .hdr-pills { display: flex; gap: 12px; margin-top: 32px; position: relative; z-index: 2; }
+    .hdr-pill { padding: 10px 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+
+    /* Phone canvas */
+    .phone-canvas {
+      width: 375px; background: #FDFAF0; border-radius: 40px; overflow: hidden;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.15); position: relative;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    /* ── Top App Bars ────────────────────────────────────── */
+    .top-bar {
+      height: 56px; padding: 0 16px; display: flex; align-items: center;
+      background: #FFFFFF; border-bottom: 1px solid #F0F0F0;
+    }
+    .top-bar.transparent { background: transparent; border-bottom: none; }
+    .top-bar.dark { background: #0C1220; border-bottom: none; }
+    .bar-back {
+      width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: #0C1220; cursor: pointer; border-radius: 12px;
+      flex-shrink: 0;
+    }
+    .bar-back.dark { color: #FFFFFF; }
+    .bar-title { flex: 1; text-align: center; font-size: 17px; font-weight: 700; color: #0C1220; }
+    .bar-title.dark { color: #FFFFFF; }
+    .bar-title.left { text-align: left; margin-left: 4px; }
+    .bar-action {
+      width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: #0C1220; cursor: pointer; flex-shrink: 0;
+    }
+    .bar-action.dark { color: rgba(255,255,255,0.7); }
+    .bar-search {
+      flex: 1; height: 36px; background: #F5F5F5; border-radius: 10px;
+      display: flex; align-items: center; gap: 8px; padding: 0 12px; margin: 0 8px;
+    }
+    .bar-search-text { font-size: 14px; color: #BBBBBB; }
+
+    /* dark hero card area */
+    .hero-top-bar-area {
+      height: 180px; background: linear-gradient(160deg, #1E3264 0%, #0C1220 60%);
+      position: relative; display: flex; flex-direction: column;
+    }
+    .hero-glow { position: absolute; top: -20px; right: 20px; width: 200px; height: 160px; border-radius: 50%; background: radial-gradient(ellipse, rgba(74,159,255,0.2) 0%, transparent 70%); }
+
+    /* ── Tab Bars ────────────────────────────────────────── */
+    .tab-bar {
+      display: flex; background: #FFFFFF; border-radius: 14px; overflow: hidden;
+      border: 1.5px solid #E8E8E8; padding: 4px; gap: 2px;
+    }
+    .tab-item {
+      flex: 1; height: 40px; display: flex; align-items: center; justify-content: center;
+      gap: 6px; font-size: 14px; font-weight: 600; color: #888; cursor: pointer;
+      border-radius: 10px; transition: all 0.2s;
+    }
+    .tab-item.active { background: #0C1220; color: #FFFFFF; }
+    .tab-item.active.gold { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); color: #0C1220; }
+    .tab-icon { font-size: 16px; }
+
+    /* Underline tabs */
+    .underline-tabs { display: flex; border-bottom: 2px solid #F0F0F0; gap: 0; }
+    .underline-tab {
+      padding: 12px 20px; font-size: 14px; font-weight: 600; color: #888; cursor: pointer;
+      position: relative; white-space: nowrap;
+    }
+    .underline-tab.active { color: #0C1220; }
+    .underline-tab.active::after {
+      content: ''; position: absolute; bottom: -2px; left: 16px; right: 16px;
+      height: 2.5px; background: #F5C842; border-radius: 999px;
+    }
+
+    /* Scrollable tabs */
+    .scroll-tabs { display: flex; gap: 0; overflow-x: auto; padding-bottom: 2px; }
+    .scroll-tabs::-webkit-scrollbar { display: none; }
+    .scroll-tab {
+      padding: 10px 16px; font-size: 13px; font-weight: 600; color: #888; cursor: pointer;
+      white-space: nowrap; position: relative; border-bottom: 2px solid transparent;
+    }
+    .scroll-tab.active { color: #0C1220; border-bottom-color: #F5C842; }
+
+    /* ── Back Button ─────────────────────────────────────── */
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 4px; padding: 10px 16px 10px 8px;
+      border-radius: 12px; background: #F5F5F5; cursor: pointer; min-height: 44px;
+    }
+    .back-chevron { font-size: 18px; color: #0C1220; font-weight: 700; }
+    .back-label { font-size: 15px; font-weight: 600; color: #0C1220; }
+
+    /* ── Step Progress ────────────────────────────────────── */
+    .stepper { display: flex; align-items: center; gap: 0; width: 100%; }
+    .step-item { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 8px; }
+    .step-circle {
+      width: 32px; height: 32px; border-radius: 999px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; position: relative; z-index: 1;
+    }
+    .step-circle.completed { background: #0C1220; color: #FFFFFF; }
+    .step-circle.active { background: linear-gradient(135deg, #F7D464 0%, #F0A832 100%); color: #0C1220; box-shadow: 0 0 0 4px rgba(245,200,66,0.2); }
+    .step-circle.remaining { background: #F0F0F0; color: #AAAAAA; border: 2px solid #E0E0E0; }
+    .step-label { font-size: 11px; color: #888; font-weight: 500; text-align: center; }
+    .step-label.active { color: #0C1220; font-weight: 700; }
+    .step-line { flex: 1; height: 2px; margin-top: -8px; }
+    .step-line.completed { background: #0C1220; }
+    .step-line.remaining { background: #E0E0E0; }
+    .step-connector { flex: 1; height: 2px; background: #E0E0E0; margin: 0 4px; }
+    .step-connector.done { background: #0C1220; }
+
+    /* ── Bottom Nav ──────────────────────────────────────── */
+    .bottom-nav {
+      display: flex; background: #FFFFFF; border-top: 1px solid #F0F0F0;
+      padding: 8px 0 24px; width: 375px;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 6px 4px; cursor: pointer; min-height: 44px;
+    }
+    .nav-icon { font-size: 22px; color: #BBBBBB; position: relative; }
+    .nav-icon.active { color: #0C1220; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #BBBBBB; letter-spacing: 0.3px; }
+    .nav-label.active { color: #0C1220; }
+    .nav-badge { position: absolute; top: -4px; right: -6px; width: 16px; height: 16px; border-radius: 999px; background: #FF6B6B; font-size: 9px; font-weight: 700; color: #FFFFFF; display: flex; align-items: center; justify-content: center; }
+    .nav-active-dot { width: 4px; height: 4px; border-radius: 999px; background: #F5C842; margin-top: 2px; }
+
+    /* 5-tab nav */
+    .bottom-nav-5 { display: flex; background: #0C1220; padding: 8px 0 24px; width: 375px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .nav5-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 2px; cursor: pointer; }
+    .nav5-icon { font-size: 20px; color: rgba(255,255,255,0.35); }
+    .nav5-icon.active { color: #F5C842; }
+    .nav5-label { font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.35); letter-spacing: 0.3px; }
+    .nav5-label.active { color: #F5C842; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="ds-header">
+    <div class="hdr-glow-gold"></div>
+    <div class="hdr-glow-blue"></div>
+    <div class="hdr-inner">
+      <div>
+        <div class="hdr-wordmark">Multipl <span>Design System</span></div>
+        <div style="color:rgba(255,255,255,0.45); font-size:15px; margin-top:6px;">v4.0 — Page 3 of 7</div>
+      </div>
+      <div class="hdr-meta">
+        <div class="hdr-badge">NAVIGATION</div>
+        <p>Top App Bar · Tab Bars · Back Button · Stepper · Bottom Nav</p>
+      </div>
+    </div>
+    <div class="hdr-pills">
+      <div class="hdr-pill">56px top bar</div>
+      <div class="hdr-pill">72px bottom nav</div>
+      <div class="hdr-pill">44pt tap targets</div>
+      <div class="hdr-pill">Safe areas respected</div>
+    </div>
+  </div>
+
+  <!-- TOP APP BAR -->
+  <div class="section-card">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">Top App Bar</div>
+    <div class="section-sub">Height 56px, white bg by default. Transparent variant overlays hero cards. All icons = 44×44pt touch area.</div>
+
+    <div class="row">
+      <!-- Simple centered -->
+      <div class="col">
+        <div style="width:375px; background:#FDFAF0; border-radius:20px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+          <div class="top-bar">
+            <div style="flex:1;"></div>
+            <div class="bar-title">Portfolio</div>
+            <div style="flex:1;"></div>
+          </div>
+          <div style="height:120px; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:13px;">Screen content</div>
+        </div>
+        <div class="state-label">Simple — title centered</div>
+      </div>
+
+      <!-- Back + title -->
+      <div class="col">
+        <div style="width:375px; background:#FDFAF0; border-radius:20px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+          <div class="top-bar">
+            <div class="bar-back">‹</div>
+            <div class="bar-title">Transaction Details</div>
+            <div style="width:44px;"></div>
+          </div>
+          <div style="height:120px; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:13px;">Screen content</div>
+        </div>
+        <div class="state-label">Back + title centered</div>
+      </div>
+
+      <!-- Back + title + right action -->
+      <div class="col">
+        <div style="width:375px; background:#FDFAF0; border-radius:20px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+          <div class="top-bar">
+            <div class="bar-back">‹</div>
+            <div class="bar-title">My Brands</div>
+            <div class="bar-action">⋮</div>
+          </div>
+          <div style="height:120px; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:13px;">Screen content</div>
+        </div>
+        <div class="state-label">Back + title + right action</div>
+      </div>
+
+      <!-- With search -->
+      <div class="col">
+        <div style="width:375px; background:#FDFAF0; border-radius:20px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+          <div class="top-bar">
+            <div class="bar-back">‹</div>
+            <div class="bar-search">
+              <span style="font-size:13px; color:#AAAAAA;">🔍</span>
+              <span class="bar-search-text">Search brands…</span>
+            </div>
+            <div class="bar-action">🎙</div>
+          </div>
+          <div style="height:120px; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:13px;">Screen content</div>
+        </div>
+        <div class="state-label">With embedded search bar</div>
+      </div>
+
+      <!-- Transparent on dark hero -->
+      <div class="col">
+        <div style="width:375px; background:#FDFAF0; border-radius:20px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+          <div class="hero-top-bar-area">
+            <div class="hero-glow"></div>
+            <div class="top-bar transparent" style="position:relative; z-index:2;">
+              <div class="bar-back dark">‹</div>
+              <div class="bar-title dark">Savings</div>
+              <div class="bar-action dark">🔔</div>
+            </div>
+            <div style="flex:1; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.4); font-size:13px; position:relative; z-index:2;">Hero card content</div>
+          </div>
+          <div style="height:60px; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:13px;">Screen content</div>
+        </div>
+        <div class="state-label">Transparent over hero card</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="spec-box">
+      <strong>Top Bar Spec:</strong> Height 56px · padding 0 16px · Back icon: ‹ chevron in 44×44 hit area · Border-bottom: 1px #F0F0F0 · Title: 17px 700 centered · Transparent variant: icon color flips to #FFFFFF on dark bg.
+    </div>
+  </div>
+
+  <!-- TAB BARS -->
+  <div class="section-card">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">Tab Bars</div>
+    <div class="section-sub">Pill indicator for fixed tabs. Underline variant for content switching. Scrollable for 5+ categories.</div>
+
+    <div class="group-label">Fixed Tab — Pill Indicator</div>
+    <div class="row" style="gap:32px;">
+      <div class="col">
+        <div class="tab-bar" style="width:335px;">
+          <div class="tab-item active">Invest</div>
+          <div class="tab-item">Spend</div>
+          <div class="tab-item">Save</div>
+        </div>
+        <div class="state-label">3 tabs — dark active pill</div>
+      </div>
+      <div class="col">
+        <div class="tab-bar" style="width:335px;">
+          <div class="tab-item">All</div>
+          <div class="tab-item active gold">Brands</div>
+          <div class="tab-item">Offers</div>
+          <div class="tab-item">Cashback</div>
+        </div>
+        <div class="state-label">4 tabs — gold active pill</div>
+      </div>
+      <div class="col">
+        <div class="tab-bar" style="width:220px;">
+          <div class="tab-item active"><span class="tab-icon">📊</span> Overview</div>
+          <div class="tab-item"><span class="tab-icon">📋</span> History</div>
+        </div>
+        <div class="state-label">2 tabs — with icons</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Underline Variant</div>
+    <div class="col" style="width:375px; background:#FDFAF0; border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+      <div class="underline-tabs">
+        <div class="underline-tab active">Overview</div>
+        <div class="underline-tab">Transactions</div>
+        <div class="underline-tab">Analytics</div>
+        <div class="underline-tab">Settings</div>
+      </div>
+      <div style="height:60px; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:13px;">Tab content</div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">Scrollable — 7 Categories</div>
+    <div style="width:375px; background:#FFFFFF; border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+      <div class="scroll-tabs">
+        <div class="scroll-tab">All</div>
+        <div class="scroll-tab active">Food</div>
+        <div class="scroll-tab">Shopping</div>
+        <div class="scroll-tab">Travel</div>
+        <div class="scroll-tab">Cabs</div>
+        <div class="scroll-tab">Health</div>
+        <div class="scroll-tab">Entertainment</div>
+      </div>
+    </div>
+    <div style="font-size:12px; color:#AAAAAA; margin-top:8px;">Horizontally scrollable · Active = underline gold · Overflow fades right edge</div>
+  </div>
+
+  <!-- BACK BUTTON -->
+  <div class="section-card">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">Back Button</div>
+    <div class="section-sub">Standalone back button spec. 44×44pt minimum. Use ‹ chevron + label or icon-only in top bar context.</div>
+
+    <div class="row">
+      <div class="col">
+        <div class="back-btn">
+          <span class="back-chevron">‹</span>
+          <span class="back-label">Back</span>
+        </div>
+        <div class="state-label">Chevron + label (light)</div>
+      </div>
+      <div class="col">
+        <div class="back-btn" style="background:#0C1220;">
+          <span class="back-chevron" style="color:#FFFFFF;">‹</span>
+          <span class="back-label" style="color:#FFFFFF;">Back</span>
+        </div>
+        <div class="state-label">Dark surface</div>
+      </div>
+      <div class="col">
+        <div style="width:44px; height:44px; border-radius:999px; background:#F5F5F5; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          <span style="font-size:20px; font-weight:700; color:#0C1220;">‹</span>
+        </div>
+        <div class="state-label">Icon-only round (in top bar)</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="spec-box"><strong>Back Button Spec:</strong> Min touch target 44×44pt · Chevron is ‹ (not ← arrow) · Label = previous screen title or "Back" · Light bg: #F5F5F5 · Dark bg: #1A2540 · Border-radius: 12px pill or circle.</div>
+  </div>
+
+  <!-- STEP PROGRESS -->
+  <div class="section-card">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Step Progress Indicator</div>
+    <div class="section-sub">Dot/circle stepper for multi-step flows (KYC, onboarding). 3–5 steps. Completed = dark filled, Active = gold gradient, Remaining = gray.</div>
+
+    <div class="group-label">3-Step Progress</div>
+    <div style="width:375px; background:#FDFAF0; border-radius:20px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+      <div style="display:flex; align-items:center; gap:0; width:100%;">
+        <div class="step-item">
+          <div class="step-circle completed">✓</div>
+          <div class="step-label">Personal</div>
+        </div>
+        <div style="flex:1; height:2px; background:#0C1220; margin-top:-20px;"></div>
+        <div class="step-item">
+          <div class="step-circle active">2</div>
+          <div class="step-label active">Documents</div>
+        </div>
+        <div style="flex:1; height:2px; background:#E0E0E0; margin-top:-20px;"></div>
+        <div class="step-item">
+          <div class="step-circle remaining">3</div>
+          <div class="step-label">Verify</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="group-label">5-Step Progress</div>
+    <div style="width:600px; background:#FDFAF0; border-radius:20px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+      <div style="display:flex; align-items:center; gap:0; width:100%;">
+        <div class="step-item">
+          <div class="step-circle completed">✓</div>
+          <div class="step-label">Mobile</div>
+        </div>
+        <div style="flex:1; height:2px; background:#0C1220; margin-top:-20px;"></div>
+        <div class="step-item">
+          <div class="step-circle completed">✓</div>
+          <div class="step-label">PAN</div>
+        </div>
+        <div style="flex:1; height:2px; background:#0C1220; margin-top:-20px;"></div>
+        <div class="step-item">
+          <div class="step-circle active">3</div>
+          <div class="step-label active">Aadhaar</div>
+        </div>
+        <div style="flex:1; height:2px; background:#E0E0E0; margin-top:-20px;"></div>
+        <div class="step-item">
+          <div class="step-circle remaining">4</div>
+          <div class="step-label">Bank</div>
+        </div>
+        <div style="flex:1; height:2px; background:#E0E0E0; margin-top:-20px;"></div>
+        <div class="step-item">
+          <div class="step-circle remaining">5</div>
+          <div class="step-label">Done</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="section-card">
+    <div class="section-label">Section 05</div>
+    <div class="section-title">Bottom Navigation</div>
+    <div class="section-sub">72px total height (48px nav + 24px safe area). White bg (light) or midnight bg (dark). Max 5 tabs.</div>
+
+    <div class="row" style="gap:48px; align-items:flex-start;">
+
+      <!-- 4-tab light -->
+      <div class="col">
+        <div class="group-label">4-Tab — Light (with badge)</div>
+        <div style="background:#FDFAF0; border-radius:24px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1); width:375px;">
+          <div style="height:160px; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:13px; padding:20px;">Screen content area</div>
+          <div class="bottom-nav">
+            <div class="nav-item">
+              <div class="nav-icon active">🏠</div>
+              <div class="nav-label active">Home</div>
+              <div class="nav-active-dot"></div>
+            </div>
+            <div class="nav-item">
+              <div class="nav-icon" style="position:relative;">💳<span class="nav-badge">3</span></div>
+              <div class="nav-label">Brands</div>
+            </div>
+            <div class="nav-item">
+              <div class="nav-icon">📊</div>
+              <div class="nav-label">Portfolio</div>
+            </div>
+            <div class="nav-item">
+              <div class="nav-icon">👤</div>
+              <div class="nav-label">Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5-tab dark -->
+      <div class="col">
+        <div class="group-label">5-Tab — Dark Surface</div>
+        <div style="background:#FDFAF0; border-radius:24px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1); width:375px;">
+          <div style="height:160px; display:flex; align-items:center; justify-content:center; color:#BBBBBB; font-size:13px; padding:20px;">Screen content area</div>
+          <div class="bottom-nav-5">
+            <div class="nav5-item">
+              <div class="nav5-icon active">🏠</div>
+              <div class="nav5-label active">Home</div>
+            </div>
+            <div class="nav5-item">
+              <div class="nav5-icon">🛍</div>
+              <div class="nav5-label">Brands</div>
+            </div>
+            <div class="nav5-item">
+              <div class="nav5-icon" style="font-size:28px; color:#F5C842; margin-top:-12px; filter:drop-shadow(0 0 8px rgba(245,200,66,0.5));">+</div>
+              <div class="nav5-label">Invest</div>
+            </div>
+            <div class="nav5-item">
+              <div class="nav5-icon">📊</div>
+              <div class="nav5-label">Portfolio</div>
+            </div>
+            <div class="nav5-item">
+              <div class="nav5-icon">👤</div>
+              <div class="nav5-label">Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="divider-line"></div>
+    <div class="spec-box">
+      <strong>Bottom Nav Spec:</strong> Height 48px visible + 24px iOS safe area = 72px total · Icon size 24px · Label 10px/600 · Active indicator: 4px gold dot below label (light) or gold icon color (dark) · Badge: 16px coral circle top-right of icon.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

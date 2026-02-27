@@ -1,0 +1,109 @@
+/* ============================================================
+   Multipl Design System v3.0 — "Midnight Gold"
+   Fintech × Spotify energy · Apple HIG precision
+   February 2026
+   ============================================================ */
+
+:root {
+  /* ── Canvas ─────────────────────────────────────────────── */
+  --canvasWidth: 375px;
+
+  /* ── Core Dark Palette ───────────────────────────────────── */
+  --midnight:    #0C1220;   /* Primary dark canvas — deep midnight navy */
+  --midnight02:  #141B2D;   /* Slightly elevated dark surface */
+  --surface01:   #1A2540;   /* Card surface — subtle navy */
+  --surface02:   #1E3264;   /* Hero card gradient start */
+  --surface03:   #0F1E45;   /* Hero card gradient mid */
+
+  /* Glass morphism tokens */
+  --glass:       rgba(255, 255, 255, 0.06);
+  --glassHigh:   rgba(255, 255, 255, 0.10);
+  --glassBorder: rgba(255, 255, 255, 0.10);
+  --glassBorderMid: rgba(255, 255, 255, 0.15);
+
+  /* ── Accent Colors ───────────────────────────────────────── */
+  --gold:        #F5C842;   /* Brand gold — unchanged, now on dark (9.6:1 contrast) */
+  --goldWarm:    #F0A832;   /* Warmer end of gold gradient */
+  --goldBright:  #F7D464;   /* Brighter end of gold gradient */
+  --goldGrad:    linear-gradient(135deg, #F7D464 0%, #F0A832 100%);
+  --goldGlow:    rgba(245, 200, 66, 0.20);
+  --goldGlowMid: rgba(245, 200, 66, 0.12);
+
+  --teal:        #00D4AA;   /* Growth / success — electric teal (replaces #2DB37A) */
+  --tealGlow:    rgba(0, 212, 170, 0.15);
+  --tealBg:      rgba(0, 212, 170, 0.12);
+
+  --electricBlue: #4A9FFF;  /* Info accent — vibrant (replaces flat #D6EAF8) */
+  --electricBlueBg: rgba(74, 159, 255, 0.12);
+  --electricBlueBorder: rgba(74, 159, 255, 0.3);
+  --electricBlueGlow: rgba(74, 159, 255, 0.18);
+
+  --coral:       #FF6B6B;   /* Error — alive, not clinical */
+  --coralBg:     rgba(255, 107, 107, 0.12);
+
+  /* ── Text ────────────────────────────────────────────────── */
+  --textPrimary:   #FFFFFF;
+  --textSecondary: rgba(255, 255, 255, 0.65);
+  --textTertiary:  rgba(255, 255, 255, 0.38);
+  --textMuted:     rgba(255, 255, 255, 0.22);
+
+  /* ── Borders ─────────────────────────────────────────────── */
+  --borderSubtle: rgba(255, 255, 255, 0.08);
+  --borderMedium: rgba(255, 255, 255, 0.15);
+  --borderStrong: rgba(255, 255, 255, 0.25);
+
+  /* ── Category Tag Colors (on dark) ──────────────────────── */
+  --catFoodBg:      rgba(255, 138, 80, 0.15);  --catFoodText:     #FF8A50;
+  --catApparelBg:   rgba(255, 107, 157, 0.15); --catApparelText:  #FF6B9D;
+  --catShoppingBg:  rgba(123, 143, 255, 0.15); --catShoppingText: #7B8FFF;
+  --catCabsBg:      rgba(0, 212, 170, 0.15);   --catCabsText:     #00D4AA;
+  --catDefaultBg:   rgba(255, 255, 255, 0.08); --catDefaultText:  rgba(255,255,255,0.65);
+
+  /* ── Semantic Colors (dark-surface variants) ─────────────── */
+  --semanticSuccess:  var(--teal);
+  --semanticNavy:     var(--electricBlue);  /* repurposed as vibrant info */
+  --semanticError:    var(--coral);
+  --semanticWarning:  #FFB347;
+
+  /* ── Spacing Scale (8px grid) ───────────────────────────── */
+  --s2:  2px;  --s4:  4px;  --s6:  6px;  --s8:  8px;
+  --s10: 10px; --s12: 12px; --s14: 14px; --s16: 16px;
+  --s20: 20px; --s24: 24px; --s28: 28px; --s32: 32px;
+  --s40: 40px; --s48: 48px; --s56: 56px; --s64: 64px;
+
+  /* ── Semantic Spacing Aliases ───────────────────────────── */
+  --pagePadding: 20px;
+  --sectionGap:  32px;
+  --itemGap:     12px;
+  --cardPadding: 20px;
+  --rowGap:      8px;
+  --inlineGap:   4px;
+
+  /* ── Component Heights ──────────────────────────────────── */
+  --btnHeight:    56px;
+  --btnSmHeight:  44px;
+  --chipHeight:   36px;
+  --inputHeight:  56px;
+  --navBarHeight: 72px;
+
+  /* ── Border Radius ──────────────────────────────────────── */
+  --radiusXS:   4px;
+  --radiusS:    8px;
+  --radiusM:    12px;
+  --radiusL:    20px;
+  --radiusXL:   24px;
+  --radiusFull: 999px;
+  --sheetTop:   28px;
+
+  /* ── Shadows / Glows ────────────────────────────────────── */
+  --shadowLow:    0 2px 8px rgba(0,0,0,0.3);
+  --shadowMedium: 0 4px 20px rgba(0,0,0,0.4);
+  --shadowHigh:   0 8px 40px rgba(0,0,0,0.5);
+  --glowGold:     0 0 24px rgba(245,200,66,0.25), 0 4px 16px rgba(245,200,66,0.15);
+  --glowTeal:     0 0 20px rgba(0,212,170,0.2);
+  --glowBlue:     0 0 20px rgba(74,159,255,0.2);
+
+  /* ── Safe Areas ─────────────────────────────────────────── */
+  --safeTop:    59px;
+  --safeBottom: 34px;
+}

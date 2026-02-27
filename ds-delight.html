@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1400, initial-scale=1" />
+  <title>Multipl DS — Delight & Motion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens-v3.css" />
+  <link rel="stylesheet" href="shared-v3.css" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    :root {
+      --tealText: #006B55;
+      --bgBase:   #FDFAF0;
+      --txDark:   #0C1220;
+    }
+
+    body {
+      background: var(--midnight);
+      width: 1400px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--textPrimary);
+    }
+
+    /* ── Doc layout ─────────────────────────────────────────── */
+    .doc-page {
+      width: 1400px;
+      background: var(--midnight);
+      padding: 0 0 80px 0;
+    }
+
+    /* Page header band */
+    .page-header {
+      background: linear-gradient(135deg, rgba(245,200,66,0.08) 0%, rgba(0,212,170,0.06) 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 48px 64px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 26px;
+      padding: 0 12px;
+      background: rgba(245,200,66,0.10);
+      border: 1px solid rgba(245,200,66,0.25);
+      border-radius: var(--radiusFull);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .page-title {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--textPrimary);
+      letter-spacing: -0.8px;
+      line-height: 1.1;
+    }
+
+    .page-desc {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--textSecondary);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* Section layout */
+    .section {
+      padding: 56px 64px 0;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 24px;
+      padding: 0 10px;
+      background: rgba(255,255,255,0.06);
+      border-radius: var(--radiusFull);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--textTertiary);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--textPrimary);
+      letter-spacing: -0.4px;
+      margin-bottom: 6px;
+    }
+
+    .section-desc {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--textSecondary);
+      line-height: 1.6;
+      max-width: 700px;
+      margin-bottom: 32px;
+    }
+
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin-top: 56px;
+    }
+
+    /* ── Tables ──────────────────────────────────────────────── */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .spec-table th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--textTertiary);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .spec-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+      color: var(--textSecondary);
+      vertical-align: middle;
+    }
+
+    .spec-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    td.mono {
+      font-family: 'DM Mono', 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--teal);
+    }
+
+    td.highlight { font-weight: 600; color: var(--textPrimary); }
+
+    /* Duration pill */
+    .dur-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: var(--radiusFull);
+      font-family: 'DM Mono', 'Courier New', monospace;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .dur-micro    { background: rgba(255,255,255,0.06); color: var(--textSecondary); }
+    .dur-standard { background: rgba(74,159,255,0.12);  color: #4A9FFF; }
+    .dur-entrance { background: rgba(0,212,170,0.10);   color: #00D4AA; }
+    .dur-celebrate{ background: rgba(245,200,66,0.12);  color: var(--gold); }
+
+    /* ── 2-col layout for demos ──────────────────────────────── */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .demo-grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .demo-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radiusL);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .demo-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--textTertiary);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .demo-spec {
+      font-family: 'DM Mono', 'Courier New', monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      margin-top: -8px;
+    }
+
+    /* ── Section 2: Micro-interaction demos ─────────────────── */
+    .press-demo-card {
+      width: 100%;
+      height: 72px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radiusM);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--textPrimary);
+      cursor: pointer;
+      /* Press state: scale 0.95, 150ms ease-out */
+      transition: transform 150ms ease-out, background 150ms ease-out;
+    }
+    .press-demo-card:active { transform: scale(0.95); }
+
+    .selected-demo-card {
+      width: 100%;
+      height: 72px;
+      background: rgba(245,200,66,0.08);
+      border: 2px solid var(--gold);
+      border-radius: var(--radiusM);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--textPrimary);
+      transform: scale(1.02);
+    }
+
+    /* Pulsing teal dot */
+    .pulse-dot-demo {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulsingDot 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulsingDot {
+      0%, 100% { transform: scale(1.0);  box-shadow: 0 0 0px rgba(0,212,170,0.4); }
+      50%       { transform: scale(1.2);  box-shadow: 0 0 12px rgba(0,212,170,0.6); }
+    }
+
+    /* ── Section 3: Staggered entrances ─────────────────────── */
+    .stagger-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radiusM);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: staggerEnter 500ms ease-out both;
+    }
+
+    .stagger-card:nth-child(1) { animation-delay: 100ms; }
+    .stagger-card:nth-child(2) { animation-delay: 150ms; }
+    .stagger-card:nth-child(3) { animation-delay: 200ms; }
+
+    @keyframes staggerEnter {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .stagger-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radiusS);
+      background: var(--glass);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Section 4: Counter animation ───────────────────────── */
+    .counter-demo {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .counter-prefix {
+      color: var(--textSecondary);
+      font-weight: 500;
+    }
+
+    .counter-S { font-size: 16px; font-weight: 700; color: var(--teal); font-variant-numeric: tabular-nums; }
+    .counter-M { font-size: 24px; font-weight: 700; color: var(--teal); font-variant-numeric: tabular-nums; }
+    .counter-L {
+      font-size: 32px; font-weight: 800; color: var(--tealText);
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 20px rgba(0,212,170,0.50);
+    }
+
+    /* Do/Don't */
+    .do-dont-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .do-card {
+      background: rgba(0,212,170,0.06);
+      border: 1px solid rgba(0,212,170,0.20);
+      border-radius: var(--radiusM);
+      padding: 20px;
+    }
+
+    .dont-card {
+      background: rgba(255,107,107,0.06);
+      border: 1px solid rgba(255,107,107,0.20);
+      border-radius: var(--radiusM);
+      padding: 20px;
+    }
+
+    .do-label  { font-size: 11px; font-weight: 700; color: var(--teal); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 10px; }
+    .dont-label{ font-size: 11px; font-weight: 700; color: var(--coral); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 10px; }
+
+    .do-text  { font-size: 13px; color: var(--textSecondary); line-height: 1.6; }
+
+    /* ── Section 5: Value breakdown card ────────────────────── */
+    .breakdown-stage {
+      background: #FDFAF0;
+      border-radius: var(--radiusL);
+      padding: 20px;
+      position: relative;
+      width: 280px;
+    }
+
+    .stage-annotation {
+      position: absolute;
+      top: -32px; right: 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.3px;
+    }
+
+    .stage-time-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(245,200,66,0.12);
+      border-radius: var(--radiusFull);
+      font-family: 'DM Mono', 'Courier New', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .stage-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    .stage-label { font-size: 13px; color: rgba(12,18,32,0.55); }
+    .stage-value { font-size: 13px; font-weight: 600; color: #0C1220; font-variant-numeric: tabular-nums; }
+    .stage-value-teal {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--tealText);
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 12px rgba(0,212,170,0.35);
+    }
+    .stage-value-total {
+      font-size: 22px;
+      font-weight: 800;
+      color: #0C1220;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stage-divider { width: 100%; height: 1px; background: rgba(12,18,32,0.10); margin: 8px 0; }
+
+    /* ── Section 6: Celebration anatomy ─────────────────────── */
+    .anatomy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .anatomy-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radiusM);
+      padding: 18px;
+    }
+
+    .anatomy-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--textPrimary);
+      margin-bottom: 10px;
+    }
+
+    .anatomy-spec {
+      font-size: 12px;
+      color: var(--textSecondary);
+      line-height: 1.7;
+    }
+
+    .anatomy-spec strong {
+      color: var(--textPrimary);
+      font-weight: 600;
+    }
+
+    .anatomy-code {
+      font-family: 'DM Mono', 'Courier New', monospace;
+      font-size: 11px;
+      color: var(--teal);
+      display: block;
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+
+    /* ── Section 7: Delight Do/Don'ts ───────────────────────── */
+    .delight-rules {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    .rule-card {
+      border-radius: var(--radiusM);
+      padding: 20px;
+    }
+
+    .rule-card.do {
+      background: rgba(0,212,170,0.05);
+      border: 1px solid rgba(0,212,170,0.15);
+    }
+
+    .rule-card.dont {
+      background: rgba(255,107,107,0.05);
+      border: 1px solid rgba(255,107,107,0.15);
+    }
+
+    .rule-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .rule-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .rule-icon.do-icon   { background: rgba(0,212,170,0.15); color: #00D4AA; }
+    .rule-icon.dont-icon { background: rgba(255,107,107,0.15); color: #FF6B6B; }
+
+    .rule-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--textPrimary);
+    }
+
+    .rule-body {
+      font-size: 13px;
+      color: var(--textSecondary);
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+<div class="doc-page">
+
+  <!-- ── Page header ── -->
+  <div class="page-header">
+    <div class="page-badge">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+        <path d="M5 1L6 3.5H9L6.5 5.5L7.5 8.5L5 7L2.5 8.5L3.5 5.5L1 3.5H4L5 1Z" fill="#F5C842"/>
+      </svg>
+      Motion &amp; Delight
+    </div>
+    <div class="page-title">Delight Vocabulary</div>
+    <div class="page-desc">
+      Motion communicates meaning, not decoration. Every animation must earn its place — communicating state, revealing hierarchy, or rewarding a genuine financial win.
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SECTION 1: Motion Vocabulary                           -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-tag">Section 01</div>
+    <div class="section-title">Motion Vocabulary</div>
+    <div class="section-desc">
+      Four duration tiers and three easing functions cover every UI transition. Match the tier to the moment's emotional weight.
+    </div>
+
+    <div class="demo-grid-2col" style="gap:24px;">
+      <!-- Duration scale -->
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--textSecondary);margin-bottom:16px;">Duration Scale</div>
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Value</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="highlight">micro</td>
+              <td><span class="dur-pill dur-micro">150ms</span></td>
+              <td>Press state, icon swap, toggle flip</td>
+            </tr>
+            <tr>
+              <td class="highlight">standard</td>
+              <td><span class="dur-pill dur-standard">300ms</span></td>
+              <td>Page transitions, fade in/out, chip selection</td>
+            </tr>
+            <tr>
+              <td class="highlight">entrance</td>
+              <td><span class="dur-pill dur-entrance">500ms</span></td>
+              <td>Card appear, bottom sheet open, hero reveal</td>
+            </tr>
+            <tr>
+              <td class="highlight">celebration</td>
+              <td><span class="dur-pill dur-celebrate">800ms</span></td>
+              <td">Counter animation, confetti burst, scale bounce peak</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Easing curves -->
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--textSecondary);margin-bottom:16px;">Easing Curves</div>
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Curve</th>
+              <th>When to Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="highlight">ease-out</td>
+              <td class="mono">ease-out</td>
+              <td>All entrances · elements coming to rest</td>
+            </tr>
+            <tr>
+              <td class="highlight">spring</td>
+              <td class="mono">cubic-bezier(0.34, 1.56, 0.64, 1)</td>
+              <td>Bottom sheets, celebratory reveals, bouncy CTA</td>
+            </tr>
+            <tr>
+              <td class="highlight">linear</td>
+              <td class="mono">linear</td>
+              <td>Counter number roll, progress bar fill</td>
+            </tr>
+            <tr>
+              <td class="highlight">ease-in-out</td>
+              <td class="mono">ease-in-out</td>
+              <td>Looping animations (glow pulse, particle float)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:16px;padding:14px;background:rgba(245,200,66,0.06);border:1px solid rgba(245,200,66,0.15);border-radius:var(--radiusM);font-size:13px;color:var(--textSecondary);line-height:1.6;">
+          <strong style="color:var(--gold);">Principle:</strong> Motion communicates meaning, not decoration. If removing an animation makes the UI harder to understand, the animation belongs. If not, cut it.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SECTION 2: Micro-interactions                          -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-tag">Section 02</div>
+    <div class="section-title">Micro-interactions</div>
+    <div class="section-desc">
+      Immediate feedback for user actions. Always 150ms or under — sub-perceptual but felt.
+    </div>
+
+    <div class="demo-grid">
+
+      <!-- Press state demo -->
+      <div class="demo-card">
+        <div class="demo-label">Press State</div>
+        <div class="demo-spec">scale 0.95 · 150ms ease-out</div>
+        <div class="press-demo-card">Tap &amp; Hold Me</div>
+        <div style="font-size:12px;color:var(--textTertiary);line-height:1.5;">
+          Applied to all tappable elements: buttons, brand tiles, list rows. Never skip on native touch.
+        </div>
+      </div>
+
+      <!-- Selected state demo -->
+      <div class="demo-card">
+        <div class="demo-label">Selected State</div>
+        <div class="demo-spec">gold border 2px · scale 1.02 · gold tint bg</div>
+        <div class="selected-demo-card">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right:6px;">
+            <path d="M3 8L6.5 11.5L13 5" stroke="#F5C842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Selected
+        </div>
+        <div style="font-size:12px;color:var(--textTertiary);line-height:1.5;">
+          Gold border signals active selection. Scale 1.02 provides lift. Combine: border + scale + tint bg.
+        </div>
+      </div>
+
+      <!-- Pulsing dot demo -->
+      <div class="demo-card">
+        <div class="demo-label">Pulsing Status Dot</div>
+        <div class="demo-spec">scale 1.0→1.2→1.0 · 1.5s ease-in-out · infinite</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:16px;">
+          <div class="pulse-dot-demo"></div>
+          <span style="font-size:14px;font-weight:500;color:var(--teal);">Account Active</span>
+        </div>
+        <div style="font-size:12px;color:var(--textTertiary);line-height:1.5;">
+          Use for live status indicators only — earning in progress, payment processing. Never decorative.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SECTION 3: Staggered Entrances                         -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-tag">Section 03</div>
+    <div class="section-title">Staggered Entrances</div>
+    <div class="section-desc">
+      Lists and card groups enter with a 50ms stagger. Each item fades + translates 12px upward. Creates a sense of scanning hierarchy without overwhelming.
+    </div>
+
+    <div class="demo-grid-2col">
+
+      <!-- Card list stagger demo -->
+      <div class="demo-card">
+        <div class="demo-label">Card List · 50ms stagger</div>
+        <div class="demo-spec">fade + translateY 12px→0 · 300ms ease-out per card</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="stagger-card">
+            <div class="stagger-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#F5C842" stroke-width="1.5"/></svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--textPrimary);">Zomato Cashback</div>
+              <div style="font-size:11px;color:var(--textSecondary);">+₹24 · Pending</div>
+            </div>
+          </div>
+          <div class="stagger-card">
+            <div class="stagger-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#00D4AA" stroke-width="1.5"/></svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--textPrimary);">Swiggy Reward</div>
+              <div style="font-size:11px;color:var(--textSecondary);">+₹18 · Credited</div>
+            </div>
+          </div>
+          <div class="stagger-card">
+            <div class="stagger-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#4A9FFF" stroke-width="1.5"/></svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--textPrimary);">Myntra Discount</div>
+              <div style="font-size:11px;color:var(--textSecondary);">+₹40 · Credited</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom sheet spring spec -->
+      <div class="demo-card">
+        <div class="demo-label">Bottom Sheet Spring</div>
+        <div class="demo-spec">translateY 100%→0 · 400ms cubic-bezier(0.34,1.56,0.64,1)</div>
+        <div style="position:relative;height:180px;background:var(--surface01);border-radius:var(--radiusM);overflow:hidden;">
+          <!-- Simulated backdrop -->
+          <div style="position:absolute;inset:0;background:rgba(12,18,32,0.70);"></div>
+          <!-- Simulated bottom sheet -->
+          <div style="position:absolute;bottom:0;left:0;right:0;background:#FDFAF0;border-radius:20px 20px 0 0;padding:12px 16px;">
+            <div style="width:32px;height:3px;background:rgba(12,18,32,0.18);border-radius:999px;margin:0 auto 10px;"></div>
+            <div style="font-size:13px;font-weight:700;color:#0C1220;margin-bottom:4px;">Modal title here</div>
+            <div style="font-size:11px;color:rgba(12,18,32,0.55);">Content slides up with spring overshoot</div>
+          </div>
+        </div>
+        <table class="spec-table">
+          <tr>
+            <td class="highlight" style="padding:6px 0;">Easing</td>
+            <td class="mono" style="padding:6px 0;">cubic-bezier(0.34, 1.56, 0.64, 1)</td>
+          </tr>
+          <tr>
+            <td class="highlight" style="padding:6px 0;">Duration</td>
+            <td style="padding:6px 0;font-size:13px;color:var(--textSecondary);">400ms</td>
+          </tr>
+          <tr>
+            <td class="highlight" style="padding:6px 0;">Dismiss</td>
+            <td style="padding:6px 0;font-size:13px;color:var(--textSecondary);">translateY 0→100%, 250ms ease-in</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SECTION 4: Counter Animation                           -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-tag">Section 04</div>
+    <div class="section-title">Counter Animation</div>
+    <div class="section-desc">
+      Animated number roll makes abstract values feel earned. Reserve for genuine financial wins — returns earned, savings total, cashback credited.
+    </div>
+
+    <div class="demo-grid" style="margin-bottom:24px;">
+      <!-- S -->
+      <div class="demo-card">
+        <div class="demo-label">Size S · Inline stat</div>
+        <div class="demo-spec">DM Sans 16px · 700 · 1s · easeOut</div>
+        <div style="padding:8px 0;">
+          <div class="counter-demo">
+            <span class="counter-prefix" style="font-size:14px;">₹</span>
+            <span class="counter-S">1,240</span>
+          </div>
+          <div style="font-size:11px;color:var(--textTertiary);margin-top:4px;">Earned this month</div>
+        </div>
+      </div>
+      <!-- M -->
+      <div class="demo-card">
+        <div class="demo-label">Size M · Card value</div>
+        <div class="demo-spec">DM Sans 24px · 700 · 1.5s · easeOut</div>
+        <div style="padding:8px 0;">
+          <div class="counter-demo">
+            <span class="counter-prefix" style="font-size:18px;">+₹</span>
+            <span class="counter-M">69</span>
+          </div>
+          <div style="font-size:11px;color:var(--textTertiary);margin-top:4px;">Grew with you</div>
+        </div>
+      </div>
+      <!-- L -->
+      <div class="demo-card">
+        <div class="demo-label">Size L · Celebration peak</div>
+        <div class="demo-spec">DM Sans 32px · 800 · 2s · easeOut · teal glow</div>
+        <div style="padding:8px 0;">
+          <div class="counter-demo">
+            <span class="counter-prefix" style="font-size:22px;color:#006B55;">₹</span>
+            <span class="counter-L">109</span>
+          </div>
+          <div style="font-size:11px;color:var(--textTertiary);margin-top:4px;">Total Saved</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont-grid">
+      <div class="do-card">
+        <div class="do-label">✓ Do</div>
+        <div class="do-text">
+          Let counters run 1–2s proportional to value magnitude. ₹69 → 800ms. ₹24,500 → 1800ms.<br><br>
+          Always use tabular-nums + tnum features so digits don't shift width during roll.<br><br>
+          Apply teal glow to celebration-size counters only (L · Size).
+        </div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-label">✗ Don't</div>
+        <div class="do-text" style="color:var(--textSecondary);">
+          Never flash counters to final value instantly — it feels cold and mechanical.<br><br>
+          Don't animate every number on screen simultaneously — pick the emotionally meaningful one.<br><br>
+          Avoid counter animation on negative values (fees, penalties) — only for wins.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SECTION 5: Value Breakdown Card — Progressive Reveal   -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-tag">Section 05</div>
+    <div class="section-title">Value Breakdown Card — Progressive Reveal</div>
+    <div class="section-desc">
+      The breakdown card reveals its content in three stages, building anticipation toward the headline "Total Saved" moment.
+    </div>
+
+    <div style="display:flex;gap:32px;align-items:flex-start;">
+
+      <!-- Stage 0 -->
+      <div style="position:relative;padding-top:36px;">
+        <div class="stage-annotation">Stage 0 · 0ms</div>
+        <div class="breakdown-stage">
+          <div class="stage-time-badge">0ms</div>
+          <div class="stage-row"><div class="stage-label">Voucher Value</div><div class="stage-value">₹500</div></div>
+          <div class="stage-row"><div class="stage-label">Brand Discount</div><div class="stage-value">−₹40</div></div>
+          <div class="stage-row"><div class="stage-label">Amount to Pay</div><div class="stage-value">₹460</div></div>
+          <!-- Returns + Total hidden at stage 0 -->
+          <div style="margin-top:8px;padding:8px;background:rgba(12,18,32,0.06);border-radius:8px;text-align:center;">
+            <div style="font-size:11px;color:rgba(12,18,32,0.35);">Returns &amp; Total Saved hidden</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:28px;color:rgba(255,255,255,0.20);align-self:center;padding-top:36px;">→</div>
+
+      <!-- Stage 1 -->
+      <div style="position:relative;padding-top:36px;">
+        <div class="stage-annotation">Stage 1 · 500ms</div>
+        <div class="breakdown-stage">
+          <div class="stage-time-badge">+500ms</div>
+          <div class="stage-row"><div class="stage-label">Voucher Value</div><div class="stage-value">₹500</div></div>
+          <div class="stage-row"><div class="stage-label">Brand Discount</div><div class="stage-value">−₹40</div></div>
+          <div class="stage-row"><div class="stage-label">Amount to Pay</div><div class="stage-value">₹460</div></div>
+          <div class="stage-divider"></div>
+          <!-- Returns earned fades in with teal glow -->
+          <div class="stage-row">
+            <div class="stage-label">Returns Earned</div>
+            <div class="stage-value-teal">+₹69</div>
+          </div>
+          <div style="margin-top:8px;padding:8px;background:rgba(12,18,32,0.06);border-radius:8px;text-align:center;">
+            <div style="font-size:11px;color:rgba(12,18,32,0.35);">Total Saved hidden</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:28px;color:rgba(255,255,255,0.20);align-self:center;padding-top:36px;">→</div>
+
+      <!-- Stage 2 -->
+      <div style="position:relative;padding-top:36px;">
+        <div class="stage-annotation">Stage 2 · 1200ms · PEAK</div>
+        <div class="breakdown-stage">
+          <div class="stage-time-badge">+1200ms</div>
+          <div class="stage-row"><div class="stage-label">Voucher Value</div><div class="stage-value">₹500</div></div>
+          <div class="stage-row"><div class="stage-label">Brand Discount</div><div class="stage-value">−₹40</div></div>
+          <div class="stage-row"><div class="stage-label">Amount to Pay</div><div class="stage-value">₹460</div></div>
+          <div class="stage-divider"></div>
+          <div class="stage-row"><div class="stage-label">Returns Earned</div><div class="stage-value-teal">+₹69</div></div>
+          <div class="stage-divider"></div>
+          <!-- Total Saved scales in (scale 1.1→1.0) -->
+          <div class="stage-row" style="align-items:center;">
+            <div class="stage-label" style="font-weight:700;color:#0C1220;">Total Saved</div>
+            <div class="stage-value-total">₹109</div>
+          </div>
+          <!-- Scale bounce annotation -->
+          <div style="text-align:right;margin-top:2px;">
+            <span style="font-size:10px;font-weight:600;color:var(--gold);letter-spacing:0.3px;">↑ scale 1.1×→1.0 · spring</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SECTION 6: Celebration Screen Anatomy                  -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-tag">Section 06</div>
+    <div class="section-title">Celebration Screen Anatomy</div>
+    <div class="section-desc">
+      The celebration screen is the peak delight moment — reserved for genuine financial wins. Every layer has a specific spec and purpose.
+    </div>
+
+    <div class="anatomy-grid">
+
+      <div class="anatomy-card">
+        <div class="anatomy-title">Floating Particles</div>
+        <div class="anatomy-spec">
+          <strong>Size:</strong> 8×8px circles<br>
+          <strong>Count:</strong> 15 particles<br>
+          <strong>Colors:</strong> Gold 40% · Teal 35% · White 25%<br>
+          <strong>Opacity:</strong> 0.30–0.70<br>
+          <strong>Loop:</strong> 10s ease-in-out infinite<br>
+          <strong>Motion:</strong> upward drift ±28px
+          <span class="anatomy-code">animation-delay: 0ms–5000ms<br>staggered spawn</span>
+        </div>
+      </div>
+
+      <div class="anatomy-card">
+        <div class="anatomy-title">Confetti Burst</div>
+        <div class="anatomy-spec">
+          <strong>Count:</strong> 20 pieces<br>
+          <strong>Shapes:</strong> 7×7px square + 5×9px tall<br>
+          <strong>Colors:</strong> Gold · Teal · White · Blue<br>
+          <strong>Origin:</strong> Screen center ±10px<br>
+          <strong>Radius:</strong> 25–130px radial<br>
+          <strong>Duration:</strong> 1500ms<br>
+          <strong>Physics:</strong> rotation + gravity + fade
+          <span class="anatomy-code">triggered at 2400ms<br>opacity: 1→0</span>
+        </div>
+      </div>
+
+      <div class="anatomy-card">
+        <div class="anatomy-title">Teal Glow (Returns)</div>
+        <div class="anatomy-spec">
+          Applied to "+₹69 grew" counter value.
+          <span class="anatomy-code">text-shadow:<br>0 0 20px<br>rgba(0,212,170,0.40);</span>
+          <br>Pulses in sync with counter:<br>
+          <span class="anatomy-code">0 0 8px rgba(0,212,170,0.30)<br>→ 0 0 24px rgba(0,212,170,0.60)<br>800ms linear</span>
+        </div>
+      </div>
+
+      <div class="anatomy-card">
+        <div class="anatomy-title">Card Entrance</div>
+        <div class="anatomy-spec">
+          Bottom sheet celebration card enters from below with spring overshoot.
+          <span class="anatomy-code">from:<br>translateY(60px)<br>rotate(-2deg)<br>opacity: 0<br><br>to:<br>translateY(0)<br>rotate(0)<br>opacity: 1</span>
+          <strong>Duration:</strong> 600ms spring<br>
+          <span class="anatomy-code">cubic-bezier(0.34,1.56,0.64,1)</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SECTION 7: Delight Dos & Don'ts                        -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-tag">Section 07</div>
+    <div class="section-title">Delight Dos &amp; Don'ts</div>
+    <div class="section-desc">
+      Principles for deploying delight thoughtfully. Motion that fires too often loses meaning.
+    </div>
+
+    <div class="delight-rules">
+
+      <div class="rule-card do">
+        <div class="rule-header">
+          <div class="rule-icon do-icon">✓</div>
+          <div class="rule-title">Reserve celebration for genuine wins</div>
+        </div>
+        <div class="rule-body">
+          Confetti and scale-bounce are reserved for moments where the user's money genuinely worked — cashback credited, returns earned, goal reached. Deploy once, at the peak. The emotional impact comes from scarcity.
+        </div>
+      </div>
+
+      <div class="rule-card do">
+        <div class="rule-header">
+          <div class="rule-icon do-icon">✓</div>
+          <div class="rule-title">One emotional peak per screen</div>
+        </div>
+        <div class="rule-body">
+          Design each celebration screen with a single scale-bounce moment — the "Total Saved" reveal. If two elements compete for peak attention, neither wins. Build up to one headline, then release with the spring animation.
+        </div>
+      </div>
+
+      <div class="rule-card do">
+        <div class="rule-header">
+          <div class="rule-icon do-icon">✓</div>
+          <div class="rule-title">Let counters run 1–2 seconds</div>
+        </div>
+        <div class="rule-body">
+          A counter that runs for 1–2s feels earned and satisfying. Duration should scale with the magnitude of the value — ₹69 runs shorter than ₹24,500. Never flash to the final value instantly; that feels like a glitch.
+        </div>
+      </div>
+
+      <div class="rule-card dont">
+        <div class="rule-header">
+          <div class="rule-icon dont-icon">✗</div>
+          <div class="rule-title">Don't animate on every screen</div>
+        </div>
+        <div class="rule-body">
+          Routine screens (transaction list, settings, profile) should have clean, fast transitions only. Entrance animations on every screen train users to ignore them — saving the spring and confetti for genuine moments preserves their impact.
+        </div>
+      </div>
+
+      <div class="rule-card dont">
+        <div class="rule-header">
+          <div class="rule-icon dont-icon">✗</div>
+          <div class="rule-title">Don't use celebration for errors or empty states</div>
+        </div>
+        <div class="rule-body">
+          Confetti and gold glow are emotionally coded as "win" moments. Using them for neutral onboarding or error recovery dilutes their meaning and can feel patronising. Error states use coral tones with simple fade-in, no spring.
+        </div>
+      </div>
+
+      <div class="rule-card dont">
+        <div class="rule-header">
+          <div class="rule-icon dont-icon">✗</div>
+          <div class="rule-title">Don't animate negative financial values</div>
+        </div>
+        <div class="rule-body">
+          Counter animations, teal glows, and scale bounces are reserved for positive amounts — returns earned, cashback, savings. Fees, charges, and payment amounts should display instantly in neutral colors. Never make the user feel excited about money leaving.
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:32px;padding:20px 24px;background:rgba(245,200,66,0.05);border:1px solid rgba(245,200,66,0.15);border-radius:var(--radiusM);display:flex;gap:12px;align-items:flex-start;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;margin-top:1px;">
+        <path d="M10 2L11.8 7H17L12.5 10.2L14.3 15.2L10 12.2L5.7 15.2L7.5 10.2L3 7H8.2L10 2Z" fill="#F5C842"/>
+      </svg>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;">The Golden Rule of Delight</div>
+        <div style="font-size:13px;color:var(--textSecondary);line-height:1.7;">
+          Every delight animation should answer: <em>"Did the user earn this?"</em> If yes, the motion amplifies a genuine moment and builds trust. If no, it's noise that teaches users to skip ahead. Motion in a fintech product is not about looking exciting — it's about making users feel that their money is working for them.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

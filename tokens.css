@@ -1,0 +1,107 @@
+/* ============================================================
+   Multipl Design System v2.0 — CSS Custom Properties (Tokens)
+   375pt reference canvas · February 2026
+   ============================================================ */
+
+:root {
+  /* ── Brand Colors ───────────────────────────────────────── */
+  --brandYellow:    #F5C842;
+  --brandBlack:     #1A1A1A;
+
+  /* ── Background Colors ──────────────────────────────────── */
+  --bgCream:        #FDFAF0;   /* financial context: Home, Add Money */
+  --bgPeach:        #FDF0E8;   /* shopping/redemption context */
+  --bgWhite:        #FFFFFF;   /* cards, inputs, bottom nav */
+
+  /* ── Semantic Colors ────────────────────────────────────── */
+  --semanticSuccess:  #2DB37A;
+  --semanticInfoCard: #D6EAF8;
+  --semanticNavy:     #1A2580;
+  --semanticError:    #E53935;
+  --semanticWarning:  #FFA726;
+
+  /* ── Neutral Scale ──────────────────────────────────────── */
+  --neutral50:   #FAFAFA;
+  --neutral100:  #F5F5F5;
+  --neutral200:  #EEEEEE;
+  --neutral300:  #E0E0E0;
+  --neutral400:  #BDBDBD;
+  --neutral500:  #9E9E9E;
+  --neutral600:  #757575;
+  --neutral700:  #616161;
+  --neutral800:  #424242;
+  --neutral900:  #111111;
+
+  /* ── Category Tag Colors ────────────────────────────────── */
+  --catFoodBg:      #FFF3E0;  --catFoodText:     #E65100;
+  --catApparelBg:   #FCE4EC;  --catApparelText:  #AD1457;
+  --catShoppingBg:  #E8EAF6;  --catShoppingText: #283593;
+  --catCabsBg:      #E8F5E9;  --catCabsText:     #1B5E20;
+  --catDefaultBg:   #F5F5F5;  --catDefaultText:  #424242;
+
+  /* ── Dark Surface Colors ────────────────────────────────── */
+  --darkSurface: #1E1E2E;
+  --darkCard:    #2A2A3E;
+
+  /* ── Spacing Scale (8px grid) ───────────────────────────── */
+  --s2:   2px;
+  --s4:   4px;
+  --s6:   6px;
+  --s8:   8px;
+  --s10:  10px;
+  --s12:  12px;
+  --s14:  14px;
+  --s16:  16px;
+  --s20:  20px;
+  --s24:  24px;
+  --s28:  28px;
+  --s32:  32px;
+  --s40:  40px;
+  --s48:  48px;
+  --s56:  56px;
+  --s64:  64px;
+
+  /* ── Semantic Spacing Aliases ───────────────────────────── */
+  --pagePadding:  16px;
+  --sectionGap:   32px;
+  --itemGap:      12px;
+  --cardPadding:  16px;
+  --rowGap:       8px;
+  --inlineGap:    4px;
+
+  /* ── Component Heights ──────────────────────────────────── */
+  --btnHeight:     56px;
+  --btnSmHeight:   44px;
+  --chipHeight:    36px;
+  --inputHeight:   56px;
+  --navBarHeight:  72px;
+
+  /* ── Border Radius ──────────────────────────────────────── */
+  --radiusXS:     4px;
+  --radiusS:      8px;
+  --radiusM:      12px;
+  --radiusL:      16px;
+  --radiusXL:     20px;
+  --radiusFull:   999px;
+  --sheetTop:     24px;  /* bottom sheet: top corners only */
+
+  /* ── Shadows & Elevation ────────────────────────────────── */
+  --shadowLow:    0 2px 8px rgba(0,0,0,0.08);
+  --shadowMedium: 0 4px 16px rgba(0,0,0,0.10);
+  --shadowHigh:   0 8px 24px rgba(0,0,0,0.15);
+  --shadowPressed:0 1px 4px rgba(0,0,0,0.16);
+
+  /* ── Safe Areas ─────────────────────────────────────────── */
+  --safeTop:     59px;   /* Dynamic Island sim. (iPhone 14 Pro+) */
+  --safeBottom:  34px;   /* Home indicator */
+
+  /* ── Canvas ─────────────────────────────────────────────── */
+  --canvasWidth: 375px;
+}
+
+/* ── Typography Utilities ────────────────────────────────── */
+/* Amount/financial: always tabular figures */
+.tabular { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* Playfair Display — wealth context only */
+.fontDisplay { font-family: 'Playfair Display', Georgia, serif; }
