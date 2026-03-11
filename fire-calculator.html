@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FIRE Calculator – Multipl India</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── GILROY ── */
+@font-face{font-family:'Gilroy';font-weight:400;font-style:normal;src:local('Gilroy-Regular'),url('assets/fonts/Gilroy/Gilroy-Regular.ttf') format('truetype')}
+@font-face{font-family:'Gilroy';font-weight:500;font-style:normal;src:local('Gilroy-Medium'),url('assets/fonts/Gilroy/Gilroy-Medium.ttf') format('truetype')}
+@font-face{font-family:'Gilroy';font-weight:600;font-style:normal;src:local('Gilroy-SemiBold'),url('assets/fonts/Gilroy/Gilroy-SemiBold.ttf') format('truetype')}
+@font-face{font-family:'Gilroy';font-weight:700;font-style:normal;src:local('Gilroy-Bold'),url('assets/fonts/Gilroy/Gilroy-Bold.ttf') format('truetype')}
+@font-face{font-family:'Gilroy';font-weight:800;font-style:normal;src:local('Gilroy-ExtraBold'),url('assets/fonts/Gilroy/Gilroy-ExtraBold.ttf') format('truetype')}
+
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ── TOKENS ── */
+:root{
+  --gold:#FBD748;--gold-end:#FBEF48;
+  --gold-grad:linear-gradient(90deg,#FBD748 0%,#FBEF48 100%);
+  --gold-tint:rgba(251,215,72,0.08);
+  --gold-border:rgba(251,215,72,0.40);
+  --bg-dark:#0C1220;--bg-base:#FDFAF0;--surface:#FFFFFF;
+  --surface-dark:#141B2D;
+  --teal:#00D4AA;--teal-text:#006B55;
+  --coral:#E53935;--blue:#4A9FFF;
+  --tx-dark:#0C1220;--tx-mid:rgba(12,18,32,0.55);--tx-light:rgba(12,18,32,0.35);
+  --tx-on-dark-1:#FFFFFF;--tx-on-dark-2:rgba(255,255,255,0.65);--tx-on-dark-3:rgba(255,255,255,0.38);
+  --border-light:rgba(12,18,32,0.10);--border-dark:rgba(255,255,255,0.10);
+  --r-btn:4px;--r-inp:8px;--r-card:16px;--r-chip:999px;
+  --btn-h:52px;--pp:16px;
+  --shadow-card:0 2px 12px rgba(0,0,0,0.08);
+  --shadow-gold:0 4px 16px rgba(251,215,72,0.35);
+  /* mode colors (overridden in JS) */
+  --mode-clr:#FBD748;
+}
+
+body{
+  font-family:'Gilroy',sans-serif;
+  background:var(--bg-base);
+  color:var(--tx-dark);
+  min-height:100vh;
+}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg-base)}
+::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:2px}
+
+/* ══ HEADER ══ */
+header{
+  height:56px;background:var(--bg-dark);
+  border-bottom:1px solid var(--border-dark);
+  padding:0 var(--pp);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--gold-grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;color:var(--bg-dark);
+  box-shadow:var(--shadow-gold);flex-shrink:0;
+}
+.logo-name{font-size:15px;font-weight:700;color:var(--tx-on-dark-1);letter-spacing:-.01em}
+.fire-badge{
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:var(--r-chip);
+  border:1px solid var(--gold-border);color:var(--gold);background:var(--gold-tint);
+}
+.tab-group{
+  display:flex;gap:3px;background:rgba(255,255,255,0.06);
+  border-radius:8px;padding:3px;border:1px solid var(--border-dark)
+}
+.tab-btn{
+  padding:6px 18px;border-radius:6px;border:none;cursor:pointer;
+  font-size:12px;font-weight:600;letter-spacing:.02em;
+  transition:all .2s;background:transparent;
+  color:var(--tx-on-dark-3);font-family:'Gilroy',sans-serif;
+}
+.tab-btn.active{background:var(--gold-grad);color:var(--bg-dark)}
+
+/* ══ HERO ZONE ══ */
+.hero-zone{
+  background:var(--bg-dark);
+  padding:24px var(--pp) 20px;
+  position:relative;overflow:hidden;
+}
+.hero-glow{
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:400px;height:300px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(251,215,72,0.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* ── FIRE mode selector ── */
+.fire-types{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;
+  margin-bottom:20px;
+}
+.fire-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border-dark);
+  border-radius:var(--r-card);
+  padding:14px;cursor:pointer;
+  text-align:left;transition:all .22s;
+  position:relative;overflow:hidden;width:100%;
+  font-family:'Gilroy',sans-serif;
+}
+.fire-card:hover{border-color:rgba(255,255,255,0.18)}
+.fire-card.lean.active  {background:rgba(0,212,170,0.08);border-color:var(--teal)}
+.fire-card.regular.active{background:rgba(251,215,72,0.08);border-color:var(--gold)}
+.fire-card.fat.active   {background:rgba(74,159,255,0.08);border-color:var(--blue)}
+.top-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0;display:none}
+.fire-card.active .top-bar{display:block}
+.lean .top-bar{background:var(--teal)}
+.regular .top-bar{background:var(--gold-grad)}
+.fat .top-bar{background:var(--blue)}
+.fc-emoji{font-size:16px;margin-bottom:5px;display:block}
+.fc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px}
+.fc-label{font-size:13px;font-weight:600;color:var(--tx-on-dark-2)}
+.lean.active .fc-label{color:var(--teal)}
+.regular.active .fc-label{color:var(--gold)}
+.fat.active .fc-label{color:var(--blue)}
+.fc-badge{
+  font-size:8px;padding:2px 7px;border-radius:var(--r-chip);
+  display:none;letter-spacing:.06em;font-weight:700;
+}
+.fire-card.active .fc-badge{display:block}
+.lean .fc-badge{color:var(--teal);background:rgba(0,212,170,0.12)}
+.regular .fc-badge{color:var(--gold);background:rgba(251,215,72,0.14)}
+.fat .fc-badge{color:var(--blue);background:rgba(74,159,255,0.12)}
+.fc-lifestyle{font-size:11px;color:var(--tx-on-dark-3);margin-bottom:10px;line-height:1.5}
+.fc-amount-label{font-size:9px;color:var(--tx-on-dark-3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.fc-amount{font-size:20px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.fc-retire{font-size:10px;color:var(--tx-on-dark-3);margin-top:3px}
+
+/* ── Key metrics strip ── */
+.metric-strip{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border-dark);
+  border-radius:var(--r-card);overflow:hidden;
+}
+.metric-cell{
+  padding:14px 12px;
+  border-right:1px solid var(--border-dark);
+}
+.metric-cell:last-child{border-right:none}
+.metric-cell-label{font-size:9px;color:var(--tx-on-dark-3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.metric-cell-val{font-size:22px;font-weight:800;color:var(--tx-on-dark-1);font-variant-numeric:tabular-nums;line-height:1}
+.metric-cell-sub{font-size:10px;color:var(--tx-on-dark-3);margin-top:2px}
+
+/* ══ BODY WRAP ══ */
+.wrap{max-width:460px;margin:0 auto;padding:20px var(--pp) 40px}
+
+/* ══ PANELS ══ */
+.panels{display:none}.panels.show{display:block}
+
+/* ══ SECTION CARDS ══ */
+.section{
+  background:var(--surface);
+  border:1px solid var(--border-light);
+  border-radius:var(--r-card);
+  padding:20px;margin-bottom:14px;
+  box-shadow:var(--shadow-card);
+}
+.section-title{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.step-num{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--border-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--tx-mid);flex-shrink:0;
+}
+.section.active-step .step-num{background:var(--gold-grad);color:var(--bg-dark)}
+.section-label{font-size:13px;font-weight:600;color:var(--tx-dark)}
+.section-hint{font-size:10px;color:var(--tx-light);margin-left:auto}
+
+/* ══ SLIDERS ══ */
+.slider-wrap{margin-bottom:20px}
+.slider-wrap:last-child{margin-bottom:0}
+.slider-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
+.slider-label{font-size:11px;font-weight:600;color:var(--tx-mid)}
+.slider-value{font-size:19px;font-weight:800;color:var(--tx-dark);font-variant-numeric:tabular-nums}
+.slider-sub{font-size:11px;color:var(--tx-light);margin-bottom:7px;line-height:1.55}
+input[type=range]{
+  -webkit-appearance:none;width:100%;height:4px;
+  border-radius:2px;background:#E8E5DC;
+  outline:none;cursor:pointer;transition:background .1s;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--gold-grad);cursor:pointer;
+  box-shadow:0 0 0 2px #FFFFFF,var(--shadow-gold);
+  border:none;
+}
+input[type=range]::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;border:2px solid #FFFFFF;
+  background:var(--gold);cursor:pointer;box-shadow:var(--shadow-gold);
+}
+.slider-hints{display:flex;justify-content:space-between;font-size:10px;color:var(--tx-light);margin-top:4px}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* ══ ALLOC ══ */
+.alloc-bar-wrap{
+  height:10px;border-radius:6px;background:var(--border-light);
+  overflow:hidden;display:flex;margin:0 0 8px;
+}
+.alloc-seg{height:100%;transition:width .35s ease}
+.alloc-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.alloc-lbl{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--tx-mid)}
+.alloc-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.alloc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
+.alloc-item-head{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.alloc-item-name{font-size:11px;font-weight:600;flex:1}
+.alloc-item-pct{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.alloc-ref{
+  font-size:10px;color:var(--tx-mid);margin-bottom:6px;
+  padding:5px 8px;background:var(--bg-base);
+  border-radius:6px;border-left:2px solid;line-height:1.55;
+}
+.alloc-total-row{
+  display:flex;align-items:center;gap:10px;margin-top:14px;
+  padding:10px 14px;border-radius:10px;
+  background:var(--bg-base);border:1px solid var(--border-light);
+}
+.alloc-total-label{font-size:11px;color:var(--tx-mid);flex:1}
+.alloc-total-num{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.alloc-total-hint{font-size:11px}
+.alloc-custom-toggle{
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  padding:10px 13px;background:var(--bg-base);
+  border:1px solid var(--border-light);border-radius:10px;
+  margin-bottom:14px;transition:border-color .2s;user-select:none;
+}
+.alloc-custom-toggle:hover{border-color:var(--gold-border)}
+.alloc-custom-toggle-text{flex:1;font-size:11px;color:var(--tx-mid)}
+.alloc-custom-toggle-text b{color:var(--tx-dark);font-weight:600}
+.alloc-custom-arrow{font-size:11px;color:var(--tx-light);transition:transform .25s}
+.alloc-custom-arrow.open{transform:rotate(180deg)}
+.alloc-custom-panel{display:none}.alloc-custom-panel.open{display:block}
+.returns-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.returns-box{
+  background:var(--bg-base);border:1px solid var(--border-light);
+  border-radius:10px;padding:12px;
+}
+.returns-box-label{font-size:9px;color:var(--tx-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.returns-box-val{font-size:19px;font-weight:800;color:var(--tx-dark);font-variant-numeric:tabular-nums}
+.returns-box-sub{font-size:10px;color:var(--tx-light);margin-top:2px}
+.warning-bar{
+  font-size:11px;color:#CC8800;
+  background:rgba(204,136,0,.07);border:1px solid rgba(204,136,0,.2);
+  border-radius:8px;padding:8px 12px;margin-top:8px;display:none;
+}
+.warning-bar.show{display:block}
+
+/* ══ MONTHLY GOAL HERO ══ */
+.goal-hero{margin-bottom:18px}
+.goal-q{font-size:17px;font-weight:700;margin-bottom:5px;letter-spacing:-.01em;line-height:1.3;color:var(--tx-dark)}
+.goal-hint{font-size:11px;color:var(--tx-mid);margin-bottom:14px;line-height:1.6}
+.goal-amount-row{display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.goal-amount{font-size:40px;font-weight:800;letter-spacing:-.03em;color:var(--teal-text);font-variant-numeric:tabular-nums;min-width:180px;line-height:1}
+.goal-slider{flex:1;min-width:180px}
+.goal-presets{display:flex;gap:7px;flex-wrap:wrap}
+.preset-btn{
+  padding:6px 12px;border-radius:var(--r-chip);
+  border:1px solid var(--border-light);
+  background:transparent;color:var(--tx-mid);
+  font-size:11px;cursor:pointer;transition:all .18s;
+  font-family:'Gilroy',sans-serif;font-weight:500;
+}
+.preset-btn:hover{border-color:var(--gold-border);color:var(--teal-text);background:var(--gold-tint)}
+.preset-btn.active{
+  border-color:var(--gold);color:var(--bg-dark);
+  background:var(--gold-grad);
+  box-shadow:0 0 0 3px rgba(251,215,72,0.12);
+}
+
+/* ══ SWR ══ */
+.swr-toggle{
+  display:flex;align-items:center;gap:10px;cursor:pointer;
+  padding:11px 14px;background:var(--bg-base);
+  border:1px solid var(--border-light);border-radius:10px;
+  transition:border-color .2s;user-select:none;margin-top:16px;
+}
+.swr-toggle:hover{border-color:var(--gold-border)}
+.swr-toggle-left{flex:1}
+.swr-toggle-badge{
+  font-size:9px;padding:2px 7px;border-radius:10px;
+  background:var(--border-light);color:var(--tx-light);
+  font-weight:700;letter-spacing:.08em;margin-right:6px;
+}
+.swr-toggle-title{font-size:11px;color:var(--tx-mid);font-weight:500}
+.swr-toggle-val{font-size:11px;color:var(--teal-text);font-weight:600;margin-top:2px}
+.swr-toggle-arrow{font-size:11px;color:var(--tx-light);transition:transform .25s}
+.swr-toggle-arrow.open{transform:rotate(180deg)}
+.swr-panel{display:none;margin-top:10px}.swr-panel.open{display:block}
+.swr-intro{
+  font-size:11px;color:var(--tx-mid);line-height:1.7;margin-bottom:10px;
+  padding:10px 13px;background:var(--bg-base);
+  border-radius:8px;border-left:2px solid var(--border-light);
+}
+.swr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.swr-card{
+  border-radius:12px;padding:12px;border:1px solid var(--border-light);
+  cursor:pointer;transition:all .18s;background:var(--bg-base);
+}
+.swr-card:hover{border-color:var(--gold-border)}
+.swr-card.selected{border-color:var(--teal);background:rgba(0,212,170,0.06)}
+.swr-card-rate{font-size:22px;font-weight:800;margin-bottom:2px;font-variant-numeric:tabular-nums}
+.swr-card-corpus{font-size:11px;font-weight:600;color:var(--tx-dark);margin-bottom:2px}
+.swr-card-tag{
+  font-size:9px;padding:2px 7px;border-radius:10px;
+  display:inline-block;margin:4px 0 5px;font-weight:700;letter-spacing:.05em;
+}
+.swr-card-note{font-size:10px;color:var(--tx-light);line-height:1.5}
+
+/* ══ SPEND TABLE ══ */
+.spend-table{width:100%;border-collapse:collapse;margin-top:4px}
+.spend-table th{
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--tx-light);padding:0 10px 10px 0;text-align:left;font-weight:600;
+}
+.spend-table th.right{text-align:right;padding-right:0}
+.spend-table td{
+  padding:5px 10px 5px 0;border-top:1px solid var(--border-light);
+  vertical-align:middle;
+}
+.spend-table td.right{padding-right:0;text-align:right}
+.spend-cat{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--tx-mid)}
+.spend-cat-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0}
+.spend-input{
+  background:var(--bg-base);border:1px solid var(--border-light);
+  border-radius:var(--r-inp);padding:6px 10px;
+  font-size:12px;font-family:'Gilroy',sans-serif;color:var(--tx-dark);
+  width:100px;text-align:right;outline:none;transition:border-color .18s,box-shadow .18s;
+}
+.spend-input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(251,215,72,0.15);
+}
+.spend-input.retirement{color:var(--teal-text);border-color:rgba(0,212,170,0.2)}
+.spend-input.retirement:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,212,170,0.1)}
+.spend-diff{font-size:11px;font-weight:600;width:56px;text-align:right;padding-right:0}
+.spend-total-row td{padding-top:12px;border-top:2px solid var(--border-light)}
+.spend-total-label{font-size:12px;font-weight:700;color:var(--tx-dark)}
+.spend-total-now{font-size:14px;font-weight:700;color:var(--tx-mid);text-align:right;font-variant-numeric:tabular-nums}
+.spend-total-ret{font-size:17px;font-weight:800;color:var(--teal-text);text-align:right;font-variant-numeric:tabular-nums}
+.spend-use-btn{
+  margin-top:14px;display:flex;align-items:center;gap:12px;
+  padding:12px 16px;background:var(--gold-tint);
+  border:1px solid var(--gold-border);border-radius:10px;
+  cursor:pointer;transition:all .18s;user-select:none;
+}
+.spend-use-btn:hover{background:rgba(251,215,72,0.14);border-color:var(--gold)}
+.spend-use-btn-text{flex:1}
+.spend-use-btn-label{font-size:12px;font-weight:600;color:var(--tx-dark)}
+.spend-use-btn-sub{font-size:10px;color:var(--tx-mid);margin-top:2px}
+.spend-use-btn-arrow{font-size:16px;color:var(--teal-text);font-weight:700}
+
+/* ══ LIQUID FUND NUDGE CARD ══ */
+.liquid-nudge{
+  background:var(--bg-dark);
+  border:1px solid var(--gold-border);
+  border-radius:var(--r-card);
+  padding:20px;margin-bottom:14px;
+  position:relative;overflow:hidden;
+  box-shadow:0 0 0 0 rgba(251,215,72,0);
+  transition:box-shadow .3s;
+}
+.liquid-nudge.has-value{box-shadow:0 0 32px rgba(251,215,72,0.12)}
+.liquid-nudge-glow{
+  position:absolute;top:-80px;right:-60px;
+  width:280px;height:220px;
+  background:radial-gradient(ellipse at 80% 20%,rgba(251,215,72,0.14) 0%,transparent 65%);
+  pointer-events:none;
+}
+.liquid-nudge-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(251,215,72,0.12);border:1px solid var(--gold-border);
+  border-radius:var(--r-chip);padding:3px 10px;
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:10px;
+}
+.liquid-nudge h3{
+  font-size:15px;font-weight:700;color:var(--tx-on-dark-1);
+  margin-bottom:6px;line-height:1.35;
+}
+.liquid-nudge-desc{
+  font-size:11px;color:var(--tx-on-dark-2);line-height:1.65;margin-bottom:16px;
+}
+.liquid-nudge-desc em{color:var(--tx-on-dark-3);font-style:normal;font-size:10px}
+.liquid-stats{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border-dark);
+  border-radius:12px;overflow:hidden;
+  margin-bottom:16px;
+}
+.liquid-stat{padding:12px 10px;border-right:1px solid var(--border-dark)}
+.liquid-stat:last-child{border-right:none}
+.liquid-stat-label{font-size:9px;color:var(--tx-on-dark-3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;line-height:1.3}
+.liquid-stat-val{font-size:17px;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums;line-height:1}
+.liquid-stat-sub{font-size:9px;color:var(--tx-on-dark-3);margin-top:2px}
+.liquid-cta{
+  display:flex;align-items:center;justify-content:center;
+  height:44px;width:100%;
+  background:var(--gold-grad);color:var(--bg-dark);
+  border:none;border-radius:var(--r-btn);
+  font-size:13px;font-weight:700;font-family:'Gilroy',sans-serif;
+  cursor:pointer;text-decoration:none;
+  box-shadow:var(--shadow-gold);
+  transition:opacity .18s;
+}
+.liquid-cta:hover{opacity:0.9}
+
+/* ══ RESULT CALLOUT ══ */
+.result-callout{
+  background:var(--bg-dark);
+  border:1px solid var(--border-dark);
+  border-radius:var(--r-card);padding:22px;margin-bottom:14px;
+  box-shadow:var(--shadow-card);
+  position:relative;overflow:hidden;
+}
+.result-glow{
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:300px;height:200px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(251,215,72,0.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.rc-label{
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tx-on-dark-3);margin-bottom:5px;
+}
+.rc-main{
+  font-size:34px;font-weight:800;letter-spacing:-.03em;
+  color:var(--gold);line-height:1;margin-bottom:3px;
+  font-variant-numeric:tabular-nums;
+}
+.rc-sub{font-size:11px;color:var(--tx-on-dark-2)}
+.rc-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  margin-top:16px;border-top:1px solid var(--border-dark);padding-top:16px;
+}
+.rc-item{padding:0 14px}
+.rc-item+.rc-item{border-left:1px solid var(--border-dark)}
+.rc-item:first-child{padding-left:0}
+.rc-item-label{font-size:9px;color:var(--tx-on-dark-3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.rc-item-val{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.rc-item-sub{font-size:10px;color:var(--tx-on-dark-3);margin-top:2px}
+
+/* ══ CHART ══ */
+.chart-panel{
+  background:var(--surface);border:1px solid var(--border-light);
+  border-radius:var(--r-card);padding:20px;box-shadow:var(--shadow-card);
+}
+.chart-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:16px;flex-wrap:wrap;gap:8px;
+}
+.chart-title-text{font-size:12px;font-weight:600;color:var(--tx-dark);display:flex;align-items:center;gap:8px}
+.pbar{width:3px;height:13px;border-radius:2px;flex-shrink:0}
+.chart-legend{display:flex;gap:14px;font-size:10px;color:var(--tx-mid)}
+.legend-item{display:flex;align-items:center;gap:5px}
+.legend-line{width:14px;height:2px;border-radius:1px}
+
+/* ══ STATS ROW ══ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.stat{
+  background:var(--surface);border:1px solid var(--border-light);
+  border-radius:12px;padding:14px;box-shadow:var(--shadow-card);
+}
+.stat-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-light);margin-bottom:7px}
+.stat-val{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.stat-sub{font-size:10px;color:var(--tx-light);margin-top:4px}
+
+/* ══ COMPARE TABLE ══ */
+.compare{
+  background:var(--surface);border:1px solid var(--border-light);
+  border-radius:var(--r-card);padding:20px;margin-top:14px;
+  box-shadow:var(--shadow-card);
+}
+.compare-title{
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-light);
+  margin-bottom:14px;display:flex;align-items:center;gap:7px;
+}
+.compare-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr 1fr;gap:0}
+.ch{
+  font-size:9px;color:var(--tx-light);letter-spacing:.08em;
+  text-transform:uppercase;padding:0 8px 10px 0;
+  border-bottom:1px solid var(--border-light);
+}
+.cc{
+  padding:11px 8px 11px 0;border-bottom:1px solid var(--border-light);
+  font-size:12px;color:var(--tx-mid);display:flex;align-items:center;
+}
+.cc.name{font-size:12px;font-weight:600;gap:7px}
+.cc.bold{font-size:13px;font-weight:800;color:var(--tx-dark);font-variant-numeric:tabular-nums}
+.dot8{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ══ FOOTER ══ */
+footer{
+  text-align:center;margin-top:24px;
+  font-size:10px;color:var(--tx-light);
+  padding-bottom:32px;line-height:2.2;
+}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:680px){
+  .fire-types{grid-template-columns:1fr}
+  .two-col,.stats,.alloc-grid,.swr-grid,.rc-grid,.returns-row{grid-template-columns:1fr}
+  .rc-item+.rc-item{border-left:none;border-top:1px solid var(--border-dark);padding:10px 0 0}
+  .rc-item{padding:0}
+  .goal-amount{font-size:32px}
+  .compare-grid{grid-template-columns:1.5fr 1fr 1fr}
+  .ch:nth-child(4),.ch:nth-child(5),.cc:nth-child(5n+4),.cc:nth-child(5n+5){display:none}
+  header{padding:0 12px}
+  .wrap{padding:14px 12px 40px}
+  .metric-strip{grid-template-columns:1fr}
+  .metric-cell{border-right:none;border-bottom:1px solid var(--border-dark)}
+  .metric-cell:last-child{border-bottom:none}
+  .liquid-stats{grid-template-columns:1fr}
+  .liquid-stat{border-right:none;border-bottom:1px solid var(--border-dark)}
+  .liquid-stat:last-child{border-bottom:none}
+}
+@media(max-width:420px){
+  .fire-types{grid-template-columns:1fr}
+  header .logo-name{font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ STICKY HEADER ══ -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">M</div>
+    <span class="logo-name">Multipl</span>
+    <span class="fire-badge">FIRE CALCULATOR</span>
+  </div>
+  <div class="tab-group">
+    <button class="tab-btn active" onclick="switchTab('inputs',this)">Calculator</button>
+    <button class="tab-btn" onclick="switchTab('projection',this)">Growth Chart</button>
+  </div>
+</header>
+
+<!-- ══ HERO ZONE ══ -->
+<div class="hero-zone">
+  <div class="hero-glow"></div>
+
+  <!-- FIRE mode selector -->
+  <div class="fire-types">
+    <button class="fire-card lean active" onclick="setMode('lean')">
+      <div class="top-bar"></div>
+      <span class="fc-emoji">🌿</span>
+      <div class="fc-head">
+        <div class="fc-label">Lean retirement</div>
+        <div class="fc-badge">YOUR PICK</div>
+      </div>
+      <div class="fc-lifestyle">Simple life · smaller city · no frills. Basic needs covered, occasional travel.</div>
+      <div class="fc-amount-label">Corpus needed</div>
+      <div class="fc-amount" id="fc-amt-lean" style="color:var(--teal)">—</div>
+      <div class="fc-retire" id="fc-ret-lean">—</div>
+    </button>
+    <button class="fire-card regular" onclick="setMode('regular')">
+      <div class="top-bar"></div>
+      <span class="fc-emoji">🔥</span>
+      <div class="fc-head">
+        <div class="fc-label">Comfortable</div>
+        <div class="fc-badge">YOUR PICK</div>
+      </div>
+      <div class="fc-lifestyle">Good life, no real compromises. Dining out, holidays, quality healthcare.</div>
+      <div class="fc-amount-label">Corpus needed</div>
+      <div class="fc-amount" id="fc-amt-regular" style="color:var(--gold)">—</div>
+      <div class="fc-retire" id="fc-ret-regular">—</div>
+    </button>
+    <button class="fire-card fat" onclick="setMode('fat')">
+      <div class="top-bar"></div>
+      <span class="fc-emoji">👑</span>
+      <div class="fc-head">
+        <div class="fc-label">Luxury</div>
+        <div class="fc-badge">YOUR PICK</div>
+      </div>
+      <div class="fc-lifestyle">Premium lifestyle. Business class, luxury stays, best healthcare, full help.</div>
+      <div class="fc-amount-label">Corpus needed</div>
+      <div class="fc-amount" id="fc-amt-fat" style="color:var(--blue)">—</div>
+      <div class="fc-retire" id="fc-ret-fat">—</div>
+    </button>
+  </div>
+
+  <!-- Key metric strip -->
+  <div class="metric-strip">
+    <div class="metric-cell">
+      <div class="metric-cell-label">Target corpus</div>
+      <div class="metric-cell-val" id="m-corpus">—</div>
+      <div class="metric-cell-sub" id="m-corpus-sub">—</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-cell-label">Years to FIRE</div>
+      <div class="metric-cell-val" id="m-years">—</div>
+      <div class="metric-cell-sub" id="m-years-sub">—</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-cell-label">Retire at age</div>
+      <div class="metric-cell-val" id="m-age">—</div>
+      <div class="metric-cell-sub" id="m-age-sub">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BODY ══ -->
+<div class="wrap">
+
+  <!-- ═══ INPUTS PANEL ═══ -->
+  <div id="panel-inputs" class="panels show">
+
+    <!-- STEP 1 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">1</div>
+        <div class="section-label">Where are you today?</div>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-label">Your age</span>
+              <span class="slider-value" id="val-age">28 yrs</span>
+            </div>
+            <input type="range" id="s-age" min="18" max="55" step="1" value="28" oninput="update();fillSlider(this)">
+            <div class="slider-hints"><span>18</span><span>55</span></div>
+          </div>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-label">Money already saved / invested</span>
+              <span class="slider-value" id="val-savings">₹10L</span>
+            </div>
+            <div class="slider-sub">Add up mutual funds, FDs, stocks, PF — everything</div>
+            <input type="range" id="s-savings" min="0" max="50000000" step="100000" value="1000000" oninput="update();fillSlider(this)">
+            <div class="slider-hints"><span>₹0</span><span>₹5Cr</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-label">Monthly take-home pay</span>
+              <span class="slider-value" id="val-income">₹1,50,000</span>
+            </div>
+            <div class="slider-sub">After taxes. What actually hits your account.</div>
+            <input type="range" id="s-income" min="20000" max="2000000" step="10000" value="150000" oninput="update();fillSlider(this)">
+            <div class="slider-hints"><span>₹20K</span><span>₹20L</span></div>
+          </div>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-label">How much you invest each month</span>
+              <span class="slider-value" id="val-rate">30%</span>
+            </div>
+            <div class="slider-sub" id="sub-rate">= ₹45,000/month going into investments</div>
+            <input type="range" id="s-rate" min="5" max="80" step="1" value="30" oninput="update();fillSlider(this)">
+            <div class="slider-hints"><span>5%</span><span>80%</span></div>
+          </div>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-label">How fast your salary grows each year</span>
+              <span class="slider-value" id="val-growth">10%</span>
+            </div>
+            <div class="slider-sub" id="sub-growth">Your monthly investment grows with your salary</div>
+            <input type="range" id="s-growth" min="0" max="25" step="1" value="10" oninput="update();fillSlider(this)">
+            <div class="slider-hints"><span>0% (flat)</span><span>~10% typical</span><span>25%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">2</div>
+        <div class="section-label">Where is your money invested?</div>
+        <div class="section-hint">Must add to 100%</div>
+      </div>
+
+      <div class="alloc-custom-toggle" onclick="toggleAlloc()">
+        <div class="alloc-custom-toggle-text">
+          Currently: <b id="alloc-summary-text">60% Stocks · 20% FD · 10% Gold · 10% Property</b>
+        </div>
+        <div class="alloc-custom-arrow" id="alloc-arrow">▾ Customise</div>
+      </div>
+
+      <div class="alloc-custom-panel" id="alloc-panel">
+        <div class="alloc-bar-wrap">
+          <div class="alloc-seg" id="bar-equity" style="background:#F97316;width:60%"></div>
+          <div class="alloc-seg" id="bar-fd"     style="background:#60A5FA;width:20%"></div>
+          <div class="alloc-seg" id="bar-gold"   style="background:#FBD748;width:10%"></div>
+          <div class="alloc-seg" id="bar-re"     style="background:#C084FC;width:10%"></div>
+        </div>
+        <div class="alloc-legend">
+          <div class="alloc-lbl"><div class="alloc-dot" style="background:#F97316"></div>Stocks / Mutual Funds</div>
+          <div class="alloc-lbl"><div class="alloc-dot" style="background:#60A5FA"></div>FD / PPF / Bonds</div>
+          <div class="alloc-lbl"><div class="alloc-dot" style="background:#FBD748"></div>Gold</div>
+          <div class="alloc-lbl"><div class="alloc-dot" style="background:#C084FC"></div>Property</div>
+        </div>
+        <div class="alloc-grid">
+          <div class="alloc-item">
+            <div class="alloc-item-head">
+              <span class="alloc-item-name" style="color:#F97316">📈 Stocks / MF</span>
+              <span class="alloc-item-pct" id="pct-equity" style="color:#F97316">60%</span>
+            </div>
+            <div class="alloc-ref" style="border-color:#F97316">
+              <b style="color:#F97316">Nifty 50 — 20yr:</b> doubled every 6–7 years. We assume 12.5%/yr.
+            </div>
+            <input type="range" id="a-equity" min="0" max="100" step="5" value="60" style="accent-color:#F97316" oninput="updateAlloc();fillSlider(this)">
+          </div>
+          <div class="alloc-item">
+            <div class="alloc-item-head">
+              <span class="alloc-item-name" style="color:#60A5FA">🏦 FD / PPF / Bonds</span>
+              <span class="alloc-item-pct" id="pct-fd" style="color:#60A5FA">20%</span>
+            </div>
+            <div class="alloc-ref" style="border-color:#60A5FA">
+              <b style="color:#60A5FA">Safe, predictable:</b> FDs 6.5–7.5%; PPF 7.1% tax-free. We assume 7%.
+            </div>
+            <input type="range" id="a-fd" min="0" max="100" step="5" value="20" style="accent-color:#60A5FA" oninput="updateAlloc();fillSlider(this)">
+          </div>
+          <div class="alloc-item">
+            <div class="alloc-item-head">
+              <span class="alloc-item-name" style="color:#FBD748">🪙 Gold</span>
+              <span class="alloc-item-pct" id="pct-gold" style="color:#FBD748">10%</span>
+            </div>
+            <div class="alloc-ref" style="border-color:#FBD748">
+              <b style="color:#FBD748">Inflation hedge:</b> Gold in ₹ grew ~11%/yr last decade. SGBs pay 2.5% extra.
+            </div>
+            <input type="range" id="a-gold" min="0" max="100" step="5" value="10" style="accent-color:#FBD748" oninput="updateAlloc();fillSlider(this)">
+          </div>
+          <div class="alloc-item">
+            <div class="alloc-item-head">
+              <span class="alloc-item-name" style="color:#C084FC">🏠 Property / REITs</span>
+              <span class="alloc-item-pct" id="pct-re" style="color:#C084FC">10%</span>
+            </div>
+            <div class="alloc-ref" style="border-color:#C084FC">
+              <b style="color:#C084FC">Real estate India:</b> values grow 7–9%/yr + rental 2–3%. We assume 9%.
+            </div>
+            <input type="range" id="a-re" min="0" max="100" step="5" value="10" style="accent-color:#C084FC" oninput="updateAlloc();fillSlider(this)">
+          </div>
+        </div>
+        <div class="alloc-total-row">
+          <span class="alloc-total-label">Total allocated</span>
+          <span class="alloc-total-num" id="alloc-total-num" style="color:var(--teal-text)">100%</span>
+          <span class="alloc-total-hint" id="alloc-total-hint" style="color:var(--teal-text)">✓ Perfect</span>
+        </div>
+        <div class="warning-bar" id="alloc-warning">⚠ Your allocation adds up to <span id="alloc-total">100</span>%. Please adjust to exactly 100%.</div>
+      </div>
+
+      <div class="returns-row">
+        <div class="returns-box">
+          <div class="returns-box-label">Expected yearly growth</div>
+          <div class="returns-box-val" id="rs-gross">11.4%</div>
+          <div class="returns-box-sub">Weighted average across your portfolio</div>
+        </div>
+        <div class="returns-box">
+          <div class="returns-box-label">Growth after inflation</div>
+          <div class="returns-box-val" id="rs-real" style="color:var(--teal-text)">5.4%</div>
+          <div class="returns-box-sub">What your money actually grows in real terms</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">3</div>
+        <div class="section-label">Spend planner — now vs retirement</div>
+      </div>
+      <p style="font-size:11px;color:var(--tx-mid);margin-bottom:16px;line-height:1.65">
+        Fill in what you spend now, then adjust retirement column for how your lifestyle will change.
+        Less commuting, more travel. Be honest — this directly sets your retirement goal.
+      </p>
+
+      <table class="spend-table">
+        <thead>
+          <tr>
+            <th style="width:38%">Category</th>
+            <th class="right" style="color:var(--tx-mid)">Now / month</th>
+            <th class="right" style="color:var(--teal-text)">In retirement</th>
+            <th class="right" style="color:var(--tx-light)">Change</th>
+          </tr>
+        </thead>
+        <tbody id="spend-tbody"></tbody>
+        <tfoot>
+          <tr class="spend-total-row">
+            <td><span class="spend-total-label">Total</span></td>
+            <td class="spend-total-now right"><span id="spend-now-total">₹0</span></td>
+            <td class="spend-total-ret right"><span id="spend-ret-total">₹0</span></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="spend-use-btn" onclick="applySpendToGoal()">
+        <div class="spend-use-btn-text">
+          <div class="spend-use-btn-label">Use <span id="spend-btn-amt">₹0</span>/month as my retirement goal →</div>
+          <div class="spend-use-btn-sub">Updates your monthly goal in Step 4 automatically</div>
+        </div>
+        <div class="spend-use-btn-arrow">→</div>
+      </div>
+    </div>
+
+    <!-- ══ LIQUID FUND NUDGE ══ -->
+    <div class="liquid-nudge" id="liquid-nudge" style="display:none">
+      <div class="liquid-nudge-glow"></div>
+      <div class="liquid-nudge-pill">💡 Spending Account tip</div>
+      <h3>Your emergency buffer could be earning for you</h3>
+      <p class="liquid-nudge-desc" id="liquid-nudge-desc">
+        Your monthly spend is ₹—. Park 2 months of expenses in a Multipl Spending Account
+        and earn more than a regular savings account.<br>
+        <em>7% liquid fund vs 3.5% savings account assumption</em>
+      </p>
+      <div class="liquid-stats">
+        <div class="liquid-stat">
+          <div class="liquid-stat-label">Park this much</div>
+          <div class="liquid-stat-val" id="liquid-buffer">—</div>
+          <div class="liquid-stat-sub">2 months of spend</div>
+        </div>
+        <div class="liquid-stat">
+          <div class="liquid-stat-label">Extra earned / yr</div>
+          <div class="liquid-stat-val" id="liquid-extra">—</div>
+          <div class="liquid-stat-sub">vs savings account</div>
+        </div>
+        <div class="liquid-stat">
+          <div class="liquid-stat-label">Return boost</div>
+          <div class="liquid-stat-val" id="liquid-boost">—</div>
+          <div class="liquid-stat-sub">of annual spend</div>
+        </div>
+      </div>
+      <a class="liquid-cta" href="https://multipl.app/spending-account" target="_blank" rel="noopener">
+        Open Spending Account →
+      </a>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">4</div>
+        <div class="section-label">What do you want in retirement?</div>
+      </div>
+      <div class="goal-hero">
+        <div class="goal-q">How much do you want to spend every month after you retire?</div>
+        <div class="goal-hint">Think in today's money. Include rent, food, travel, health, hobbies — everything. Be realistic.</div>
+        <div class="goal-amount-row">
+          <div class="goal-amount" id="goal-val">₹80,000</div>
+          <div class="goal-slider">
+            <input type="range" id="s-monthly-need" min="10000" max="1000000" step="5000" value="80000" oninput="update();fillSlider(this)">
+            <div class="slider-hints"><span>₹10K/mo</span><span>₹5L/mo</span><span>₹10L/mo</span></div>
+          </div>
+        </div>
+        <div class="goal-presets">
+          <span style="font-size:10px;color:var(--tx-light);align-self:center">Quick select:</span>
+          <button class="preset-btn" onclick="setGoal(30000,this)">₹30K · Basic</button>
+          <button class="preset-btn" onclick="setGoal(60000,this)">₹60K · Simple</button>
+          <button class="preset-btn active" onclick="setGoal(80000,this)">₹80K · Comfortable</button>
+          <button class="preset-btn" onclick="setGoal(150000,this)">₹1.5L · Premium</button>
+          <button class="preset-btn" onclick="setGoal(300000,this)">₹3L · Luxury</button>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--border-light)">
+        <div class="slider-wrap" style="max-width:440px">
+          <div class="slider-header">
+            <span class="slider-label">Expected inflation (how fast prices rise)</span>
+            <span class="slider-value" id="val-inflation">6%</span>
+          </div>
+          <div class="slider-sub" id="sub-inflation">India average: ~6% per year. ₹80K today = ₹1.43L in 10 years at 6%.</div>
+          <input type="range" id="s-inflation" min="2" max="10" step="0.5" value="6" oninput="update();fillSlider(this)">
+          <div class="slider-hints"><span>2% (low)</span><span>6% India avg</span><span>10% (high)</span></div>
+        </div>
+      </div>
+
+      <!-- SWR advanced -->
+      <div class="swr-toggle" onclick="toggleSWR()">
+        <div class="swr-toggle-left">
+          <span class="swr-toggle-badge">ADVANCED</span>
+          <span class="swr-toggle-title">How long should your savings last? — Withdrawal strategy</span>
+          <div class="swr-toggle-val" id="swr-toggle-val">✓ Using 3.5% yearly withdrawals — recommended for India</div>
+        </div>
+        <div class="swr-toggle-arrow" id="swr-arrow">▾</div>
+      </div>
+      <div class="swr-panel" id="swr-panel">
+        <div class="swr-intro">
+          In retirement, you'll withdraw a portion of your savings each year to live on.
+          <b style="color:var(--tx-dark)">The lower the percentage you take out, the longer your money lasts</b> — but you'll need a bigger savings target.<br><br>
+          We recommend <b style="color:var(--teal-text)">3.5%</b> for India because inflation here is higher than in the West, and you may need savings to last 40–50 years.
+        </div>
+        <div class="swr-grid">
+          <div class="swr-card" id="swr-card-4" onclick="setSWR(4)">
+            <div class="swr-card-rate" style="color:var(--coral)">4%/year</div>
+            <div class="swr-card-corpus" id="swr-corpus-4">—</div>
+            <div style="font-size:9px;color:var(--tx-light)">savings needed</div>
+            <span class="swr-card-tag" style="background:rgba(229,57,53,.08);color:var(--coral)">Aggressive</span>
+            <div class="swr-card-note">Works if you retire at 50+ with a shorter horizon. Risky for early retirees — India's inflation can eat savings faster.</div>
+          </div>
+          <div class="swr-card selected" id="swr-card-3.5" onclick="setSWR(3.5)">
+            <div class="swr-card-rate" style="color:var(--teal-text)">3.5%/year</div>
+            <div class="swr-card-corpus" id="swr-corpus-3.5">—</div>
+            <div style="font-size:9px;color:var(--tx-light)">savings needed</div>
+            <span class="swr-card-tag" style="background:rgba(0,212,170,.08);color:var(--teal-text)">✓ Recommended for India</span>
+            <div class="swr-card-note">The sweet spot for India. Accounts for high inflation, a 40+ year retirement, and no government pension.</div>
+          </div>
+          <div class="swr-card" id="swr-card-3" onclick="setSWR(3)">
+            <div class="swr-card-rate" style="color:var(--blue)">3%/year</div>
+            <div class="swr-card-corpus" id="swr-corpus-3">—</div>
+            <div style="font-size:9px;color:var(--tx-light)">savings needed</div>
+            <span class="swr-card-tag" style="background:rgba(74,159,255,.08);color:var(--blue)">Very Safe</span>
+            <div class="swr-card-note">If you're retiring very early (35–40) or want maximum buffer for healthcare, family, or emergencies.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT CALLOUT -->
+    <div class="result-callout" id="result-callout">
+      <div class="result-glow"></div>
+      <div class="rc-label">Your retirement savings target</div>
+      <div class="rc-main" id="rc-corpus">—</div>
+      <div class="rc-sub" id="rc-sub">Based on ₹80,000/month · 3.5% yearly withdrawals</div>
+      <div class="rc-grid">
+        <div class="rc-item">
+          <div class="rc-item-label">Retire in</div>
+          <div class="rc-item-val" id="rc-years" style="color:var(--gold)">—</div>
+          <div class="rc-item-sub" id="rc-age">—</div>
+        </div>
+        <div class="rc-item">
+          <div class="rc-item-label">Monthly income in retirement</div>
+          <div class="rc-item-val" id="rc-income" style="color:var(--teal)">—</div>
+          <div class="rc-item-sub" id="rc-income-sub">—</div>
+        </div>
+        <div class="rc-item">
+          <div class="rc-item-label">You invest monthly (now)</div>
+          <div class="rc-item-val" id="rc-sip" style="color:var(--blue)">—</div>
+          <div class="rc-item-sub" id="rc-sip-sub">—</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end inputs panel -->
+
+  <!-- ═══ PROJECTION PANEL ═══ -->
+  <div id="panel-projection" class="panels">
+    <div class="chart-panel">
+      <div class="chart-header">
+        <div class="chart-title-text">
+          <div class="pbar" id="chart-pbar" style="background:var(--gold)"></div>
+          <span id="chart-title-label">Your savings growth over time</span>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-line" id="leg-line" style="background:var(--gold)"></div>Your portfolio
+          </div>
+          <div class="legend-item">
+            <div class="legend-line" style="background:var(--coral);opacity:.6"></div>Retirement target
+          </div>
+        </div>
+      </div>
+      <canvas id="fireChart" height="320"></canvas>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Retirement target</div>
+      <div class="stat-val" id="stat-target" style="color:var(--gold)">—</div>
+      <div class="stat-sub" id="stat-swr-sub">At 3.5% withdrawals/yr</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Years until retirement</div>
+      <div class="stat-val" id="stat-years" style="color:var(--blue)">—</div>
+      <div class="stat-sub" id="stat-years-sub">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Monthly retirement income</div>
+      <div class="stat-val" id="stat-income" style="color:var(--teal-text)">—</div>
+      <div class="stat-sub" id="stat-income-sub">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">You invest monthly now</div>
+      <div class="stat-val" id="stat-sip" style="color:var(--tx-dark)">—</div>
+      <div class="stat-sub" id="stat-sip-sub">—</div>
+    </div>
+  </div>
+
+  <!-- COMPARE TABLE -->
+  <div class="compare">
+    <div class="compare-title">
+      <div class="pbar" style="background:var(--gold-grad);background:var(--blue)"></div>
+      All three retirement styles compared
+    </div>
+    <div class="compare-grid">
+      <div class="ch">Style</div>
+      <div class="ch">Monthly spend</div>
+      <div class="ch">Savings target</div>
+      <div class="ch">Retire at age</div>
+      <div class="ch">Monthly income</div>
+
+      <div class="cc name" id="cn-lean"><div class="dot8" style="background:var(--teal)"></div>🌿 Lean</div>
+      <div class="cc" id="ce-lean">—</div>
+      <div class="cc bold" id="ct-lean">—</div>
+      <div class="cc" id="ca-lean">—</div>
+      <div class="cc" style="color:var(--teal-text)" id="ci-lean">—</div>
+
+      <div class="cc name" id="cn-regular"><div class="dot8" style="background:var(--gold)"></div>🔥 Comfortable</div>
+      <div class="cc" id="ce-regular">—</div>
+      <div class="cc bold" id="ct-regular">—</div>
+      <div class="cc" id="ca-regular">—</div>
+      <div class="cc" style="color:var(--teal-text)" id="ci-regular">—</div>
+
+      <div class="cc name" id="cn-fat"><div class="dot8" style="background:var(--blue)"></div>👑 Luxury</div>
+      <div class="cc" id="ce-fat">—</div>
+      <div class="cc bold" id="ct-fat">—</div>
+      <div class="cc" id="ca-fat">—</div>
+      <div class="cc" style="color:var(--teal-text)" id="ci-fat">—</div>
+    </div>
+  </div>
+
+  <footer>
+    Growth assumptions: Stocks (Nifty 50) 12.5% · FD / PPF / Bonds 7.0% · Gold 10.5% · Property 9.0% per year<br>
+    Withdrawal rate: 3.5% recommended for India · Higher inflation &amp; longer retirement horizon than the West<br>
+    All numbers use inflation-adjusted (real) returns · Past performance doesn't guarantee future results · Not financial advice
+  </footer>
+</div><!-- end wrap -->
+
+<script>
+// ── CONSTANTS ──
+const ASSET_RETURNS = { equity:12.5, fd:7.0, gold:10.5, re:9.0 };
+const MODE_MULT     = { lean:0.6, regular:1.0, fat:1.75 };
+const MODE_CLR      = { lean:'#00D4AA', regular:'#FBD748', fat:'#4A9FFF' };
+const MODE_NAME     = { lean:'Lean retirement', regular:'Comfortable retirement', fat:'Luxury retirement' };
+
+const LIQUID_RATE    = 7.0;
+const SA_RATE        = 3.5;
+const BUFFER_MONTHS  = 2;
+
+let activeMode  = 'lean';
+let currentTab  = 'inputs';
+let selectedSWR = 3.5;
+let chart       = null;
+let alloc       = { equity:60, fd:20, gold:10, re:10 };
+
+// ── SLIDER FILL ──
+function fillSlider(el){
+  const min  = +el.min;
+  const max  = +el.max;
+  const val  = +el.value;
+  const pct  = ((val - min) / (max - min) * 100).toFixed(1);
+  el.style.background = `linear-gradient(to right, #FBD748 ${pct}%, #E8E5DC ${pct}%)`;
+}
+function initAllSliders(){
+  document.querySelectorAll('input[type=range]').forEach(fillSlider);
+}
+
+// ── FORMATTERS ──
+function fmtINR(n){
+  if(n>=1e7) return '₹'+(n/1e7).toFixed(2)+' Cr';
+  if(n>=1e5) return '₹'+(n/1e5).toFixed(1)+'L';
+  if(n>=1e3) return '₹'+Math.round(n/1e3)+'K';
+  return '₹'+Math.round(n).toLocaleString('en-IN');
+}
+function fmtFull(n){ return '₹'+Math.round(n).toLocaleString('en-IN'); }
+
+// ── BLENDED RETURN ──
+function getBlended(){
+  const t = alloc.equity+alloc.fd+alloc.gold+alloc.re || 100;
+  return (alloc.equity/t)*ASSET_RETURNS.equity
+        +(alloc.fd/t)*ASSET_RETURNS.fd
+        +(alloc.gold/t)*ASSET_RETURNS.gold
+        +(alloc.re/t)*ASSET_RETURNS.re;
+}
+
+// ── CORE CALC ──
+function calcAll(){
+  const age          = +document.getElementById('s-age').value;
+  const savings      = +document.getElementById('s-savings').value;
+  const income       = +document.getElementById('s-income').value;
+  const rate         = +document.getElementById('s-rate').value;
+  const inf          = +document.getElementById('s-inflation').value;
+  const growthPct    = +document.getElementById('s-growth').value;
+  const baseMonthly  = +document.getElementById('s-monthly-need').value;
+  const monthlySaveY1= income * rate / 100;
+  const blended      = getBlended();
+  const realAnnual   = (blended - inf) / 100;
+  const monthlyReal  = realAnnual / 12;
+  const swr          = selectedSWR / 100;
+  const annualGrowth = growthPct / 100;
+
+  const results = {};
+  Object.keys(MODE_MULT).forEach(key => {
+    const monthlyNeed = baseMonthly * MODE_MULT[key];
+    const corpus      = monthlyNeed * 12 / swr;
+    let s = savings, years = 0, curSIP = monthlySaveY1;
+    const chartData = [{ age, savings, sip:Math.round(monthlySaveY1) }];
+    for(let y=1;y<=65;y++){
+      if(y>1) curSIP *= (1+annualGrowth);
+      for(let m=0;m<12;m++) s = s*(1+monthlyReal)+curSIP;
+      years = y;
+      chartData.push({ age:age+y, savings:Math.round(s), sip:Math.round(curSIP) });
+      if(s>=corpus) break;
+    }
+    const sipY10 = monthlySaveY1 * Math.pow(1+annualGrowth, Math.min(9,years-1));
+    results[key] = {
+      monthlyNeed, corpus,
+      retirementAge: age+years, yearsToFIRE: years,
+      monthlyPassive: (s*swr)/12,
+      chartData, monthlySave:monthlySaveY1, sipY10,
+    };
+  });
+  return { results, blended, inf, age, income, rate, growthPct, monthlySave:monthlySaveY1, baseMonthly };
+}
+
+// ── LIQUID FUND NUDGE ──
+function calcLiquidFund(){
+  let totalNow = 0;
+  const SPEND_IDS = ['rent','food','transport','health','travel','entertain','shopping','kids','other'];
+  SPEND_IDS.forEach(id => {
+    const el = document.getElementById('now-'+id);
+    if(el) totalNow += +el.value || 0;
+  });
+  const bufferAmount  = totalNow * BUFFER_MONTHS;
+  const annualExtra   = bufferAmount * ((LIQUID_RATE - SA_RATE) / 100);
+  const effectiveBoost= totalNow > 0
+    ? ((annualExtra / (totalNow * 12)) * 100).toFixed(1)
+    : '0.0';
+  return { totalNow, bufferAmount, annualExtra, effectiveBoost };
+}
+
+function updateLiquidFundNudge(){
+  const { totalNow, bufferAmount, annualExtra, effectiveBoost } = calcLiquidFund();
+  const card = document.getElementById('liquid-nudge');
+  if(!card) return;
+  if(totalNow === 0){
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+  card.classList.toggle('has-value', annualExtra > 0);
+  document.getElementById('liquid-nudge-desc').innerHTML =
+    `Your monthly spend is <strong style="color:var(--gold)">${fmtFull(totalNow)}</strong>. Park `+
+    `<strong style="color:var(--gold)">${fmtINR(bufferAmount)}</strong> (2 months) in a Multipl Spending Account `+
+    `and earn <strong style="color:var(--teal)">${fmtINR(annualExtra)}</strong> more per year vs. a regular savings account.<br>`+
+    `<em>7% liquid fund vs 3.5% savings account assumption</em>`;
+  document.getElementById('liquid-buffer').textContent = fmtINR(bufferAmount);
+  document.getElementById('liquid-extra').textContent  = fmtINR(annualExtra)+'/yr';
+  document.getElementById('liquid-boost').textContent  = effectiveBoost+'%';
+}
+
+// ── MAIN RENDER ──
+function update(){
+  const { results, blended, inf, income, rate, growthPct, monthlySave, baseMonthly } = calcAll();
+  const active = results[activeMode];
+  const color  = MODE_CLR[activeMode];
+
+  // Slider labels
+  document.getElementById('val-age').textContent      = document.getElementById('s-age').value+' yrs';
+  document.getElementById('val-savings').textContent  = fmtINR(+document.getElementById('s-savings').value);
+  document.getElementById('val-income').textContent   = fmtFull(income);
+  document.getElementById('val-rate').textContent     = rate+'%';
+  document.getElementById('sub-rate').textContent     = '= '+fmtFull(monthlySave)+' per month going into investments';
+  document.getElementById('val-growth').textContent   = growthPct+'%';
+  const sipY10 = monthlySave * Math.pow(1+growthPct/100, 9);
+  document.getElementById('sub-growth').textContent   =
+    growthPct===0 ? 'Your monthly investment stays flat' :
+    'By year 10 you\'ll be investing '+fmtINR(sipY10)+'/month';
+  document.getElementById('val-inflation').textContent= inf+'%';
+  const futureVal = Math.round(baseMonthly * Math.pow(1+inf/100, 10));
+  document.getElementById('sub-inflation').textContent=
+    'India average: ~6% per year. '+fmtFull(baseMonthly)+' today = '+fmtFull(futureVal)+' in 10 years.';
+
+  // Allocation display
+  document.getElementById('alloc-summary-text').textContent =
+    alloc.equity+'% Stocks · '+alloc.fd+'% FD · '+alloc.gold+'% Gold · '+alloc.re+'% Property';
+  document.getElementById('rs-gross').textContent = blended.toFixed(1)+'% per year';
+  document.getElementById('rs-real').textContent  = (blended-inf).toFixed(1)+'% per year';
+
+  // Hero metric strip
+  document.getElementById('m-corpus').textContent    = fmtINR(active.corpus);
+  document.getElementById('m-corpus').style.color    = color;
+  document.getElementById('m-corpus-sub').textContent= 'at '+selectedSWR+'% SWR';
+  document.getElementById('m-years').textContent     = active.yearsToFIRE+' yrs';
+  document.getElementById('m-years').style.color     = color;
+  document.getElementById('m-years-sub').textContent = 'from today';
+  document.getElementById('m-age').textContent       = 'Age '+active.retirementAge;
+  document.getElementById('m-age').style.color       = color;
+  document.getElementById('m-age-sub').textContent   = MODE_NAME[activeMode];
+
+  // Mode cards
+  Object.keys(results).forEach(key => {
+    const r = results[key];
+    document.getElementById('fc-amt-'+key).textContent = fmtINR(r.corpus);
+    document.getElementById('fc-ret-'+key).textContent =
+      'Retire at '+r.retirementAge+' · in '+r.yearsToFIRE+' yrs';
+  });
+
+  // SWR cards
+  [4, 3.5, 3].forEach(r => {
+    const corpus = active.monthlyNeed*12/(r/100);
+    document.getElementById('swr-corpus-'+r).textContent = fmtINR(corpus);
+    document.getElementById('swr-card-'+r).classList.toggle('selected', r===selectedSWR);
+  });
+  const swrMap = {
+    4:'4% yearly withdrawals — Aggressive',
+    3.5:'3.5% yearly withdrawals — Recommended for India',
+    3:'3% yearly withdrawals — Very Safe'
+  };
+  document.getElementById('swr-toggle-val').textContent = '✓ Using '+swrMap[selectedSWR];
+
+  // Big result callout
+  document.getElementById('rc-corpus').textContent  = fmtINR(active.corpus);
+  document.getElementById('rc-corpus').style.color  = color;
+  document.getElementById('rc-sub').textContent     =
+    'Based on '+fmtFull(Math.round(active.monthlyNeed))+'/month · '+selectedSWR+'% yearly withdrawals';
+  document.getElementById('rc-years').textContent   = active.yearsToFIRE+' years';
+  document.getElementById('rc-years').style.color   = color;
+  document.getElementById('rc-age').textContent     = 'Retire at age '+active.retirementAge;
+  document.getElementById('rc-sip').textContent     = fmtFull(monthlySave);
+  document.getElementById('rc-sip-sub').textContent = rate+'% of your take-home pay';
+
+  const futureMonthly = Math.round(active.monthlyNeed * Math.pow(1+inf/100, active.yearsToFIRE));
+  const retireYear    = new Date().getFullYear() + active.yearsToFIRE;
+  const incomeSubText = fmtFull(Math.round(active.monthlyNeed))+' today = '+fmtFull(futureMonthly)+'/mo in '+retireYear;
+  document.getElementById('rc-income').textContent   = fmtFull(Math.round(active.monthlyNeed));
+  document.getElementById('rc-income-sub').textContent = incomeSubText;
+
+  // Stat cards
+  document.getElementById('stat-target').textContent  = fmtINR(active.corpus);
+  document.getElementById('stat-target').style.color  = color;
+  document.getElementById('stat-swr-sub').textContent = 'At '+selectedSWR+'% withdrawals/yr';
+  document.getElementById('stat-years').textContent   = active.yearsToFIRE+' yrs';
+  document.getElementById('stat-years-sub').textContent = 'Retire at age '+active.retirementAge;
+  document.getElementById('stat-income').textContent  = fmtFull(Math.round(active.monthlyNeed));
+  document.getElementById('stat-income-sub').textContent = incomeSubText;
+  document.getElementById('stat-sip').textContent     = fmtFull(monthlySave);
+  document.getElementById('stat-sip-sub').textContent = rate+'% of '+fmtFull(income);
+
+  // Compare table
+  const CLR_MAP = { lean:'#00D4AA', regular:'#FBD748', fat:'#4A9FFF' };
+  Object.keys(results).forEach(key => {
+    const r = results[key];
+    document.getElementById('ce-'+key).textContent  = fmtFull(Math.round(r.monthlyNeed))+'/mo';
+    document.getElementById('ct-'+key).textContent  = fmtINR(r.corpus);
+    document.getElementById('ca-'+key).textContent  = 'Age '+r.retirementAge;
+    document.getElementById('ci-'+key).textContent  = fmtFull(Math.round(r.monthlyPassive))+'/mo';
+    document.getElementById('cn-'+key).style.color  = key===activeMode ? CLR_MAP[key] : 'var(--tx-mid)';
+  });
+
+  // Chart bar & legend color
+  document.getElementById('chart-pbar').style.background  = color;
+  document.getElementById('leg-line').style.background    = color;
+  document.getElementById('chart-title-label').textContent=
+    'Your savings growth · '+MODE_NAME[activeMode];
+  if(currentTab==='projection') renderChart(active, color);
+}
+
+// ── CHART ──
+function renderChart(active, color){
+  if(chart){ chart.destroy(); chart=null; }
+  const ctx = document.getElementById('fireChart').getContext('2d');
+  const grad = ctx.createLinearGradient(0,0,0,400);
+  grad.addColorStop(0, color+'44');
+  grad.addColorStop(1, color+'00');
+
+  chart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: active.chartData.map(d=>d.age),
+      datasets:[
+        {
+          label:'Your portfolio',
+          data: active.chartData.map(d=>d.savings),
+          sipData: active.chartData.map(d=>d.sip),
+          borderColor:color, borderWidth:2.5, backgroundColor:grad,
+          fill:true, tension:0.4, pointRadius:0, pointHoverRadius:6
+        },
+        {
+          label:'Retirement target',
+          data: active.chartData.map(()=>active.corpus),
+          borderColor:'#E53935', borderWidth:1.5, borderDash:[6,3],
+          backgroundColor:'transparent', fill:false, pointRadius:0
+        }
+      ]
+    },
+    options:{
+      responsive:true, animation:{duration:500},
+      interaction:{intersect:false, mode:'index'},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#0C1220',
+          borderColor:'rgba(255,255,255,0.10)',
+          borderWidth:1,
+          titleColor:'rgba(255,255,255,0.45)',
+          bodyColor:'#FFFFFF',
+          padding:12,
+          titleFont:{family:'Gilroy',size:11},
+          bodyFont:{family:'Gilroy',size:12},
+          callbacks:{
+            title: i => 'Age '+i[0].label,
+            label: i => i.dataset.label+': '+fmtINR(i.raw),
+            afterBody: items => {
+              const ds = items[0];
+              if(ds.datasetIndex===0 && ds.chart.data.datasets[0].sipData){
+                const sip = ds.chart.data.datasets[0].sipData[ds.dataIndex];
+                if(sip) return ['Monthly investment then: '+fmtINR(sip)];
+              }
+              return [];
+            }
+          }
+        }
+      },
+      scales:{
+        x:{
+          grid:{color:'rgba(12,18,32,0.06)'},
+          ticks:{color:'rgba(12,18,32,0.55)',font:{size:11,family:'Gilroy'}},
+          title:{display:true,text:'Age',color:'rgba(12,18,32,0.35)',font:{size:11,family:'Gilroy'}}
+        },
+        y:{
+          grid:{color:'rgba(12,18,32,0.06)'},
+          ticks:{color:'rgba(12,18,32,0.55)',font:{size:11,family:'Gilroy'},callback:v=>fmtINR(v)}
+        }
+      }
+    }
+  });
+}
+
+// ── ALLOCATION ──
+function updateAlloc(){
+  alloc.equity = +document.getElementById('a-equity').value;
+  alloc.fd     = +document.getElementById('a-fd').value;
+  alloc.gold   = +document.getElementById('a-gold').value;
+  alloc.re     = +document.getElementById('a-re').value;
+
+  const total = alloc.equity+alloc.fd+alloc.gold+alloc.re;
+  const safe  = total || 100;
+
+  ['equity','fd','gold','re'].forEach(k => {
+    document.getElementById('pct-'+k).textContent  = alloc[k]+'%';
+    document.getElementById('bar-'+k).style.width  = (alloc[k]/safe*100).toFixed(1)+'%';
+  });
+
+  const numEl  = document.getElementById('alloc-total-num');
+  const hintEl = document.getElementById('alloc-total-hint');
+  const warnEl = document.getElementById('alloc-warning');
+  document.getElementById('alloc-total').textContent = total;
+  numEl.textContent = total+'%';
+  if(total===100){
+    numEl.style.color  = 'var(--teal-text)'; hintEl.style.color='var(--teal-text)';
+    hintEl.textContent = '✓ Perfect'; warnEl.classList.remove('show');
+  } else if(total<100){
+    numEl.style.color  = '#CC8800'; hintEl.style.color='#CC8800';
+    hintEl.textContent = '↑ Add '+(100-total)+'% more'; warnEl.classList.add('show');
+  } else {
+    numEl.style.color  = 'var(--coral)'; hintEl.style.color='var(--coral)';
+    hintEl.textContent = '↓ Remove '+(total-100)+'%'; warnEl.classList.add('show');
+  }
+  update();
+}
+
+// ── EVENT HANDLERS ──
+function setMode(mode){
+  activeMode = mode;
+  document.querySelectorAll('.fire-card').forEach(c=>c.classList.remove('active'));
+  document.querySelector('.fire-card.'+mode).classList.add('active');
+  update();
+}
+function setGoal(val, btn){
+  document.getElementById('s-monthly-need').value = val;
+  fillSlider(document.getElementById('s-monthly-need'));
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  update();
+}
+function setSWR(rate){
+  selectedSWR = rate;
+  update();
+}
+function toggleSWR(){
+  document.getElementById('swr-panel').classList.toggle('open');
+  document.getElementById('swr-arrow').classList.toggle('open');
+}
+function toggleAlloc(){
+  document.getElementById('alloc-panel').classList.toggle('open');
+  const arrow = document.getElementById('alloc-arrow');
+  if(document.getElementById('alloc-panel').classList.contains('open')){
+    arrow.textContent = '▴ Collapse';
+  } else {
+    arrow.textContent = '▾ Customise';
+  }
+}
+function switchTab(tab, btn){
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-inputs').classList.toggle('show', tab==='inputs');
+  document.getElementById('panel-projection').classList.toggle('show', tab==='projection');
+  if(tab==='projection'){
+    const { results } = calcAll();
+    renderChart(results[activeMode], MODE_CLR[activeMode]);
+  }
+}
+
+// ── SPEND CATEGORIES ──
+const SPEND_CATS = [
+  { id:'rent',      icon:'🏠', label:'Rent / Home loan EMI',        now:25000, ret:15000 },
+  { id:'food',      icon:'🛒', label:'Groceries &amp; eating out',   now:12000, ret:12000 },
+  { id:'transport', icon:'🚗', label:'Transport &amp; fuel',         now:8000,  ret:3000  },
+  { id:'health',    icon:'🏥', label:'Health &amp; insurance',       now:3000,  ret:8000  },
+  { id:'travel',    icon:'✈️', label:'Holidays &amp; travel',        now:5000,  ret:15000 },
+  { id:'entertain', icon:'🎬', label:'Entertainment &amp; subs',     now:3000,  ret:3000  },
+  { id:'shopping',  icon:'🛍️', label:'Clothes &amp; shopping',      now:5000,  ret:3000  },
+  { id:'kids',      icon:'👨‍👩‍👧', label:'Kids / parents / family',     now:8000,  ret:0     },
+  { id:'other',     icon:'📦', label:'Other / miscellaneous',        now:5000,  ret:5000  },
+];
+
+function buildSpendTable(){
+  const tbody = document.getElementById('spend-tbody');
+  tbody.innerHTML = SPEND_CATS.map(cat => `
+    <tr>
+      <td><div class="spend-cat"><span class="spend-cat-icon">${cat.icon}</span>${cat.label}</div></td>
+      <td class="right">
+        <input class="spend-input" type="number" id="now-${cat.id}" value="${cat.now}"
+          min="0" step="500" oninput="recalcSpend()">
+      </td>
+      <td class="right">
+        <input class="spend-input retirement" type="number" id="ret-${cat.id}" value="${cat.ret}"
+          min="0" step="500" oninput="recalcSpend()">
+      </td>
+      <td class="right"><span class="spend-diff" id="diff-${cat.id}">—</span></td>
+    </tr>
+  `).join('');
+  recalcSpend();
+}
+
+function fmtDiff(diff){
+  if(diff===0) return '<span style="color:var(--tx-light)">—</span>';
+  const sign = diff>0 ? '+' : '';
+  const col  = diff>0 ? 'var(--coral)' : 'var(--teal-text)';
+  return `<span style="color:${col}">${sign}${fmtINR(Math.abs(diff))}</span>`;
+}
+
+function recalcSpend(){
+  let totalNow=0, totalRet=0;
+  SPEND_CATS.forEach(cat => {
+    const now  = +document.getElementById('now-'+cat.id).value || 0;
+    const ret  = +document.getElementById('ret-'+cat.id).value || 0;
+    const diff = ret - now;
+    document.getElementById('diff-'+cat.id).innerHTML = fmtDiff(diff);
+    totalNow += now; totalRet += ret;
+  });
+  document.getElementById('spend-now-total').textContent = fmtFull(totalNow);
+  document.getElementById('spend-ret-total').textContent = fmtFull(totalRet);
+  document.getElementById('spend-btn-amt').textContent   = fmtFull(totalRet);
+  updateLiquidFundNudge();
+}
+
+function applySpendToGoal(){
+  let totalRet=0;
+  SPEND_CATS.forEach(cat => {
+    totalRet += +document.getElementById('ret-'+cat.id).value || 0;
+  });
+  const snapped = Math.max(10000, Math.round(totalRet/5000)*5000);
+  document.getElementById('s-monthly-need').value = snapped;
+  fillSlider(document.getElementById('s-monthly-need'));
+  document.getElementById('goal-val').textContent = fmtFull(snapped);
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  const goalEl = document.getElementById('goal-val');
+  goalEl.style.transition = 'color .15s';
+  goalEl.style.color = 'var(--teal-text)';
+  setTimeout(()=>{ goalEl.style.color=''; }, 600);
+  document.getElementById('goal-val').scrollIntoView({behavior:'smooth', block:'center'});
+  update();
+}
+
+// ── BOOT ──
+buildSpendTable();
+initAllSliders();
+update();
+</script>
+</body>
+</html>
