@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Multipl Onboarding Audit — Behavioral Science CRO Report</title>
+<style>
+@font-face { font-family: 'Gilroy'; font-weight: 400; src: url('assets/fonts/Gilroy/Gilroy-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Gilroy'; font-weight: 500; src: url('assets/fonts/Gilroy/Gilroy-Medium.ttf') format('truetype'); }
+@font-face { font-family: 'Gilroy'; font-weight: 600; src: url('assets/fonts/Gilroy/Gilroy-SemiBold.ttf') format('truetype'); }
+@font-face { font-family: 'Gilroy'; font-weight: 700; src: url('assets/fonts/Gilroy/Gilroy-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Gilroy'; font-weight: 800; src: url('assets/fonts/Gilroy/Gilroy-ExtraBold.ttf') format('truetype'); }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #FBD748;
+  --gold-grad: linear-gradient(90deg, #FBD748 0%, #FBEF48 100%);
+  --gold-tint: rgba(251,215,72,0.10);
+  --teal: #00D4AA;
+  --teal-text: #006B55;
+  --bg-base: #FDFAF0;
+  --bg-dark: #0C1220;
+  --tx-dark: #0C1220;
+  --tx-mid: rgba(12,18,32,.55);
+  --tx-light: rgba(12,18,32,.32);
+  --coral: #E53935;
+  --coral-bg: rgba(229,57,53,.08);
+  --green: #2A7A47;
+  --green-bg: rgba(42,122,71,.08);
+  --r-s: 8px; --r-m: 12px; --r-l: 16px; --r-xl: 24px;
+}
+
+body {
+  font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #F0EDE4;
+  color: var(--tx-dark);
+  min-height: 100vh;
+}
+
+/* ── LAYOUT ── */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--bg-dark);
+  padding: 32px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.sidebar-logo {
+  padding: 0 24px 28px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  margin-bottom: 24px;
+}
+.sidebar-logo .brand { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+.sidebar-logo .brand span { color: var(--gold); }
+.sidebar-logo .doc-label { font-size: 11px; font-weight: 500; color: rgba(255,255,255,.4); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+.nav-section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(255,255,255,.3); padding: 0 24px 8px; margin-top: 20px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 24px; font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,.55); text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.nav-item:hover { color: #fff; background: rgba(255,255,255,.05); }
+.nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(251,215,72,.06); }
+.nav-item .nav-num {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(255,255,255,.1); font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  color: rgba(255,255,255,.5);
+}
+.nav-item.active .nav-num { background: var(--gold); color: var(--bg-dark); }
+
+.main { flex: 1; padding: 48px 56px; max-width: 960px; }
+
+/* ── HEADER ── */
+.page-header { margin-bottom: 48px; }
+.page-header .badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--gold-tint); border: 1px solid rgba(251,215,72,.25);
+  border-radius: 999px; padding: 4px 12px;
+  font-size: 11px; font-weight: 600; color: #8B6E00;
+  text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 16px;
+}
+.page-header h1 {
+  font-size: 36px; font-weight: 800; line-height: 1.15; letter-spacing: -0.5px;
+  color: var(--tx-dark); margin-bottom: 12px;
+}
+.page-header h1 span { color: var(--teal-text); }
+.page-header .meta { font-size: 14px; color: var(--tx-mid); display: flex; gap: 20px; flex-wrap: wrap; }
+.page-header .meta strong { color: var(--tx-dark); }
+
+/* ── SECTION ── */
+.section { margin-bottom: 64px; scroll-margin-top: 32px; }
+.section-header {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+  padding-bottom: 16px; border-bottom: 2px solid rgba(12,18,32,.08);
+}
+.section-num {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--bg-dark); color: var(--gold);
+  font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.section-title { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+.section-subtitle { font-size: 13px; color: var(--tx-mid); margin-top: 2px; }
+
+/* ── CARDS ── */
+.card {
+  background: #fff; border-radius: var(--r-xl);
+  padding: 28px 32px; margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+}
+.card-title {
+  font-size: 15px; font-weight: 700; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.screen-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase;
+  color: var(--tx-light); display: block; margin-bottom: 6px;
+}
+
+/* ── TAGS / BADGES ── */
+.tag {
+  display: inline-flex; align-items: center;
+  border-radius: 999px; padding: 3px 10px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
+}
+.tag-p0 { background: rgba(229,57,53,.1); color: #C62828; }
+.tag-p1 { background: rgba(251,215,72,.15); color: #8B6E00; }
+.tag-p2 { background: rgba(0,212,170,.1); color: var(--teal-text); }
+.tag-p3 { background: rgba(12,18,32,.07); color: var(--tx-mid); }
+.tag-keep { background: var(--green-bg); color: var(--green); }
+.tag-change { background: var(--coral-bg); color: var(--coral); }
+.tag-new { background: rgba(74,159,255,.1); color: #1565C0; }
+.tag-move { background: rgba(251,215,72,.15); color: #8B6E00; }
+
+.effort-s { background: var(--green-bg); color: var(--green); }
+.effort-m { background: rgba(251,215,72,.15); color: #8B6E00; }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; border-radius: var(--r-m); border: 1px solid rgba(12,18,32,.08); }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+thead tr { background: var(--bg-dark); }
+thead th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; color: rgba(255,255,255,.55); }
+tbody tr { border-bottom: 1px solid rgba(12,18,32,.06); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(251,215,72,.04); }
+td { padding: 13px 16px; vertical-align: top; line-height: 1.5; }
+td:first-child { font-weight: 600; color: var(--tx-mid); white-space: nowrap; }
+.copy-current { color: var(--tx-mid); }
+.copy-new { font-weight: 600; color: var(--tx-dark); }
+.copy-keep { font-weight: 700; color: var(--green); }
+.rationale { color: var(--tx-mid); font-size: 13px; }
+
+/* ── CALLOUTS ── */
+.callout {
+  border-radius: var(--r-m); padding: 16px 20px; margin: 16px 0;
+  display: flex; gap: 14px; align-items: flex-start;
+  font-size: 13.5px; line-height: 1.6;
+}
+.callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.callout-warn { background: var(--coral-bg); border-left: 3px solid var(--coral); }
+.callout-success { background: var(--green-bg); border-left: 3px solid var(--green); }
+.callout-info { background: var(--gold-tint); border-left: 3px solid var(--gold); }
+.callout-neutral { background: rgba(12,18,32,.04); border-left: 3px solid rgba(12,18,32,.15); }
+.callout strong { font-weight: 700; color: var(--tx-dark); }
+
+/* ── FLOW DIAGRAM ── */
+.flow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+.flow-col-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.flow-col-label.current { color: var(--coral); }
+.flow-col-label.recommended { color: var(--teal-text); }
+
+.flow-step {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border-radius: var(--r-m);
+  margin-bottom: 6px; background: #fff;
+  border: 1px solid rgba(12,18,32,.07);
+  font-size: 13px; line-height: 1.45;
+}
+.flow-step-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.flow-step.current-step .flow-step-num { background: rgba(12,18,32,.08); color: var(--tx-mid); }
+.flow-step.rec-step .flow-step-num { background: var(--bg-dark); color: var(--gold); }
+.flow-step.rec-new { border-color: rgba(74,159,255,.3); background: rgba(74,159,255,.04); }
+.flow-step.rec-moved { border-color: rgba(251,215,72,.4); background: rgba(251,215,72,.05); }
+.flow-step.rec-removed { opacity: 0.45; text-decoration: line-through; }
+.flow-step-body .step-name { font-weight: 700; color: var(--tx-dark); }
+.flow-step-body .step-cta { font-size: 12px; color: var(--tx-mid); margin-top: 2px; font-style: italic; }
+
+.flow-connector { text-align: center; color: var(--tx-light); font-size: 18px; margin: 2px 0; }
+
+/* ── FUNNEL ── */
+.funnel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.funnel-col { background: #fff; border-radius: var(--r-l); padding: 24px; }
+.funnel-col h4 { font-size: 13px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.6px; }
+.funnel-col.current h4 { color: var(--tx-mid); }
+.funnel-col.rec h4 { color: var(--teal-text); }
+.funnel-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(12,18,32,.05); font-size: 13px; }
+.funnel-row:last-child { border-bottom: none; font-weight: 700; font-size: 14px; }
+.funnel-row .label { color: var(--tx-mid); }
+.funnel-bar-wrap { display: flex; align-items: center; gap: 10px; }
+.funnel-pct { font-weight: 700; min-width: 38px; text-align: right; }
+.funnel-bar { height: 6px; border-radius: 3px; background: rgba(12,18,32,.08); min-width: 80px; }
+.funnel-bar-fill { height: 100%; border-radius: 3px; }
+.current .funnel-bar-fill { background: rgba(12,18,32,.25); }
+.rec .funnel-bar-fill { background: var(--teal); }
+.funnel-delta { font-size: 11px; font-weight: 700; color: var(--green); }
+
+/* ── PHASE DIAGRAM ── */
+.phases { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+.phase-card {
+  background: #fff; border-radius: var(--r-l); padding: 20px 22px;
+  border-top: 3px solid var(--gold);
+}
+.phase-card .phase-num { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--tx-light); }
+.phase-card .phase-name { font-size: 16px; font-weight: 800; margin: 4px 0 8px; }
+.phase-card .phase-screens { font-size: 12px; color: var(--tx-mid); margin-bottom: 8px; }
+.phase-card .phase-goal { font-size: 13px; line-height: 1.5; }
+.phase-card .phase-trigger { font-size: 12px; color: var(--teal-text); font-weight: 600; margin-top: 8px; }
+
+/* ── EXPERIMENT CARDS ── */
+.exp-card {
+  background: #fff; border-radius: var(--r-xl);
+  padding: 28px 32px; margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  border-left: 4px solid transparent;
+}
+.exp-card.p0 { border-left-color: var(--coral); }
+.exp-card.p1 { border-left-color: var(--gold); }
+.exp-card.p2 { border-left-color: var(--teal); }
+.exp-card.p3 { border-left-color: rgba(12,18,32,.2); }
+
+.exp-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.exp-id { font-size: 11px; font-weight: 700; color: var(--tx-light); letter-spacing: 0.8px; text-transform: uppercase; }
+.exp-title { font-size: 16px; font-weight: 800; margin-top: 3px; }
+.exp-tags { display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; }
+
+.exp-hypothesis {
+  background: var(--gold-tint); border-radius: var(--r-m); padding: 14px 16px;
+  font-size: 13.5px; line-height: 1.6; margin-bottom: 16px; font-style: italic;
+}
+
+.exp-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.exp-meta-item { font-size: 13px; }
+.exp-meta-label { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--tx-light); margin-bottom: 4px; }
+
+.exp-variants { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.exp-variant {
+  border-radius: var(--r-m); padding: 10px 14px; font-size: 13px; line-height: 1.5;
+  border: 1px solid rgba(12,18,32,.08);
+}
+.exp-variant.control { background: rgba(12,18,32,.03); }
+.exp-variant.variant-a { background: var(--green-bg); border-color: rgba(42,122,71,.2); }
+.exp-variant.variant-b { background: rgba(74,159,255,.06); border-color: rgba(74,159,255,.2); }
+.exp-variant.variant-c { background: rgba(251,215,72,.08); border-color: rgba(251,215,72,.3); }
+.exp-variant.dropped { opacity: 0.5; text-decoration: line-through; }
+.variant-label { font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 3px; color: var(--tx-mid); }
+
+.exp-footer { display: flex; gap: 12px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid rgba(12,18,32,.06); }
+.exp-footer-item { font-size: 12px; display: flex; align-items: center; gap: 6px; }
+.exp-footer-item .label { color: var(--tx-light); font-weight: 600; }
+
+/* ── TIMELINE ── */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.timeline-phase {
+  display: flex; gap: 20px; padding: 20px 0;
+  border-bottom: 1px solid rgba(12,18,32,.07);
+}
+.timeline-phase:last-child { border-bottom: none; }
+.timeline-label {
+  min-width: 110px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.7px; color: var(--tx-light); padding-top: 3px; flex-shrink: 0;
+}
+.timeline-items { display: flex; flex-direction: column; gap: 8px; }
+.timeline-item {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border-radius: var(--r-m); padding: 10px 16px;
+  font-size: 13px; font-weight: 500;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-visual {
+  background: var(--bg-dark); border-radius: var(--r-l); padding: 24px 28px; margin: 20px 0;
+  display: flex; align-items: center; gap: 0;
+}
+.progress-step {
+  flex: 1; text-align: center;
+  position: relative;
+}
+.progress-step:not(:last-child)::after {
+  content: ''; position: absolute; top: 16px; left: 50%; width: 100%;
+  height: 2px; background: rgba(255,255,255,.15); z-index: 0;
+}
+.progress-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,.1); border: 2px solid rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 8px; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.4);
+  position: relative; z-index: 1;
+}
+.progress-dot.done { background: var(--gold); border-color: var(--gold); color: var(--bg-dark); }
+.progress-dot.active { background: rgba(251,215,72,.2); border-color: var(--gold); color: var(--gold); }
+.progress-label { font-size: 11px; color: rgba(255,255,255,.4); font-weight: 500; }
+.progress-dot.done ~ .progress-label,
+.progress-dot.active ~ .progress-label { color: rgba(255,255,255,.7); }
+
+/* ── ROOT CAUSES ── */
+.root-causes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.root-cause-card {
+  background: #fff; border-radius: var(--r-l); padding: 20px 22px;
+  border-top: 3px solid var(--coral);
+}
+.root-cause-card .cause-screens { font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--tx-light); margin-bottom: 6px; }
+.root-cause-card .cause-name { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+.root-cause-card .cause-impact { font-size: 13px; color: var(--tx-mid); }
+.impact-high { color: var(--coral); font-weight: 700; }
+
+/* ── WHAT'S WORKING ── */
+.working-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.working-table tr { border-bottom: 1px solid rgba(12,18,32,.06); }
+.working-table tr:last-child { border-bottom: none; }
+.working-table td { padding: 12px 0; vertical-align: top; }
+.working-table td:first-child { width: 220px; font-weight: 700; padding-right: 16px; }
+.working-table td:last-child { color: var(--tx-mid); }
+.working-table .instruction { font-weight: 700; color: var(--green); margin-top: 4px; font-size: 12px; }
+
+/* ── FRAMEWORK GRID ── */
+.framework-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.framework-item {
+  background: #fff; border-radius: var(--r-m); padding: 16px;
+  font-size: 13px;
+}
+.framework-item .fw-name { font-weight: 700; margin-bottom: 4px; }
+.framework-item .fw-source { font-size: 11px; color: var(--tx-light); }
+
+/* ── SCROLLBAR ── */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
+
+/* ── SUMMARY STRIP ── */
+.summary-strip {
+  background: var(--bg-dark); border-radius: var(--r-xl); padding: 28px 32px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 48px;
+}
+.stat-item .stat-val { font-size: 32px; font-weight: 800; color: var(--gold); letter-spacing: -1px; }
+.stat-item .stat-label { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px; font-weight: 500; }
+
+/* ── REVISED CALLOUT ── */
+.revised-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(229,57,53,.1); border: 1px solid rgba(229,57,53,.2);
+  border-radius: 999px; padding: 2px 10px;
+  font-size: 11px; font-weight: 700; color: var(--coral); margin-left: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Multi<span>pl</span></div>
+    <div class="doc-label">Onboarding Audit v1.1</div>
+  </div>
+
+  <div class="nav-section-label">Report Sections</div>
+  <a class="nav-item active" href="#audit" onclick="setActive(this)">
+    <span class="nav-num">1</span> Behavioral Audit
+  </a>
+  <a class="nav-item" href="#copy" onclick="setActive(this)">
+    <span class="nav-num">2</span> Copy Deck
+  </a>
+  <a class="nav-item" href="#flow" onclick="setActive(this)">
+    <span class="nav-num">3</span> Flow Redesign
+  </a>
+  <a class="nav-item" href="#experiments" onclick="setActive(this)">
+    <span class="nav-num">4</span> Experiment Backlog
+  </a>
+
+  <div class="nav-section-label" style="margin-top:28px;">Jump To</div>
+  <a class="nav-item" href="#root-causes" onclick="setActive(this)">
+    <span class="nav-num" style="font-size:9px;">RC</span> Root Causes
+  </a>
+  <a class="nav-item" href="#funnel" onclick="setActive(this)">
+    <span class="nav-num" style="font-size:9px;">FN</span> Funnel Model
+  </a>
+  <a class="nav-item" href="#timeline" onclick="setActive(this)">
+    <span class="nav-num" style="font-size:9px;">TL</span> Experiment Timeline
+  </a>
+
+  <div style="padding: 24px; margin-top: auto; border-top: 1px solid rgba(255,255,255,.08);">
+    <div style="font-size:11px; color:rgba(255,255,255,.3); line-height:1.6;">
+      Figma file: <code style="color:rgba(255,255,255,.5); font-size:10px;">fC0xa2hANiwnkTAqHHwCcN</code><br>
+      Audited: 2026-03-12<br>
+      Version: 1.1 (MF copy revised)
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="badge">🔬 Behavioral Science CRO</div>
+    <h1>Multipl Onboarding<br><span>Audit & Growth Recommendations</span></h1>
+    <div class="meta">
+      <span><strong>Target persona:</strong> Salaried, 25–40, ₹6L+, metro</span>
+      <span><strong>Primary goal:</strong> Sign-up completion → Day-0 activation</span>
+      <span><strong>Screens audited:</strong> 10</span>
+    </div>
+  </div>
+
+  <!-- SUMMARY STRIP -->
+  <div class="summary-strip">
+    <div class="stat-item">
+      <div class="stat-val">~27%</div>
+      <div class="stat-label">Current est. completion rate</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">~54%</div>
+      <div class="stat-label">Target completion rate</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">2→1</div>
+      <div class="stat-label">OTPs (email OTP removed)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">8</div>
+      <div class="stat-label">Experiments proposed</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       SECTION 1: BEHAVIORAL AUDIT
+  ════════════════════════════════════ -->
+  <section class="section" id="audit">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-title">Behavioral Audit</div>
+        <div class="section-subtitle">Screen-by-screen analysis using COM-B, Fogg, Loss Aversion & Social Proof frameworks</div>
+      </div>
+    </div>
+
+    <!-- Frameworks -->
+    <div class="framework-grid">
+      <div class="framework-item"><div class="fw-name">COM-B Model</div><div class="fw-source">Decision Lab: Moka Financial Inclusion</div></div>
+      <div class="framework-item"><div class="fw-name">Present Bias + Avoidance</div><div class="fw-source">Decision Lab: Wellness for Wallet</div></div>
+      <div class="framework-item"><div class="fw-name">Social Proof</div><div class="fw-source">Cialdini — descriptive vs. injunctive</div></div>
+      <div class="framework-item"><div class="fw-name">Fogg Behavior Model</div><div class="fw-source">M × A × T — Stanford Fogg Lab</div></div>
+      <div class="framework-item"><div class="fw-name">Loss Aversion / Status Quo</div><div class="fw-source">Kahneman & Tversky</div></div>
+      <div class="framework-item"><div class="fw-name">Cognitive Load Reduction</div><div class="fw-source">Sweller / Miller's Law</div></div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="card">
+      <span class="screen-label">Screen 1 — Value Prop Hero · Node 1:423</span>
+      <div class="card-title">Value Prop Hero <span class="tag tag-keep">Mostly good</span></div>
+      <div class="callout callout-success"><div class="callout-icon">✓</div><div><strong>"Show me how it beats my bank"</strong> — conversational, curiosity-driven, low commitment. Keep verbatim.<br><strong>"5 Lakh+ customers"</strong> — strong descriptive social proof. Keep verbatim.</div></div>
+      <div class="callout callout-warn"><div class="callout-icon">!</div><div><strong>Headline gap:</strong> "Higher Yield Spending Account" is abstract. Users must do mental work to translate "higher yield" into personal benefit. No loss framing — the status quo cost is invisible.</div></div>
+      <div class="callout callout-neutral"><div class="callout-icon">→</div><div><strong>Fix:</strong> Rewrite headline to activate user benefit directly. CTA and social proof stay unchanged. See Copy Deck, Screen 1.</div></div>
+    </div>
+
+    <!-- Screen 2 -->
+    <div class="card">
+      <span class="screen-label">Screen 2 — Yield Comparison · Node 1:769</span>
+      <div class="card-title">Yield Comparison <span class="tag tag-change">Needs work</span></div>
+      <div class="callout callout-success"><div class="callout-icon">✓</div><div>2.5% vs 7% visual anchoring is strong. Abstract yield comparison still works as an anchor.</div></div>
+      <div class="callout callout-warn"><div class="callout-icon">!</div><div><strong>No personalization:</strong> Abstract yield % doesn't override present bias. "₹3,500 more this year at your balance" is 10× more motivating than "earn 7%."<br><br><strong>CTA "Start spending smartly" is weak</strong> — vague, no concrete benefit signal, doesn't tell user what happens next.</div></div>
+      <div class="callout callout-info" style="border-left-color: var(--teal); background: rgba(0,212,170,.06);">
+        <div class="callout-icon">💡</div>
+        <div>
+          <strong>India-specific context: "Mutual Funds Sahi Hai"</strong><br>
+          The original recommendation to replace "mutual funds" with "government-regulated funds" was wrong. AMFI's multi-year national campaign — endorsed by top sports figures, saturation TV/OOH/digital — has pre-loaded strong positive trust for "mutual funds" in exactly this TG. Hiding the term wastes a free credibility transfer and risks reading as evasive.<br><br>
+          <strong>The real objection is liquidity, not the term.</strong> Fix: own "mutual funds" explicitly and resolve the liquidity concern in the same line.
+        </div>
+      </div>
+      <div class="callout callout-neutral"><div class="callout-icon">→</div><div><strong>Fixes:</strong> (1) "Powered by SEBI-regulated mutual funds — withdraw anytime." (2) Add one-input calculator. (3) CTA: "Show me my potential earnings."</div></div>
+    </div>
+
+    <!-- Screen 3 -->
+    <div class="card">
+      <span class="screen-label">Screen 3 — Phone Entry · Node 1:886</span>
+      <div class="card-title">Phone Entry <span class="tag tag-change">Critical structural fix</span></div>
+      <div class="callout callout-success"><div class="callout-icon">✓</div><div>Phone-first auth is correct for India. Single field, minimal cognitive load.</div></div>
+      <div class="callout callout-warn"><div class="callout-icon">!</div><div><strong>Trust has not appeared yet.</strong> Skeptical users who need reassurance before sharing their phone number have never seen the trust screen — it's at position 6, after phone OTP. This is the most structurally wrong element in the current flow.<br><br><strong>KYC consent language</strong> ("I authorise Multipl to fetch my bank and KYC details") creates COM-B capability barrier — users can't make an informed decision because the language is opaque.</div></div>
+      <div class="callout callout-neutral"><div class="callout-icon">→</div><div><strong>Critical fix:</strong> Move trust screen to before phone entry (position 5). Convert KYC consent to inline reassurance copy.</div></div>
+    </div>
+
+    <!-- Screen 6 -->
+    <div class="card">
+      <span class="screen-label">Screen 6 — Trust Screen · Node 1:1968</span>
+      <div class="card-title">Trust Screen <span class="tag tag-change">Wrong position + wrong headline</span></div>
+      <div class="callout callout-warn"><div class="callout-icon">!</div><div><strong>Placement:</strong> Appears AFTER phone OTP — the skeptics who needed this screen dropped at S3–4 and never saw it.<br><br><strong>Headline "Why trust us?"</strong> plants the seed of doubt. Users who weren't actively questioning trust are now prompted to do so. Defensive framing triggers suspicion, not confidence.<br><br><strong>CTA "Start spendvesting"</strong> uses a brand neologism the user hasn't internalized. Creates micro-friction on a trust screen.</div></div>
+      <div class="callout callout-success"><div class="callout-icon">✓</div><div>Content is right: SEBI-regulated, "No lock-in. Withdraw anytime," "Multipl never holds your money" — these are the three highest-trust statements in the flow.</div></div>
+      <div class="callout callout-neutral"><div class="callout-icon">→</div><div><strong>Fixes:</strong> Move to position 5. Rename headline: "Your money is always in your control." CTA: "I'm in — let's go." Promote "Multipl never holds your money" to primary callout.</div></div>
+    </div>
+
+    <!-- Screen 9 -->
+    <div class="card">
+      <span class="screen-label">Screen 9 — Email OTP · Node 1:2566</span>
+      <div class="card-title">Email OTP <span class="tag tag-change" style="background:rgba(229,57,53,.15);">Remove from flow</span></div>
+      <div class="callout callout-warn"><div class="callout-icon">⚠</div><div><strong>Double OTP catastrophe.</strong> Two separate 6-digit verifications in a single session. Each OTP = ~10–15% drop-off. Combined: estimated 20–30% additional completion loss. Decision Lab / Moka case: friction compounds multiplicatively — it doesn't add.<br><br><strong>Screen 7 says "One Final Step"</strong> immediately before this screen. When users realize the email OTP follows, trust is damaged by the broken promise.</div></div>
+      <div class="callout callout-neutral"><div class="callout-icon">→</div><div><strong>Fix:</strong> Remove from onboarding entirely. Send email verification link async post-signup. Phone OTP is sufficient KYC anchor. Standard fintech practice.</div></div>
+    </div>
+
+    <!-- Screen 10 -->
+    <div class="card">
+      <span class="screen-label">Screen 10 — Brand Showcase · Node 1:2738</span>
+      <div class="card-title">Brand Showcase <span class="tag tag-move">Move to position 2</span></div>
+      <div class="callout callout-success"><div class="callout-icon">✓</div><div>"Spend as usual, Save extra automatically" — the strongest behavior-change copy in the flow. Zero-friction framing. Brand logos (Flipkart, Zomato, Amazon) = instant familiarity.</div></div>
+      <div class="callout callout-warn"><div class="callout-icon">!</div><div>Buried at position 10 — after all friction. The users who needed this motivational push to get through phone entry never saw it.</div></div>
+      <div class="callout callout-neutral"><div class="callout-icon">→</div><div><strong>Fix:</strong> Move to position 2. Change CTA to "I want this — sign me up." Keep all copy verbatim.</div></div>
+    </div>
+
+    <!-- Root Causes -->
+    <div id="root-causes" style="scroll-margin-top:32px; margin-top:36px; margin-bottom:20px;">
+      <div style="font-size:16px; font-weight:800; margin-bottom:16px;">4 Structural Root Causes</div>
+      <div class="root-causes">
+        <div class="root-cause-card">
+          <div class="cause-screens">Screens 3, 4, 6</div>
+          <div class="cause-name">Trust signals come after friction</div>
+          <div class="cause-impact">Skeptics drop before ever seeing SEBI credential, no-lock-in, or "Multipl never holds your money." <span class="impact-high">High drop-off at phone entry.</span></div>
+        </div>
+        <div class="root-cause-card">
+          <div class="cause-screens">Screens 4, 9</div>
+          <div class="cause-name">Double OTP in one session</div>
+          <div class="cause-impact">Phone OTP + email OTP back-to-back. <span class="impact-high">Estimated 20–30% additional completion loss</span> vs. single-OTP flows.</div>
+        </div>
+        <div class="root-cause-card">
+          <div class="cause-screens">Screens 7, 9</div>
+          <div class="cause-name">Broken "Final Step" promise</div>
+          <div class="cause-impact">"One Final Step: Connect Your Email" is immediately followed by an email OTP screen. Trust damage + abandonment spike.</div>
+        </div>
+        <div class="root-cause-card">
+          <div class="cause-screens">Screen 10 → should be 2</div>
+          <div class="cause-name">Best value copy buried post-auth</div>
+          <div class="cause-impact">The most compelling motivation ("Spend as usual, Save extra") only reaches users who already completed sign-up. Missed opportunity.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What's Working -->
+    <div class="card">
+      <div class="card-title">What's Working — Do Not Change</div>
+      <table class="working-table">
+        <tr>
+          <td>"Show me how it beats my bank" (S1)<div class="instruction">KEEP VERBATIM</div></td>
+          <td>Curiosity-driven, conversational, no commitment. Perfect CTA.</td>
+        </tr>
+        <tr>
+          <td>"5 Lakh+ customers" (S1)<div class="instruction">KEEP</div></td>
+          <td>Strong descriptive social proof (Cialdini).</td>
+        </tr>
+        <tr>
+          <td>"Spend as usual, Save extra automatically" (S10)<div class="instruction">KEEP VERBATIM — move earlier</div></td>
+          <td>Zero-change-required framing. Strongest behavior copy in the flow.</td>
+        </tr>
+        <tr>
+          <td>"No lock-in. Withdraw anytime." (S6)<div class="instruction">KEEP — surface earlier</div></td>
+          <td>Directly resolves #1 user barrier.</td>
+        </tr>
+        <tr>
+          <td>"Multipl never holds your money" (S6)<div class="instruction">PROMOTE to primary callout</div></td>
+          <td>Highest-trust statement in the flow. Currently under-emphasized.</td>
+        </tr>
+        <tr>
+          <td>2.5% vs 7% yield chart (S2)<div class="instruction">KEEP — add calculator</div></td>
+          <td>Strong visual anchoring.</td>
+        </tr>
+        <tr>
+          <td>Phone-first auth (S3)<div class="instruction">KEEP</div></td>
+          <td>Right choice for India.</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════
+       SECTION 2: COPY DECK
+  ════════════════════════════════════ -->
+  <section class="section" id="copy">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-title">Revised Copy Deck</div>
+        <div class="section-subtitle">Current → Recommended, with behavioral rationale</div>
+      </div>
+    </div>
+
+    <!-- S1 -->
+    <div class="card">
+      <span class="screen-label">Screen 1 — Value Prop Hero</span>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Element</th><th>Current</th><th>Recommended</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>Headline</td><td class="copy-current">"Higher Yield Spending Account"</td><td class="copy-new">"Your spending money, working harder for you"</td><td class="rationale">Shifts from product descriptor to user benefit. "Working harder for you" activates agency — the money does the work.</td></tr>
+            <tr><td>CTA</td><td class="copy-current">"Show me how it beats my bank"</td><td class="copy-keep">KEEP VERBATIM</td><td class="rationale">Perfect. Conversational, curiosity-driven, low commitment, competitive frame.</td></tr>
+            <tr><td>Social proof</td><td class="copy-current">"5 Lakh+ customers"</td><td class="copy-keep">KEEP VERBATIM</td><td class="rationale">Strong descriptive norm.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S2 (Brand Showcase moved) -->
+    <div class="card">
+      <span class="screen-label">Screen 2 — Brand Showcase (moved from S10) <span class="tag tag-move">Moved</span></span>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Element</th><th>Current (at S10)</th><th>Recommended (at S2)</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>Headline</td><td class="copy-current">—</td><td class="copy-new">"Spend at your favourite places. Earn while you do."</td><td class="rationale">Establishes zero-friction value: no behaviour change required.</td></tr>
+            <tr><td>Subheadline</td><td class="copy-current">"Spend as usual, Save extra automatically"</td><td class="copy-keep">KEEP VERBATIM</td><td class="rationale">Strongest behavior-change copy in the flow.</td></tr>
+            <tr><td>CTA</td><td class="copy-current">"Create my spending account"</td><td class="copy-new">"I want this — sign me up"</td><td class="rationale">First-person phrasing builds commitment via Cialdini consistency.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S3 Yield -->
+    <div class="card">
+      <span class="screen-label">Screen 3 — Yield Comparison + Calculator</span>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Element</th><th>Current</th><th>Recommended</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>Yield chart</td><td class="copy-current">2.5% vs 7%</td><td class="copy-keep">KEEP the visual chart</td><td class="rationale">Strong anchoring.</td></tr>
+            <tr>
+              <td>"Powered by" label</td>
+              <td class="copy-current">"Powered by liquid mutual funds"</td>
+              <td class="copy-new">"Powered by SEBI-regulated mutual funds — withdraw anytime"</td>
+              <td class="rationale">
+                <strong>Own the term.</strong> "Mutual Funds Sahi Hai" (AMFI's national campaign) has pre-loaded trust for this TG. Hiding "mutual funds" wastes that credibility transfer. The real objection is <em>liquidity</em> — resolve it immediately in the same line.
+              </td>
+            </tr>
+            <tr><td>Calculator (NEW)</td><td class="copy-current">—</td><td class="copy-new">"I keep about ₹___ for monthly expenses → You'd earn ₹XXX more this year with Multipl"</td><td class="rationale">Present bias override: concrete, personal, near-term. Seeing "₹3,500 more this year" acts faster than "earn 7%."</td></tr>
+            <tr><td>CTA</td><td class="copy-current">"Start spending smartly"</td><td class="copy-new">"Show me my potential earnings"</td><td class="rationale">Connects to calculator output. Action-oriented, benefit-specific.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S4 Loss Framing NEW -->
+    <div class="card">
+      <span class="screen-label">Screen 4 — Loss Framing Slide <span class="tag tag-new">New screen</span></span>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Element</th><th>Recommended</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>Headline</td><td class="copy-new">"Your savings account is working against you"</td><td class="rationale">Loss aversion: losses are ~2× more motivating than equivalent gains. The status quo now costs them something.</td></tr>
+            <tr><td>Body</td><td class="copy-new">"At ₹50,000, you're giving ₹2,250/year back to your bank. At ₹1L, that's ₹4,500 a year."</td><td class="rationale">Specific amounts personalize the loss. Frame: the bank takes from you.</td></tr>
+            <tr><td>Amount slider</td><td class="copy-new">"My spending balance is approx ₹___" → auto-calculates "You're leaving ₹XXX/year behind"</td><td class="rationale">Dynamic loss figure is more compelling than static example.</td></tr>
+            <tr><td>CTA</td><td class="copy-new">"Stop leaving money behind"</td><td class="rationale">Loss-framed CTA. Motivates action to end the loss.</td></tr>
+            <tr><td>Fine print</td><td class="copy-current">Based on 2.5% savings rate vs 7% p.a. on Multipl. Returns not guaranteed.</td><td class="rationale">Required disclosure. Keep small.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S5 Trust -->
+    <div class="card">
+      <span class="screen-label">Screen 5 — Trust Screen (moved from S6)</span>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Element</th><th>Current</th><th>Recommended</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>Headline</td><td class="copy-current">"Before you begin... Why trust us?"</td><td class="copy-new">"Your money is always in your control"</td><td class="rationale">Eliminates defensive framing. "Why trust us?" plants doubt. This headline resolves anxiety before it forms.</td></tr>
+            <tr><td>Subheadline</td><td class="copy-current">—</td><td class="copy-new">"Built on India's most regulated financial infrastructure"</td><td class="rationale">Authority signal without jargon.</td></tr>
+            <tr><td>"Multipl never holds your money"</td><td class="copy-current">Present (secondary)</td><td class="copy-keep">PROMOTE to primary callout, larger type</td><td class="rationale">The single most trust-building statement in the flow.</td></tr>
+            <tr><td>CTA</td><td class="copy-current">"Start spendvesting"</td><td class="copy-new">"I'm in — let's go"</td><td class="rationale">"Spendvesting" is a neologism the user hasn't internalized. Creates micro-friction. Introduce in-app post-onboarding.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S9 Email -->
+    <div class="card">
+      <span class="screen-label">Screen 9 — Email Entry</span>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Element</th><th>Current</th><th>Recommended</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>Headline</td><td class="copy-current">"One Final Step: Connect Your Email"</td><td class="copy-new">"Almost there — add your email"</td><td class="rationale">Removes the broken promise. "Almost there" is accurate without over-promising.</td></tr>
+            <tr><td>Subheadline</td><td class="copy-current">—</td><td class="copy-new">"We'll send your monthly returns summary here."</td><td class="rationale">Reframes email collection as a user benefit.</td></tr>
+            <tr><td>CTA</td><td class="copy-current">"Verify Email"</td><td class="copy-new">"Continue"</td><td class="rationale">"Verify" primes users to expect another OTP. "Continue" is neutral.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S10 Confirmation -->
+    <div class="card">
+      <span class="screen-label">Screen 10 — Account Created</span>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Element</th><th>Current</th><th>Recommended</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>Headline</td><td class="copy-current">—</td><td class="copy-new">"Your spending account is ready."</td><td class="rationale">Clear confirmation. Present tense, done.</td></tr>
+            <tr><td>Earnings callout (NEW)</td><td class="copy-current">—</td><td class="copy-new">"At your balance, you're on track to earn ₹X more this year."</td><td class="rationale">Echoes the calculator from S3. Creates continuity.</td></tr>
+            <tr><td>T+1 expectation</td><td class="copy-current">Absent or small</td><td class="copy-new">"Your money works from tomorrow. Add ₹5,000 today to start earning."</td><td class="rationale">T+1 unit allotment must be set explicitly. Users who see ₹0 earning "today" abandon without this.</td></tr>
+            <tr><td>CTA</td><td class="copy-current">"Add Money"</td><td class="copy-new">"Add money — start earning tomorrow"</td><td class="rationale">Incorporates T+1 into the CTA. Prevents post-deposit confusion.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Quick Reference -->
+    <div class="card">
+      <div class="card-title">Quick Reference — All CTA Changes</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Screen</th><th>Current CTA</th><th>Recommended</th></tr></thead>
+          <tbody>
+            <tr><td>S1</td><td class="copy-current">"Show me how it beats my bank"</td><td class="copy-keep">KEEP VERBATIM</td></tr>
+            <tr><td>S2 (new pos)</td><td class="copy-current">"Create my spending account"</td><td class="copy-new">"I want this — sign me up"</td></tr>
+            <tr><td>S3</td><td class="copy-current">"Start spending smartly"</td><td class="copy-new">"Show me my potential earnings"</td></tr>
+            <tr><td>S4 (new)</td><td class="copy-current">—</td><td class="copy-new">"Stop leaving money behind"</td></tr>
+            <tr><td>S5</td><td class="copy-current">"Start spendvesting"</td><td class="copy-new">"I'm in — let's go"</td></tr>
+            <tr><td>S6–S8</td><td class="copy-current">Standard</td><td class="copy-keep">Keep</td></tr>
+            <tr><td>S9</td><td class="copy-current">"Verify Email"</td><td class="copy-new">"Continue"</td></tr>
+            <tr><td>S10</td><td class="copy-current">"Add Money"</td><td class="copy-new">"Add money — start earning tomorrow"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════
+       SECTION 3: FLOW DIAGRAM
+  ════════════════════════════════════ -->
+  <section class="section" id="flow">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <div class="section-title">Flow Redesign</div>
+        <div class="section-subtitle">Current vs. Recommended — 10 screens, 2 OTPs → 10 screens, 1 OTP</div>
+      </div>
+    </div>
+
+    <!-- Flow Grid -->
+    <div class="flow-grid">
+      <div>
+        <div class="flow-col-label current">● Current Flow (10 screens, 2 OTPs)</div>
+        <div class="flow-step current-step"><span class="flow-step-num">1</span><div class="flow-step-body"><div class="step-name">Value Prop Hero</div><div class="step-cta">"Show me how it beats my bank"</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step current-step"><span class="flow-step-num">2</span><div class="flow-step-body"><div class="step-name">Yield Comparison</div><div class="step-cta">"Start spending smartly"</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step current-step"><span class="flow-step-num">3</span><div class="flow-step-body"><div class="step-name">Phone Entry + KYC consent</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step current-step"><span class="flow-step-num">4</span><div class="flow-step-body"><div class="step-name">Phone OTP ①</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step current-step"><span class="flow-step-num">5</span><div class="flow-step-body"><div class="step-name">Profile: Name + Invite Code</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step current-step"><span class="flow-step-num">6</span><div class="flow-step-body"><div class="step-name">Trust Screen</div><div class="step-cta">"Why trust us?" → "Start spendvesting"</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step current-step"><span class="flow-step-num">7</span><div class="flow-step-body"><div class="step-name">Email Entry</div><div class="step-cta">"One Final Step" ← broken promise</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step current-step"><span class="flow-step-num">8</span><div class="flow-step-body"><div class="step-name">Email Entry (filled state)</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step current-step" style="border-color: rgba(229,57,53,.3); background: rgba(229,57,53,.04);"><span class="flow-step-num" style="background:rgba(229,57,53,.15); color:var(--coral);">9</span><div class="flow-step-body"><div class="step-name" style="color:var(--coral);">Email OTP ② ← major drop-off</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step current-step"><span class="flow-step-num">10</span><div class="flow-step-body"><div class="step-name">Brand Showcase</div><div class="step-cta">"Create my spending account"</div></div></div>
+      </div>
+
+      <div>
+        <div class="flow-col-label recommended">● Recommended Flow (10 screens, 1 OTP)</div>
+        <div class="flow-step rec-step"><span class="flow-step-num">1</span><div class="flow-step-body"><div class="step-name">Value Prop Hero</div><div class="step-cta">"Show me how it beats my bank" ← keep</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step rec-step rec-moved"><span class="flow-step-num">2</span><div class="flow-step-body"><div class="step-name">Brand Showcase + Logos <span class="tag tag-move" style="font-size:10px;">moved from S10</span></div><div class="step-cta">"I want this — sign me up"</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step rec-step"><span class="flow-step-num">3</span><div class="flow-step-body"><div class="step-name">Yield Comparison + Calculator</div><div class="step-cta">"Show me my potential earnings"</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step rec-step rec-new"><span class="flow-step-num">4</span><div class="flow-step-body"><div class="step-name">Loss Framing Slide <span class="tag tag-new" style="font-size:10px;">new</span></div><div class="step-cta">"Stop leaving money behind"</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step rec-step rec-moved"><span class="flow-step-num">5</span><div class="flow-step-body"><div class="step-name">Trust Screen <span class="tag tag-move" style="font-size:10px;">moved from S6</span></div><div class="step-cta">"Your money is always in your control" → "I'm in"</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step rec-step"><span class="flow-step-num">6</span><div class="flow-step-body"><div class="step-name">Phone Entry (inline KYC copy)</div><div class="step-cta">"Get OTP"</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step rec-step"><span class="flow-step-num">7</span><div class="flow-step-body"><div class="step-name">Phone OTP ①</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step rec-step"><span class="flow-step-num">8</span><div class="flow-step-body"><div class="step-name">Profile (Name only — invite code removed)</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step rec-step"><span class="flow-step-num">9</span><div class="flow-step-body"><div class="step-name">Email Entry</div><div class="step-cta">"Almost there — add your email" → "Continue"</div></div></div>
+        <div class="flow-connector">↓</div>
+        <div class="flow-step rec-step" style="border-color: rgba(0,212,170,.3); background: rgba(0,212,170,.04);"><span class="flow-step-num">10</span><div class="flow-step-body"><div class="step-name">Account Created + Projected Earnings + T+1</div><div class="step-cta">"Add money — start earning tomorrow"</div></div></div>
+        <div style="margin-top:8px; padding:10px 14px; border-radius:var(--r-m); background:rgba(0,212,170,.08); font-size:12px; color:var(--teal-text); font-weight:600;">✓ Email verified async via link — no OTP step</div>
+      </div>
+    </div>
+
+    <!-- Net Changes Table -->
+    <div class="card">
+      <div class="card-title">Net Changes Summary</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Change</th><th>Type</th><th>Impact</th></tr></thead>
+          <tbody>
+            <tr><td>Screen 10 (Brand Showcase) → Position 2</td><td><span class="tag tag-move">Move</span></td><td class="rationale">Best value copy reaches users before any friction</td></tr>
+            <tr><td>New Loss Framing slide</td><td><span class="tag tag-new">Add</span></td><td class="rationale">Loss aversion activation before auth</td></tr>
+            <tr><td>Trust screen → Position 5 (before phone entry)</td><td><span class="tag tag-move">Move</span></td><td class="rationale">Skeptics see trust signals before data request</td></tr>
+            <tr><td>Email OTP removed</td><td><span class="tag tag-change">Remove</span></td><td class="rationale">~15–20% completion lift; email verified async</td></tr>
+            <tr><td>Invite code field removed from main flow</td><td><span class="tag tag-change">Remove</span></td><td class="rationale">Eliminates "outsider" signal for organic users</td></tr>
+            <tr><td>KYC consent copy reframed</td><td><span class="tag tag-change">Change</span></td><td class="rationale">Reduces data anxiety at phone entry</td></tr>
+            <tr><td>5-step progress bar added globally</td><td><span class="tag tag-new">Add</span></td><td class="rationale">Accurate effort estimation reduces mid-funnel abandonment</td></tr>
+            <tr><td>Calculator widget on S3</td><td><span class="tag tag-new">Add</span></td><td class="rationale">Present bias override via personalized ₹ figures</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:16px; display:flex; gap:24px; font-size:13px;">
+        <div><strong>Screens:</strong> 10 → 10 (1 removed, 1 added, 2 moved)</div>
+        <div><strong>OTPs:</strong> 2 → 1</div>
+        <div><strong>Net cognitive load:</strong> Significantly lower</div>
+      </div>
+    </div>
+
+    <!-- Progress Bar Design -->
+    <div class="card">
+      <div class="card-title">Progress Indicator Design</div>
+      <div class="progress-visual">
+        <div class="progress-step">
+          <div class="progress-dot done">✓</div>
+          <div class="progress-label">Value</div>
+        </div>
+        <div class="progress-step">
+          <div class="progress-dot done">✓</div>
+          <div class="progress-label">Trust</div>
+        </div>
+        <div class="progress-step">
+          <div class="progress-dot active">3</div>
+          <div class="progress-label">Phone</div>
+        </div>
+        <div class="progress-step">
+          <div class="progress-dot">4</div>
+          <div class="progress-label">Profile</div>
+        </div>
+        <div class="progress-step">
+          <div class="progress-dot">5</div>
+          <div class="progress-label">Done</div>
+        </div>
+      </div>
+      <div style="font-size:13px; color:var(--tx-mid); margin-top:8px;">Phase labels (not screen numbers) keep the indicator human. Never label "Final Step" unless it is definitively the last action. Gold fill = active; grey = upcoming; checkmark = completed.</div>
+    </div>
+
+    <!-- Phase Diagram -->
+    <div class="card">
+      <div class="card-title">4-Phase Behavioral Arc</div>
+      <div class="phases">
+        <div class="phase-card">
+          <div class="phase-num">Phase 1 · Screens 1–4</div>
+          <div class="phase-name">Value & Motivation</div>
+          <div class="phase-screens">Hero → Brand Logos → Calculator → Loss Frame</div>
+          <div class="phase-goal">User wants this product for their specific benefit. Personalized gain + loss aversion activated.</div>
+          <div class="phase-trigger">User thinks: "This is for me"</div>
+        </div>
+        <div class="phase-card">
+          <div class="phase-num">Phase 2 · Screen 5</div>
+          <div class="phase-name">Trust</div>
+          <div class="phase-screens">Trust Screen (moved)</div>
+          <div class="phase-goal">User is confident enough to share phone number. SEBI credential, no lock-in, "Multipl never holds your money."</div>
+          <div class="phase-trigger">User thinks: "This is safe"</div>
+        </div>
+        <div class="phase-card">
+          <div class="phase-num">Phase 3 · Screens 6–9</div>
+          <div class="phase-name">Auth</div>
+          <div class="phase-screens">Phone → OTP → Name → Email</div>
+          <div class="phase-goal">Minimum viable identity capture. One OTP, honest progress bar, every field justified with a user benefit.</div>
+          <div class="phase-trigger">User thinks: "Almost done"</div>
+        </div>
+        <div class="phase-card">
+          <div class="phase-num">Phase 4 · Screen 10</div>
+          <div class="phase-name">Activation</div>
+          <div class="phase-screens">Account Created</div>
+          <div class="phase-goal">User adds ₹5,000 immediately (Day-0 activation). Projected earnings + T+1 explained + clear next action.</div>
+          <div class="phase-trigger">User thinks: "I'm earning already"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Funnel Model -->
+    <div id="funnel" style="scroll-margin-top:32px;">
+      <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Funnel Impact Model (Estimated)</div>
+      <div class="funnel-grid">
+        <div class="funnel-col current">
+          <h4>Current Flow</h4>
+          <div class="funnel-row"><span class="label">App Open</span><div class="funnel-bar-wrap"><span class="funnel-pct">100%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:100%"></div></div></div></div>
+          <div class="funnel-row"><span class="label">S1 → S2</span><div class="funnel-bar-wrap"><span class="funnel-pct">85%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:85%"></div></div></div></div>
+          <div class="funnel-row"><span class="label">S2 → Phone Entry</span><div class="funnel-bar-wrap"><span class="funnel-pct">70%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:70%"></div></div></div></div>
+          <div class="funnel-row"><span class="label">→ Phone OTP</span><div class="funnel-bar-wrap"><span class="funnel-pct">60%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:60%"></div></div></div></div>
+          <div class="funnel-row"><span class="label">→ Profile</span><div class="funnel-bar-wrap"><span class="funnel-pct">55%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:55%"></div></div></div></div>
+          <div class="funnel-row"><span class="label">→ Email OTP</span><div class="funnel-bar-wrap"><span class="funnel-pct">32%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:32%"></div></div></div></div>
+          <div class="funnel-row" style="border-top:2px solid rgba(12,18,32,.1); margin-top:4px; padding-top:12px;"><span>Est. Completion</span><div class="funnel-bar-wrap"><span class="funnel-pct" style="font-size:18px;">~27%</span></div></div>
+        </div>
+        <div class="funnel-col rec">
+          <h4>Recommended Flow</h4>
+          <div class="funnel-row"><span class="label">App Open</span><div class="funnel-bar-wrap"><span class="funnel-pct">100%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:100%"></div></div></div></div>
+          <div class="funnel-row"><span class="label">S1 → S2</span><div class="funnel-bar-wrap"><span class="funnel-pct">88%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:88%"></div></div><span class="funnel-delta">+3%</span></div></div>
+          <div class="funnel-row"><span class="label">Value → Trust</span><div class="funnel-bar-wrap"><span class="funnel-pct">82%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:82%"></div></div><span class="funnel-delta">+12%</span></div></div>
+          <div class="funnel-row"><span class="label">Trust → Phone</span><div class="funnel-bar-wrap"><span class="funnel-pct">75%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:75%"></div></div><span class="funnel-delta">+15%</span></div></div>
+          <div class="funnel-row"><span class="label">→ OTP → Profile</span><div class="funnel-bar-wrap"><span class="funnel-pct">62%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:62%"></div></div></div></div>
+          <div class="funnel-row"><span class="label">→ Email → Done</span><div class="funnel-bar-wrap"><span class="funnel-pct">54%</span><div class="funnel-bar"><div class="funnel-bar-fill" style="width:54%"></div></div></div></div>
+          <div class="funnel-row" style="border-top:2px solid rgba(0,212,170,.2); margin-top:4px; padding-top:12px;"><span>Est. Completion</span><div class="funnel-bar-wrap"><span class="funnel-pct" style="font-size:18px; color:var(--teal-text);">~54%</span><span class="funnel-delta" style="font-size:14px;">+27pp</span></div></div>
+        </div>
+      </div>
+      <div style="font-size:12px; color:var(--tx-light); margin-top:12px;">Modelled estimates based on Decision Lab benchmarks and Moka case data. Actual lifts require A/B measurement. See experiment backlog.</div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════
+       SECTION 4: EXPERIMENT BACKLOG
+  ════════════════════════════════════ -->
+  <section class="section" id="experiments">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <div class="section-title">Experiment Backlog</div>
+        <div class="section-subtitle">8 prioritized A/B experiments — sign-up completion as primary metric</div>
+      </div>
+    </div>
+
+    <!-- EXP-01 -->
+    <div class="exp-card p0">
+      <div class="exp-header">
+        <div>
+          <div class="exp-id">EXP-01</div>
+          <div class="exp-title">Remove Email OTP from Onboarding</div>
+        </div>
+        <div class="exp-tags">
+          <span class="tag tag-p0">P0</span>
+          <span class="tag" style="background:var(--green-bg); color:var(--green);">S effort</span>
+          <span class="tag" style="background:rgba(12,18,32,.06); color:var(--tx-mid);">Funnel simplification</span>
+        </div>
+      </div>
+      <div class="exp-hypothesis">"Removing email OTP and replacing with async email verification link post-signup will increase sign-up completion by 15–25%, because users no longer face a second 6-digit code in the same session."</div>
+      <div class="exp-variants">
+        <div class="exp-variant control"><div class="variant-label">Control</div>Current: phone OTP + email OTP (double verification)</div>
+        <div class="exp-variant variant-a"><div class="variant-label">Variant</div>Phone OTP only. Email link sent post-signup. Email marked "unverified" internally until clicked.</div>
+      </div>
+      <div class="exp-meta-grid">
+        <div class="exp-meta-item"><div class="exp-meta-label">Primary metric</div>Sign-up completion rate (S1 → Account created)</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Success criteria</div>+10% or more; no regression on KYC pass rate</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Secondary metrics</div>Email verification rate within 7 days, Day-0 activation rate</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Guardrail</div>KYC pass rate, regulatory compliance flag rate</div>
+      </div>
+      <div class="exp-footer">
+        <div class="exp-footer-item"><span class="label">Effort:</span> 1–2 days backend</div>
+        <div class="exp-footer-item"><span class="label">Risk:</span> Low</div>
+        <div class="exp-footer-item"><span class="label">⚠ Regulatory:</span> Confirm phone OTP alone satisfies KYC at this stage</div>
+      </div>
+    </div>
+
+    <!-- EXP-02 -->
+    <div class="exp-card p0">
+      <div class="exp-header">
+        <div>
+          <div class="exp-id">EXP-02</div>
+          <div class="exp-title">Move Trust Screen Before Phone Entry</div>
+        </div>
+        <div class="exp-tags">
+          <span class="tag tag-p0">P0</span>
+          <span class="tag" style="background:var(--green-bg); color:var(--green);">S effort</span>
+          <span class="tag" style="background:rgba(12,18,32,.06); color:var(--tx-mid);">Flow resequencing</span>
+        </div>
+      </div>
+      <div class="exp-hypothesis">"Moving the trust screen to position 5 — before phone entry — will increase phone entry completion by 10–20%, because skeptical users will have seen SEBI credential, no lock-in, and 'Multipl never holds your money' before being asked to share personal data."</div>
+      <div class="exp-variants">
+        <div class="exp-variant control"><div class="variant-label">Control</div>Trust screen at position 6 (after phone OTP) — current flow</div>
+        <div class="exp-variant variant-a"><div class="variant-label">Variant</div>Trust screen at position 5 (before phone entry) + headline changed to "Your money is always in your control"</div>
+      </div>
+      <div class="exp-meta-grid">
+        <div class="exp-meta-item"><div class="exp-meta-label">Primary metric</div>Phone entry completion rate</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Success criteria</div>+8% on phone entry completion</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Secondary metrics</div>Sign-up completion rate, time on trust screen</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Guardrail</div>Bounce rate from trust screen</div>
+      </div>
+      <div class="exp-footer">
+        <div class="exp-footer-item"><span class="label">Effort:</span> 0.5 days (flow reorder)</div>
+        <div class="exp-footer-item"><span class="label">Risk:</span> Low</div>
+      </div>
+    </div>
+
+    <!-- EXP-03 -->
+    <div class="exp-card p1">
+      <div class="exp-header">
+        <div>
+          <div class="exp-id">EXP-03</div>
+          <div class="exp-title">Personalized ₹ Calculator + Loss Framing Slide</div>
+        </div>
+        <div class="exp-tags">
+          <span class="tag tag-p1">P1</span>
+          <span class="tag" style="background:rgba(251,215,72,.15); color:#8B6E00;">M effort</span>
+          <span class="tag" style="background:rgba(12,18,32,.06); color:var(--tx-mid);">Value prop enhancement</span>
+        </div>
+      </div>
+      <div class="exp-hypothesis">"Adding a one-input calculator ('I keep ₹___ → earn ₹XXX more') + a loss framing slide ('You're leaving ₹X/year behind') will increase value-to-phone-entry conversion by 10–15%, because personalized, concrete, loss-framed numbers override present bias more effectively than abstract yield percentages."</div>
+      <div class="exp-variants">
+        <div class="exp-variant control"><div class="variant-label">Control</div>Current yield comparison screen (abstract 2.5% vs 7%)</div>
+        <div class="exp-variant variant-a"><div class="variant-label">Variant A</div>Add calculator to yield screen only</div>
+        <div class="exp-variant variant-b"><div class="variant-label">Variant B</div>Add loss framing slide only (new screen)</div>
+        <div class="exp-variant variant-c"><div class="variant-label">Variant C</div>Both calculator + loss framing slide</div>
+      </div>
+      <div class="exp-meta-grid">
+        <div class="exp-meta-item"><div class="exp-meta-label">Primary metric</div>Value screen → phone entry conversion</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Success criteria</div>+8% value-to-phone; no significant increase in completion time</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Secondary metrics</div>Time on yield screen, sign-up completion</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Guardrail</div>Total time-to-complete (Variant C adds 1 screen)</div>
+      </div>
+      <div class="exp-footer">
+        <div class="exp-footer-item"><span class="label">Effort:</span> 2–3 days (calculator widget + loss slide)</div>
+        <div class="exp-footer-item"><span class="label">Risk:</span> Low–Medium</div>
+      </div>
+    </div>
+
+    <!-- EXP-04 REVISED -->
+    <div class="exp-card p1">
+      <div class="exp-header">
+        <div>
+          <div class="exp-id">EXP-04 <span class="revised-badge">↺ Revised</span></div>
+          <div class="exp-title">Own "Mutual Funds" + Resolve Liquidity Objection</div>
+        </div>
+        <div class="exp-tags">
+          <span class="tag tag-p1">P1</span>
+          <span class="tag" style="background:var(--green-bg); color:var(--green);">S effort</span>
+          <span class="tag" style="background:rgba(12,18,32,.06); color:var(--tx-mid);">Copy optimization</span>
+        </div>
+      </div>
+      <div class="callout callout-info" style="margin-bottom:14px; font-size:13px;">
+        <div class="callout-icon">💡</div>
+        <div><strong>Why this was revised:</strong> The original hypothesis (replace "mutual funds" with "government-regulated funds" to reduce anxiety) missed India-specific context. AMFI's "Mutual Funds Sahi Hai" campaign has built strong positive priming for this exact TG. The real objection is <strong>liquidity</strong>, not the term. The fix is to own the term confidently and resolve the liquidity concern in the same line.</div>
+      </div>
+      <div class="exp-hypothesis">"Explicitly naming 'mutual funds' with a same-line liquidity resolution will outperform both the current neutral copy and the previously proposed 'government-regulated funds' replacement, because it claims the AMFI trust association while immediately neutralizing the only objection that actually blocks this persona."</div>
+      <div class="exp-variants">
+        <div class="exp-variant control"><div class="variant-label">Control</div>"Powered by liquid mutual funds" — neutral, no liquidity reassurance</div>
+        <div class="exp-variant variant-a"><div class="variant-label">Variant A ★ Primary</div>"Powered by SEBI-regulated mutual funds — withdraw anytime"</div>
+        <div class="exp-variant variant-b"><div class="variant-label">Variant B</div>"Powered by SEBI-regulated mutual funds. Your money stays liquid."</div>
+        <div class="exp-variant dropped"><div class="variant-label">Dropped variant</div>"Powered by government-regulated funds" — discards the AMFI trust asset. Do not test.</div>
+      </div>
+      <div class="exp-meta-grid">
+        <div class="exp-meta-item"><div class="exp-meta-label">Primary metric</div>Value screen → phone entry conversion</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Success criteria</div>Variant A or B: +5% on value-to-phone vs. control</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Secondary metrics</div>Trust screen engagement; qualitative: "Did you feel you could withdraw your money when needed?"</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Guardrail</div>None (pure copy swap)</div>
+      </div>
+      <div class="exp-footer">
+        <div class="exp-footer-item"><span class="label">Effort:</span> 2–4 hours (copy only)</div>
+        <div class="exp-footer-item"><span class="label">Risk:</span> Very low</div>
+      </div>
+    </div>
+
+    <!-- EXP-05 -->
+    <div class="exp-card p2">
+      <div class="exp-header">
+        <div>
+          <div class="exp-id">EXP-05</div>
+          <div class="exp-title">Move Brand Showcase to Position 2</div>
+        </div>
+        <div class="exp-tags">
+          <span class="tag tag-p2">P2</span>
+          <span class="tag" style="background:var(--green-bg); color:var(--green);">S effort</span>
+          <span class="tag" style="background:rgba(12,18,32,.06); color:var(--tx-mid);">Flow resequencing</span>
+        </div>
+      </div>
+      <div class="exp-hypothesis">"Moving the brand logo carousel to position 2 will increase overall flow completion by 5–10%, because zero-friction framing ('no behaviour change') and brand familiarity (Flipkart, Zomato, Amazon) will motivate more users before they reach the auth friction."</div>
+      <div class="exp-variants">
+        <div class="exp-variant control"><div class="variant-label">Control</div>Brand showcase at position 10 (post-auth)</div>
+        <div class="exp-variant variant-a"><div class="variant-label">Variant</div>Brand showcase at position 2 (pre-auth) + CTA: "I want this — sign me up"</div>
+      </div>
+      <div class="exp-meta-grid">
+        <div class="exp-meta-item"><div class="exp-meta-label">Primary metric</div>S2 → S3 continuation rate</div>
+        <div class="exp-meta-item"><div class="exp-meta-label">Success criteria</div>+4% on S2→S3 rate</div>
+      </div>
+      <div class="exp-footer">
+        <div class="exp-footer-item"><span class="label">Effort:</span> 0.5 days</div>
+        <div class="exp-footer-item"><span class="label">Risk:</span> Low</div>
+      </div>
+    </div>
+
+    <!-- EXP-06 -->
+    <div class="exp-card p2">
+      <div class="exp-header">
+        <div>
+          <div class="exp-id">EXP-06</div>
+          <div class="exp-title">"Why trust us?" → "Your money is always in your control"</div>
+        </div>
+        <div class="exp-tags">
+          <span class="tag tag-p2">P2</span>
+          <span class="tag" style="background:var(--green-bg); color:var(--green);">S effort</span>
+          <span class="tag" style="background:rgba(12,18,32,.06); color:var(--tx-mid);">Copy optimization</span>
+        </div>
+      </div>
+      <div class="exp-hypothesis">"Changing the trust screen headline to 'Your money is always in your control' will increase trust screen → next action completion by 5–10%, because the current defensive framing plants doubt while a control-focused headline resolves anxiety."</div>
+      <div class="exp-variants">
+        <div class="exp-variant control"><div class="variant-label">Control</div>"Before you begin... Why trust us?"</div>
+        <div class="exp-variant variant-a"><div class="variant-label">Variant A</div>"Your money is always in your control"</div>
+        <div class="exp-variant variant-b"><div class="variant-label">Variant B</div>"Built on India's most regulated financial infrastructure"</div>
+      </div>
+      <div class="exp-footer">
+        <div class="exp-footer-item"><span class="label">Effort:</span> 2 hours</div>
+        <div class="exp-footer-item"><span class="label">Risk:</span> Very low</div>
+        <div class="exp-footer-item"><span class="label">Note:</span> Can bundle with EXP-02 or run in isolation</div>
+      </div>
+    </div>
+
+    <!-- EXP-07 -->
+    <div class="exp-card p3">
+      <div class="exp-header">
+        <div>
+          <div class="exp-id">EXP-07</div>
+          <div class="exp-title">Remove Invite Code Field for Organic Users</div>
+        </div>
+        <div class="exp-tags">
+          <span class="tag tag-p3">P3</span>
+          <span class="tag" style="background:var(--green-bg); color:var(--green);">S effort</span>
+          <span class="tag" style="background:rgba(12,18,32,.06); color:var(--tx-mid);">Friction removal</span>
+        </div>
+      </div>
+      <div class="exp-hypothesis">"Hiding the invite code field for users who did not arrive via referral deep-link will increase profile completion by 3–5%, because organic users currently experience a pause and a mild 'outsider' feeling when seeing an optional field for a code they don't have."</div>
+      <div class="exp-variants">
+        <div class="exp-variant control"><div class="variant-label">Control</div>Invite code field shown to all users (optional)</div>
+        <div class="exp-variant variant-a"><div class="variant-label">Variant</div>Field hidden unless user arrived via referral URL parameter. Referral flow unchanged.</div>
+      </div>
+      <div class="exp-footer">
+        <div class="exp-footer-item"><span class="label">Effort:</span> 1 day</div>
+        <div class="exp-footer-item"><span class="label">Risk:</span> Low–Medium (requires reliable deep-link attribution)</div>
+        <div class="exp-footer-item"><span class="label">Guardrail:</span> Referral conversion rate must not drop</div>
+      </div>
+    </div>
+
+    <!-- EXP-08 -->
+    <div class="exp-card p3">
+      <div class="exp-header">
+        <div>
+          <div class="exp-id">EXP-08</div>
+          <div class="exp-title">5-Step Honest Progress Bar Throughout Flow</div>
+        </div>
+        <div class="exp-tags">
+          <span class="tag tag-p3">P3</span>
+          <span class="tag" style="background:var(--green-bg); color:var(--green);">S effort</span>
+          <span class="tag" style="background:rgba(12,18,32,.06); color:var(--tx-mid);">Navigation / effort visibility</span>
+        </div>
+      </div>
+      <div class="exp-hypothesis">"Adding an honest 5-phase progress indicator throughout all onboarding screens will reduce mid-funnel abandonment by 3–8%, because users with visible, accurate effort estimation are less likely to abandon — they can see the 'cost' is finite and they're close to done."</div>
+      <div class="exp-variants">
+        <div class="exp-variant control"><div class="variant-label">Control</div>Current (no progress indicator or inconsistent indicator)</div>
+        <div class="exp-variant variant-a"><div class="variant-label">Variant</div>Persistent 5-phase bar: Value → Trust → Phone → Profile → Done. Gold fill active; grey upcoming; checkmark completed.</div>
+      </div>
+      <div class="exp-footer">
+        <div class="exp-footer-item"><span class="label">Effort:</span> ~1 day (shared component)</div>
+        <div class="exp-footer-item"><span class="label">Risk:</span> Very low</div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="card" id="timeline" style="scroll-margin-top:32px;">
+      <div class="card-title">Experiment Sequencing</div>
+      <div class="timeline">
+        <div class="timeline-phase">
+          <div class="timeline-label">Week 1–2<br><span style="color:var(--coral); font-size:12px;">P0 — Ship first</span></div>
+          <div class="timeline-items">
+            <div class="timeline-item"><span class="tag tag-p0">EXP-01</span> Remove Email OTP <span style="color:var(--tx-light); font-size:12px; margin-left:auto;">1–2 days engineering</span></div>
+            <div class="timeline-item"><span class="tag tag-p0">EXP-02</span> Move Trust Screen <span style="color:var(--tx-light); font-size:12px; margin-left:auto;">0.5 days</span></div>
+          </div>
+        </div>
+        <div class="timeline-phase">
+          <div class="timeline-label">Week 3–4<br><span style="color:#8B6E00; font-size:12px;">P1 — After P0 reads</span></div>
+          <div class="timeline-items">
+            <div class="timeline-item"><span class="tag tag-p1">EXP-03</span> Calculator + Loss Framing <span style="color:var(--tx-light); font-size:12px; margin-left:auto;">2–3 days</span></div>
+            <div class="timeline-item"><span class="tag tag-p1">EXP-04</span> "Mutual funds" + liquidity resolve <span style="color:var(--tx-light); font-size:12px; margin-left:auto;">2–4 hours</span></div>
+          </div>
+        </div>
+        <div class="timeline-phase">
+          <div class="timeline-label">Week 5–6<br><span style="color:var(--teal-text); font-size:12px;">P2 — Supporting lifts</span></div>
+          <div class="timeline-items">
+            <div class="timeline-item"><span class="tag tag-p2">EXP-05</span> Move Brand Showcase <span style="color:var(--tx-light); font-size:12px; margin-left:auto;">0.5 days</span></div>
+            <div class="timeline-item"><span class="tag tag-p2">EXP-06</span> Trust headline copy <span style="color:var(--tx-light); font-size:12px; margin-left:auto;">2 hours</span></div>
+          </div>
+        </div>
+        <div class="timeline-phase">
+          <div class="timeline-label">Week 7–8<br><span style="color:var(--tx-light); font-size:12px;">P3 — Polish</span></div>
+          <div class="timeline-items">
+            <div class="timeline-item"><span class="tag tag-p3">EXP-07</span> Remove invite code field <span style="color:var(--tx-light); font-size:12px; margin-left:auto;">1 day</span></div>
+            <div class="timeline-item"><span class="tag tag-p3">EXP-08</span> 5-step progress bar <span style="color:var(--tx-light); font-size:12px; margin-left:auto;">1 day</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="callout callout-neutral" style="margin-top:16px; margin-bottom:0;">
+        <div class="callout-icon">📊</div>
+        <div><strong>Sample size:</strong> Min 500 completions per variant; run 2 weeks minimum. <strong>Significance:</strong> p &lt; 0.05 two-tailed; MDE 5% absolute. <strong>Qualitative:</strong> 5 user interviews per P0 experiment. Target: salaried, 25–35, metro, no prior mutual fund experience.</div>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+</div>
+
+<script>
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Intersection observer for active nav state
+const sections = document.querySelectorAll('section[id], div[id]');
+const navItems = document.querySelectorAll('.nav-item');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(item => {
+        item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
