@@ -41,8 +41,8 @@
 /* ══ APP SHELL ══ */
 body{
   font-family:'Gilroy',sans-serif;
-  background:var(--bg-base);
-  color:var(--tx-dark);
+  background:#FFFEF5;
+  color:#1f1f1f;
   min-height:100vh;
   -webkit-font-smoothing:antialiased;
 }
@@ -52,23 +52,26 @@ body{
   min-height:100vh;
   display:flex;flex-direction:column;
   padding:0;
+  background:#FFFEF5;
   position:relative;overflow:hidden;
   transition:opacity .4s ease, transform .4s ease;
 }
 #phase1.exiting{opacity:0;transform:translateY(-20px)}
 
-/* Decorative arc grid at bottom — pure CSS */
+/* Decorative arc grid at bottom — matches Figma 3D Morph Lines pattern */
 #phase1::after{
   content:'';
-  position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);
-  width:520px;height:300px;
+  position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+  width:600px;height:340px;
   background:
-    radial-gradient(ellipse 480px 260px at 50% 100%,transparent 58%,rgba(251,215,72,0.18) 58.5%,transparent 59%),
-    radial-gradient(ellipse 400px 210px at 50% 100%,transparent 58%,rgba(251,215,72,0.14) 58.5%,transparent 59%),
-    radial-gradient(ellipse 320px 160px at 50% 100%,transparent 57%,rgba(251,215,72,0.12) 57.5%,transparent 58%),
-    radial-gradient(ellipse 240px 120px at 50% 100%,transparent 56%,rgba(251,215,72,0.10) 56.5%,transparent 57%),
-    radial-gradient(ellipse 160px 80px  at 50% 100%,transparent 55%,rgba(251,215,72,0.10) 55.5%,transparent 56%);
-  pointer-events:none;z-index:0;
+    radial-gradient(ellipse 560px 300px at 50% 100%,transparent 57%,rgba(251,215,72,0.22) 57.3%,transparent 57.6%),
+    radial-gradient(ellipse 480px 255px at 50% 100%,transparent 57%,rgba(251,215,72,0.20) 57.3%,transparent 57.6%),
+    radial-gradient(ellipse 400px 210px at 50% 100%,transparent 56%,rgba(251,215,72,0.18) 56.3%,transparent 56.6%),
+    radial-gradient(ellipse 320px 165px at 50% 100%,transparent 55%,rgba(251,215,72,0.17) 55.3%,transparent 55.6%),
+    radial-gradient(ellipse 240px 120px at 50% 100%,transparent 54%,rgba(251,215,72,0.15) 54.3%,transparent 54.6%),
+    radial-gradient(ellipse 160px 78px  at 50% 100%,transparent 53%,rgba(251,215,72,0.14) 53.3%,transparent 53.6%),
+    radial-gradient(ellipse 90px  44px  at 50% 100%,transparent 50%,rgba(251,215,72,0.12) 50.5%,transparent 51%);
+  pointer-events:none;z-index:1;
 }
 
 /* Status bar */
@@ -101,12 +104,12 @@ body{
 }
 
 .p1-headline{
-  font-size:28px;font-weight:800;color:#1A1A1A;
-  line-height:1.2;margin-bottom:10px;
-  letter-spacing:-.02em;
+  font-size:26px;font-weight:800;color:#1f1f1f;
+  line-height:1.25;margin-bottom:8px;
+  letter-spacing:-.01em;
 }
 .p1-sub{
-  font-size:15px;color:var(--tx-mid);
+  font-size:14px;color:#848484;
   line-height:1.55;margin-bottom:28px;
 }
 
@@ -140,43 +143,58 @@ body{
   box-shadow:0 0 0 3px rgba(251,215,72,0.18);
 }
 
-/* Bottom section */
+/* Bottom section — glass layer matching Figma */
 .p1-bottom{
-  padding:16px 24px 36px;
-  position:relative;z-index:1;
+  padding:12px 20px 32px;
+  position:relative;z-index:2;
+  background:rgba(255,254,245,0.85);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  mix-blend-mode:normal;
 }
 .trust-row{
   display:flex;align-items:center;justify-content:center;
-  gap:12px;flex-wrap:wrap;
-  margin-bottom:14px;
+  gap:8px;flex-wrap:wrap;
+  margin-bottom:10px;
 }
 .trust-item{
   display:flex;align-items:center;gap:4px;
-  font-size:11px;color:rgba(12,18,32,0.40);font-weight:500;
+  font-size:10px;color:rgba(12,18,32,0.38);font-weight:500;
 }
-.trust-dot{width:3px;height:3px;border-radius:50%;background:rgba(12,18,32,0.20)}
+.trust-dot{width:3px;height:3px;border-radius:50%;background:rgba(12,18,32,0.18)}
 .p1-motivator{
-  font-size:13px;color:var(--tx-mid);
-  text-align:center;margin-bottom:14px;line-height:1.4;
+  font-size:13px;color:#848484;
+  text-align:center;margin-bottom:12px;line-height:1.4;
 }
-.p1-motivator strong{color:#1A1A1A}
+.p1-motivator strong{color:#1f1f1f}
+/* Pill CTA — vertical gradient matching Figma onboarding exactly */
 .btn-pill{
   width:100%;height:52px;
-  border-radius:999px;
-  background:var(--gold-grad);
+  border-radius:34px;
+  background:linear-gradient(180deg,#FFE600 0%,#FFC107 100%);
   border:none;cursor:pointer;
   font-family:'Gilroy',sans-serif;
-  font-size:16px;font-weight:700;color:var(--tx-dark);
+  font-size:16px;font-weight:700;color:#2B2301;
   letter-spacing:-.01em;
   transition:opacity .18s,transform .1s;
   position:relative;
+  overflow:hidden;
+}
+/* Shine shimmer on button */
+.btn-pill::before{
+  content:'';
+  position:absolute;top:-40px;left:-60px;
+  width:40px;height:150px;
+  background:rgba(255,255,255,0.45);
+  transform:rotate(15deg);
+  pointer-events:none;
 }
 .btn-pill:active:not(:disabled){transform:scale(0.98)}
 .btn-pill:disabled,.btn-pill.disabled{
-  opacity:0.35;pointer-events:none;cursor:not-allowed;
+  opacity:0.5;pointer-events:none;cursor:not-allowed;
 }
 .cta-footnote{
-  font-size:11px;color:rgba(12,18,32,0.35);
+  font-size:10px;color:rgba(12,18,32,0.32);
   text-align:center;margin-top:10px;
 }
 
@@ -185,7 +203,11 @@ body{
   display:none;
   flex-direction:column;
   align-items:center;
-  min-height:calc(100vh - 56px);
+  min-height:100vh;
+  background:#0C1220;
+}
+#phase3{
+  background:#0C1220;
 }
 #phase2.visible{
   opacity:1 !important;
@@ -773,12 +795,14 @@ const AGE_PROFILES = {
   a4: { weights:{food:0.22,shopping:0.25,travel:0.22,home:0.31}, mult:0.72 },
 };
 
-// Category-level brand discount rates (3–10% range, per Multipl brand partnerships)
+// Category-level brand discount rates (per Multipl brand partnerships)
+// Food & dining: 4% | Shopping: Amazon 2%, Nykaa/Ajio 6% → blended ~4.5%
+// Travel: MakeMyTrip flights 6% | Home/utilities: no discount
 const CAT_DISCOUNTS = {
-  food:     0.08,  // Swiggy, Zomato, BigBasket — avg ~8%
-  shopping: 0.05,  // Flipkart, Amazon, Myntra — avg ~5%
-  travel:   0.06,  // MakeMyTrip, ixigo, Goibibo — avg ~6%
-  home:     0.03,  // Jio, Airtel, utility brands — avg ~3%
+  food:     0.040,  // Swiggy, Zomato, BigBasket — 4%
+  shopping: 0.045,  // Amazon 2% + Nykaa/Ajio 6% → blended ~4.5%
+  travel:   0.060,  // MakeMyTrip flights 6%
+  home:     0.000,  // No brand discounts on utilities
 };
 
 function calculateResults(ageKey, incomeKey) {
@@ -926,8 +950,7 @@ function startCalculation() {
   ctaBtn.disabled = true;
   ctaBtn.classList.add('disabled');
 
-  // t=0: dark bg
-  document.body.style.background = '#0C1220';
+  // t=0: iphone-screen bg stays neutral; phases have their own backgrounds
 
   // Phase 1 exit animation
   phase1.classList.add('exiting');
@@ -1041,8 +1064,7 @@ function recalculate() {
     phase3.style.opacity = '0';
     phase3.style.transition = '';
 
-    // Restore light bg
-    document.body.style.background = 'var(--bg-base)';
+    // Phase backgrounds are set in CSS; no body override needed
 
     // Show phase1
     phase1.style.display = 'flex';
