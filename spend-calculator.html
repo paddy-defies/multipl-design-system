@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spend Calculator – Multipl India</title>
+<style>
+/* ── GILROY ── */
+@font-face{font-family:'Gilroy';font-weight:400;font-style:normal;src:local('Gilroy-Regular'),url('assets/fonts/Gilroy/Gilroy-Regular.ttf') format('truetype')}
+@font-face{font-family:'Gilroy';font-weight:500;font-style:normal;src:local('Gilroy-Medium'),url('assets/fonts/Gilroy/Gilroy-Medium.ttf') format('truetype')}
+@font-face{font-family:'Gilroy';font-weight:600;font-style:normal;src:local('Gilroy-SemiBold'),url('assets/fonts/Gilroy/Gilroy-SemiBold.ttf') format('truetype')}
+@font-face{font-family:'Gilroy';font-weight:700;font-style:normal;src:local('Gilroy-Bold'),url('assets/fonts/Gilroy/Gilroy-Bold.ttf') format('truetype')}
+@font-face{font-family:'Gilroy';font-weight:800;font-style:normal;src:local('Gilroy-ExtraBold'),url('assets/fonts/Gilroy/Gilroy-ExtraBold.ttf') format('truetype')}
+
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ── TOKENS ── */
+:root{
+  --gold:#FBD748;--gold-end:#FBEF48;
+  --gold-grad:linear-gradient(90deg,#FBD748 0%,#FBEF48 100%);
+  --gold-tint:rgba(251,215,72,0.08);
+  --gold-border:rgba(251,215,72,0.40);
+  --bg-dark:#0C1220;--bg-base:#FDFAF0;--surface:#FFFFFF;
+  --surface-dark:#141B2D;
+  --teal:#00D4AA;--teal-text:#006B55;
+  --coral:#E53935;--blue:#4A9FFF;
+  --tx-dark:#0C1220;--tx-mid:rgba(12,18,32,0.55);--tx-light:rgba(12,18,32,0.35);
+  --tx-on-dark-1:#FFFFFF;--tx-on-dark-2:rgba(255,255,255,0.65);--tx-on-dark-3:rgba(255,255,255,0.38);
+  --border-light:rgba(12,18,32,0.10);--border-dark:rgba(255,255,255,0.10);
+  --r-btn:4px;--r-inp:8px;--r-card:16px;--r-chip:999px;
+  --btn-h:52px;--pp:16px;
+  --shadow-card:0 2px 12px rgba(0,0,0,0.08);
+  --shadow-gold:0 4px 16px rgba(251,215,72,0.35);
+}
+
+body{
+  font-family:'Gilroy',sans-serif;
+  background:var(--bg-base);
+  color:var(--tx-dark);
+  min-height:100vh;
+}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:2px}
+
+/* ══ HEADER ══ */
+header{
+  height:56px;background:var(--bg-dark);
+  border-bottom:1px solid var(--border-dark);
+  padding:0 var(--pp);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--gold-grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;color:var(--bg-dark);
+  box-shadow:var(--shadow-gold);flex-shrink:0;
+}
+.logo-name{font-size:15px;font-weight:700;color:var(--tx-on-dark-1);letter-spacing:-.01em}
+.fire-badge{
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:var(--r-chip);
+  border:1px solid var(--gold-border);color:var(--gold);background:var(--gold-tint);
+}
+
+/* ══ PHASE 1 — INPUT ══ */
+#phase1{
+  transition:opacity .4s ease, transform .4s ease;
+}
+#phase1.exiting{
+  opacity:0;
+  transform:translateY(-20px);
+}
+
+.wrap{
+  padding:20px 16px 100px;
+}
+
+.phase1-headline{
+  font-size:24px;font-weight:800;color:var(--tx-dark);
+  margin-bottom:6px;line-height:1.2;
+}
+.phase1-sub{
+  font-size:14px;color:var(--tx-mid);
+  margin-bottom:28px;line-height:1.5;
+}
+
+.chip-label{
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--tx-mid);margin-bottom:10px;
+}
+.chip-label.mt{margin-top:20px}
+
+.chips-row{
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+
+.chip{
+  padding:10px 16px;border-radius:var(--r-chip);
+  border:1.5px solid var(--border-light);background:var(--surface);
+  font-size:13px;font-weight:500;color:var(--tx-mid);
+  cursor:pointer;transition:all .18s;
+  font-family:'Gilroy',sans-serif;
+  white-space:nowrap;
+  user-select:none;
+}
+.chip:hover{border-color:var(--gold-border);color:var(--tx-dark)}
+.chip.selected{
+  border-color:var(--gold);
+  background:rgba(251,215,72,0.08);
+  color:var(--tx-dark);font-weight:600;
+  box-shadow:0 0 0 3px rgba(251,215,72,0.15);
+}
+
+/* Sticky CTA strip */
+.sticky-cta{
+  position:fixed;bottom:0;left:0;right:0;
+  padding:12px 16px;
+  background:var(--bg-base);
+  border-top:1px solid var(--border-light);
+  z-index:90;
+}
+.sticky-cta-inner{}
+
+.btn-primary{
+  width:100%;height:var(--btn-h);border-radius:var(--r-btn);
+  background:var(--gold-grad);
+  border:none;cursor:pointer;
+  font-family:'Gilroy',sans-serif;
+  font-size:15px;font-weight:700;color:var(--tx-dark);
+  letter-spacing:-.01em;
+  transition:opacity .18s, box-shadow .18s;
+  box-shadow:var(--shadow-gold);
+}
+.btn-primary:hover:not(:disabled){box-shadow:0 6px 20px rgba(251,215,72,0.45)}
+.btn-primary:disabled,
+.btn-primary.disabled{opacity:0.4;pointer-events:none;cursor:not-allowed;box-shadow:none}
+
+.cta-caption{
+  font-size:11px;color:var(--tx-light);
+  text-align:center;margin-top:6px;
+}
+
+/* ══ PHASE 2 — LOADING ══ */
+#phase2{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  min-height:calc(100vh - 56px);
+}
+#phase2.visible{
+  opacity:1 !important;
+}
+
+.loading-wrap{
+  width:100%;
+  padding:80px 16px 40px;
+  text-align:center;
+  display:flex;flex-direction:column;align-items:center;
+}
+
+.spinner{
+  width:56px;height:56px;border-radius:50%;
+  border:3.5px solid rgba(251,215,72,0.2);
+  border-top-color:#FBD748;
+  animation:spin 0.8s linear infinite;
+  margin-bottom:32px;
+  flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.step-lines{
+  display:flex;flex-direction:column;gap:16px;
+  width:100%;max-width:300px;
+  text-align:left;
+}
+
+.step-line{
+  display:flex;align-items:center;gap:10px;
+  opacity:0;transition:opacity .4s ease;
+}
+.step-line.visible{opacity:1}
+
+.pulse-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--gold);
+  flex-shrink:0;
+  animation:pulse-dot 1.2s ease-in-out infinite;
+}
+@keyframes pulse-dot{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.4;transform:scale(0.7)}
+}
+
+.step-text{
+  font-size:14px;color:rgba(255,255,255,0.65);
+  font-weight:400;line-height:1.4;
+}
+
+/* ══ PHASE 3 — RESULTS ══ */
+#phase3{
+  display:none;
+}
+
+/* Card stagger animation */
+.result-card-wrapper{
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.result-card-wrapper.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Hero result card */
+.hero-result-card{
+  background:var(--surface-dark);
+  border:1px solid var(--border-dark);
+  border-radius:var(--r-card);
+  padding:28px 24px;
+  margin-bottom:14px;
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.hero-glow-1{
+  position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+  width:340px;height:280px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(251,215,72,0.22) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-glow-2{
+  position:absolute;top:-60px;right:-60px;
+  width:300px;height:300px;
+  background:radial-gradient(ellipse at 80% 20%,rgba(74,159,255,0.18) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-glow-3{
+  position:absolute;bottom:-60px;right:-40px;
+  width:260px;height:260px;
+  background:radial-gradient(ellipse at 80% 80%,rgba(0,212,170,0.16) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-label-top{
+  font-size:13px;color:rgba(255,255,255,0.55);
+  margin-bottom:8px;position:relative;z-index:1;
+}
+.hero-number{
+  font-size:48px;font-weight:800;color:var(--teal);
+  font-variant-numeric:tabular-nums;line-height:1;
+  position:relative;z-index:1;
+}
+.hero-label-bottom{
+  font-size:13px;color:rgba(255,255,255,0.55);
+  margin-top:8px;position:relative;z-index:1;
+}
+.hero-caption{
+  font-size:11px;color:rgba(255,255,255,0.35);
+  margin-top:16px;position:relative;z-index:1;line-height:1.5;
+}
+
+/* White surface card */
+.result-card{
+  background:var(--surface);
+  border:1px solid var(--border-light);
+  border-radius:var(--r-card);
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow-card);
+}
+.card-headline{
+  font-size:14px;font-weight:700;color:var(--tx-dark);
+  margin-bottom:16px;
+}
+
+/* Category rows */
+.category-row{margin-bottom:16px}
+.category-row:last-child{margin-bottom:0}
+.cat-header{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:8px;
+}
+.cat-icon{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+.cat-name{
+  font-size:13px;font-weight:600;color:var(--tx-dark);
+  flex:1;
+}
+.cat-amount{
+  font-size:13px;font-weight:600;color:var(--teal-text);
+  font-variant-numeric:tabular-nums;
+}
+.progress-track{
+  height:8px;border-radius:4px;
+  background:var(--border-light);
+  overflow:hidden;
+  margin-bottom:8px;
+}
+.progress-fill{
+  height:100%;border-radius:4px;
+  background:var(--gold-grad);
+  width:0%;
+  transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+.brand-circles{
+  display:flex;flex-direction:row;gap:6px;
+}
+.brand-circle{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:#FFFFFF;
+  flex-shrink:0;
+}
+
+/* Comparison card */
+.two-col-compare{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.compare-col{
+  border-radius:12px;padding:16px;
+}
+.compare-col.bank{
+  background:rgba(229,57,53,0.06);
+  border:1px solid rgba(229,57,53,0.15);
+}
+.compare-col.multipl{
+  background:rgba(0,212,170,0.06);
+  border:1px solid rgba(0,212,170,0.20);
+}
+.compare-header{
+  font-size:12px;font-weight:600;color:var(--tx-dark);
+  margin-bottom:12px;
+}
+.compare-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:8px;
+}
+.compare-row-label{
+  font-size:11px;color:var(--tx-mid);
+}
+.compare-row-val{
+  font-size:15px;font-weight:700;
+  font-variant-numeric:tabular-nums;
+}
+.compare-row-val.bank-clr{color:var(--coral)}
+.compare-row-val.bank-dim{color:rgba(229,57,53,0.5)}
+.compare-row-val.mul-clr{color:var(--teal-text)}
+.compare-divider{
+  height:1px;background:var(--border-light);
+  margin:10px 0;
+}
+.compare-total-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.compare-total-label{
+  font-size:10px;color:var(--tx-light);
+}
+.compare-total-val{
+  font-size:20px;font-weight:800;
+  font-variant-numeric:tabular-nums;
+}
+.compare-total-val.bank-clr{color:var(--coral)}
+.compare-total-val.mul-clr{color:var(--teal-text)}
+
+.loss-badge{
+  background:rgba(251,215,72,0.08);
+  border:1px solid rgba(251,215,72,0.25);
+  border-radius:10px;
+  padding:12px 16px;
+  margin-top:12px;
+  font-size:13px;color:var(--tx-dark);
+  line-height:1.55;
+}
+.loss-badge strong{color:var(--teal-text)}
+
+/* CTA card (dark) */
+.cta-card{
+  background:var(--surface-dark);
+  border:1px solid var(--border-dark);
+  border-radius:var(--r-card);
+  padding:20px;
+  margin-bottom:14px;
+}
+.btn-recalc{
+  width:100%;height:44px;border-radius:var(--r-btn);
+  background:transparent;
+  border:1.5px solid var(--border-dark);
+  color:rgba(255,255,255,0.55);
+  font-family:'Gilroy',sans-serif;
+  font-size:13px;font-weight:500;
+  cursor:pointer;
+  margin-top:12px;
+  transition:border-color .18s, color .18s;
+}
+.btn-recalc:hover{border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.8)}
+
+/* ── MOBILE-FIRST (375px reference canvas) ── */
+/* Chips are compact by default */
+.chip{padding:8px 14px;font-size:13px}
+
+/* Desktop: show a "best on mobile" overlay, cap width at 390px */
+@media(min-width:600px){
+  body{display:flex;flex-direction:column;align-items:center;background:#1A1F2E !important}
+  header{width:100%;max-width:390px;border-radius:0}
+  #phase1,#phase2,#phase3{width:100%;max-width:390px}
+  .sticky-cta{left:50%;transform:translateX(-50%);width:390px;border-radius:0 0 16px 16px}
+  .desktop-hint{display:flex}
+}
+/* Desktop nudge banner */
+.desktop-hint{
+  display:none;
+  align-items:center;gap:8px;
+  background:rgba(251,215,72,0.08);border:1px solid rgba(251,215,72,0.20);
+  border-radius:8px;padding:8px 14px;margin:10px 0 0;width:100%;max-width:390px;
+  font-size:11px;color:rgba(255,255,255,0.55);
+}
+.desktop-hint span{font-size:14px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">M</div>
+    <span class="logo-name">Multipl</span>
+    <span class="fire-badge">SPEND CALCULATOR</span>
+  </div>
+</header>
+
+<!-- Desktop nudge (hidden on mobile) -->
+<div class="desktop-hint">
+  <span>📱</span>
+  This screen is designed for mobile onboarding — best viewed at 375px.
+</div>
+
+<!-- ══ PHASE 1: INPUT ══ -->
+<div id="phase1">
+  <div class="wrap">
+    <h1 class="phase1-headline">What's your profile?</h1>
+    <p class="phase1-sub">No typing needed — we'll calculate your exact earning potential.</p>
+
+    <!-- Age group -->
+    <div class="chip-label">Your age group</div>
+    <div class="chips-row" id="age-chips">
+      <button class="chip" data-group="age" data-val="a1">22–26</button>
+      <button class="chip" data-group="age" data-val="a2">27–32</button>
+      <button class="chip" data-group="age" data-val="a3">33–40</button>
+      <button class="chip" data-group="age" data-val="a4">40+</button>
+    </div>
+
+    <!-- Monthly income -->
+    <div class="chip-label mt">Monthly income</div>
+    <div class="chips-row" id="income-chips">
+      <button class="chip" data-group="income" data-val="i1">₹30–50k</button>
+      <button class="chip" data-group="income" data-val="i2">₹50–80k</button>
+      <button class="chip" data-group="income" data-val="i3">₹80–1.25L</button>
+      <button class="chip" data-group="income" data-val="i4">₹1.25–2L</button>
+      <button class="chip" data-group="income" data-val="i5">₹2L+</button>
+    </div>
+
+    <!-- Spacer so content isn't hidden behind sticky strip -->
+    <div style="height:20px"></div>
+  </div>
+
+  <!-- Sticky CTA strip -->
+  <div class="sticky-cta" id="sticky-cta">
+    <div class="sticky-cta-inner">
+      <button class="btn-primary disabled" id="cta-btn" disabled onclick="startCalculation()">
+        Calculate my earning potential →
+      </button>
+      <p class="cta-caption">Powered by SEBI-regulated mutual funds</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHASE 2: LOADING ══ -->
+<div id="phase2" style="display:none;opacity:0">
+  <div class="loading-wrap">
+    <div class="spinner"></div>
+    <div class="step-lines">
+      <div class="step-line" id="step1">
+        <div class="pulse-dot"></div>
+        <span class="step-text">Mapping spending patterns for your age group...</span>
+      </div>
+      <div class="step-line" id="step2">
+        <div class="pulse-dot"></div>
+        <span class="step-text">Calculating your float earning potential...</span>
+      </div>
+      <div class="step-line" id="step3">
+        <div class="pulse-dot"></div>
+        <span class="step-text">Finding brands where you typically spend...</span>
+      </div>
+      <div class="step-line" id="step4">
+        <div class="pulse-dot"></div>
+        <span class="step-text">Building your personalized report...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHASE 3: RESULTS ══ -->
+<div id="phase3" style="display:none;opacity:0">
+  <div class="wrap">
+
+    <!-- Card A: Hero -->
+    <div class="result-card-wrapper" id="card-a">
+      <div class="hero-result-card">
+        <div class="hero-glow-1"></div>
+        <div class="hero-glow-2"></div>
+        <div class="hero-glow-3"></div>
+        <p class="hero-label-top">People like you earn an extra</p>
+        <div class="hero-number" id="hero-counter">₹0</div>
+        <p class="hero-label-bottom">per year on Multipl</p>
+        <p class="hero-caption">Powered by SEBI-regulated mutual funds · Withdraw anytime</p>
+      </div>
+    </div>
+
+    <!-- Card B: Spending Profile -->
+    <div class="result-card-wrapper" id="card-b">
+      <div class="result-card">
+        <div class="card-headline">Where people like you spend</div>
+
+        <!-- Food & Dining -->
+        <div class="category-row" id="cat-food">
+          <div class="cat-header">
+            <div class="cat-icon" style="background:rgba(251,215,72,0.12)">🍽️</div>
+            <span class="cat-name" style="color:#8B7000">Food &amp; Dining</span>
+            <span class="cat-amount" id="cat-food-amt"></span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="prog-food"></div>
+          </div>
+          <div class="brand-circles">
+            <div class="brand-circle" style="background:#FF6600" title="Swiggy">SW</div>
+            <div class="brand-circle" style="background:#CB202D" title="Zomato">ZO</div>
+            <div class="brand-circle" style="background:#84C225" title="BigBasket">BB</div>
+            <div class="brand-circle" style="background:#0F4C81" title="Spencer's">SP</div>
+          </div>
+        </div>
+
+        <!-- Shopping -->
+        <div class="category-row" id="cat-shopping">
+          <div class="cat-header">
+            <div class="cat-icon" style="background:rgba(74,159,255,0.12)">🛍️</div>
+            <span class="cat-name" style="color:#1A5FA8">Shopping</span>
+            <span class="cat-amount" id="cat-shopping-amt"></span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="prog-shopping"></div>
+          </div>
+          <div class="brand-circles">
+            <div class="brand-circle" style="background:#2874F0" title="Flipkart">FL</div>
+            <div class="brand-circle" style="background:#FF9900;color:#000" title="Amazon">AM</div>
+            <div class="brand-circle" style="background:#FF3F6C" title="Myntra">MN</div>
+            <div class="brand-circle" style="background:#FC2779" title="Nykaa">NK</div>
+          </div>
+        </div>
+
+        <!-- Travel -->
+        <div class="category-row" id="cat-travel">
+          <div class="cat-header">
+            <div class="cat-icon" style="background:rgba(0,212,170,0.12)">✈️</div>
+            <span class="cat-name" style="color:var(--teal-text)">Travel</span>
+            <span class="cat-amount" id="cat-travel-amt"></span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="prog-travel"></div>
+          </div>
+          <div class="brand-circles">
+            <div class="brand-circle" style="background:#E8196A" title="MakeMyTrip">MK</div>
+            <div class="brand-circle" style="background:#EB3A2F" title="ixigo">IB</div>
+            <div class="brand-circle" style="background:#E8146B" title="Goibibo">GY</div>
+            <div class="brand-circle" style="background:#1a1a1a" title="IRCTC">IR</div>
+          </div>
+        </div>
+
+        <!-- Home & Utilities -->
+        <div class="category-row" id="cat-home">
+          <div class="cat-header">
+            <div class="cat-icon" style="background:rgba(251,215,72,0.08)">🏠</div>
+            <span class="cat-name" style="color:#8B7000">Home &amp; Utilities</span>
+            <span class="cat-amount" id="cat-home-amt"></span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="prog-home"></div>
+          </div>
+          <div class="brand-circles">
+            <div class="brand-circle" style="background:#7B2D8B" title="Urban Co.">UR</div>
+            <div class="brand-circle" style="background:#003087" title="Jio">JO</div>
+            <div class="brand-circle" style="background:#ED1C24" title="Airtel">AI</div>
+            <div class="brand-circle" style="background:#5C4033" title="Duke">DU</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Card C: Comparison -->
+    <div class="result-card-wrapper" id="card-c">
+      <div class="result-card">
+        <div class="card-headline">Multipl vs your bank</div>
+        <div class="two-col-compare">
+          <!-- Bank column -->
+          <div class="compare-col bank">
+            <div class="compare-header">🏦 Your Bank</div>
+            <div class="compare-row">
+              <span class="compare-row-label">Interest @2.5%</span>
+              <span class="compare-row-val bank-clr" id="bank-interest-val"></span>
+            </div>
+            <div class="compare-row">
+              <span class="compare-row-label">Brand savings</span>
+              <span class="compare-row-val bank-dim">₹0</span>
+            </div>
+            <div class="compare-divider"></div>
+            <div class="compare-total-row">
+              <span class="compare-total-label">Total/year</span>
+              <span class="compare-total-val bank-clr" id="bank-total-val"></span>
+            </div>
+          </div>
+          <!-- Multipl column -->
+          <div class="compare-col multipl">
+            <div class="compare-header">⚡ Multipl</div>
+            <div class="compare-row">
+              <span class="compare-row-label">Interest @7%</span>
+              <span class="compare-row-val mul-clr" id="multipl-interest-val"></span>
+            </div>
+            <div class="compare-row">
+              <span class="compare-row-label">Brand savings</span>
+              <span class="compare-row-val mul-clr" id="brand-savings-val"></span>
+            </div>
+            <div class="compare-divider"></div>
+            <div class="compare-total-row">
+              <span class="compare-total-label">Total/year</span>
+              <span class="compare-total-val mul-clr" id="multipl-total-val"></span>
+            </div>
+          </div>
+        </div>
+        <div class="loss-badge">
+          You're leaving <strong id="loss-badge-val"></strong> on the table every year
+        </div>
+      </div>
+    </div>
+
+    <!-- Card D: CTA -->
+    <div class="result-card-wrapper" id="card-d">
+      <div class="cta-card">
+        <button class="btn-primary" id="results-cta-btn">
+          Start earning <span id="cta-gain"></span>/year →
+        </button>
+        <button class="btn-recalc" onclick="recalculate()">Recalculate</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ══ DATA MODEL ══ */
+const INCOME_PROFILES = {
+  i1: { monthly_spend:22000,  avg_balance:130000,  eligible_annual:180000  },
+  i2: { monthly_spend:38000,  avg_balance:230000,  eligible_annual:300000  },
+  i3: { monthly_spend:58000,  avg_balance:350000,  eligible_annual:460000  },
+  i4: { monthly_spend:80000,  avg_balance:480000,  eligible_annual:640000  },
+  i5: { monthly_spend:110000, avg_balance:660000,  eligible_annual:880000  },
+};
+
+const AGE_PROFILES = {
+  a1: { weights:{food:0.35,shopping:0.20,travel:0.15,home:0.30}, mult:0.70 },
+  a2: { weights:{food:0.30,shopping:0.22,travel:0.18,home:0.30}, mult:0.78 },
+  a3: { weights:{food:0.25,shopping:0.27,travel:0.20,home:0.28}, mult:0.75 },
+  a4: { weights:{food:0.22,shopping:0.25,travel:0.22,home:0.31}, mult:0.72 },
+};
+
+function calculateResults(ageKey, incomeKey) {
+  const inc = INCOME_PROFILES[incomeKey];
+  const age = AGE_PROFILES[ageKey];
+  const multipl_interest = Math.round(inc.avg_balance * 0.07);
+  const bank_interest    = Math.round(inc.avg_balance * 0.025);
+  const brand_savings    = Math.round(inc.eligible_annual * age.mult * 0.04);
+  const total_multipl    = multipl_interest + brand_savings;
+  const net_gain         = total_multipl - bank_interest;
+  const categories = [
+    { key:'food',    label:'Food & Dining',    emoji:'🍽️', monthly: Math.round(inc.monthly_spend * age.weights.food) },
+    { key:'shopping',label:'Shopping',          emoji:'🛍️', monthly: Math.round(inc.monthly_spend * age.weights.shopping) },
+    { key:'travel',  label:'Travel',            emoji:'✈️', monthly: Math.round(inc.monthly_spend * age.weights.travel) },
+    { key:'home',    label:'Home & Utilities',  emoji:'🏠', monthly: Math.round(inc.monthly_spend * age.weights.home) },
+  ];
+  return { multipl_interest, bank_interest, brand_savings, total_multipl, net_gain, avg_balance:inc.avg_balance, categories };
+}
+
+function fmt(n) {
+  return '₹' + n.toLocaleString('en-IN');
+}
+
+/* ══ STATE ══ */
+let selectedAge = null;
+let selectedIncome = null;
+let calculating = false;
+
+/* ══ CHIP SELECTION ══ */
+document.querySelectorAll('.chip').forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    const group = this.dataset.group;
+    const val   = this.dataset.val;
+
+    // Deselect siblings
+    document.querySelectorAll('.chip[data-group="' + group + '"]').forEach(function(c) {
+      c.classList.remove('selected');
+    });
+    this.classList.add('selected');
+
+    if (group === 'age')    selectedAge    = val;
+    if (group === 'income') selectedIncome = val;
+
+    updateCTAState();
+  });
+});
+
+function updateCTAState() {
+  const btn = document.getElementById('cta-btn');
+  if (selectedAge && selectedIncome) {
+    btn.disabled = false;
+    btn.classList.remove('disabled');
+  } else {
+    btn.disabled = true;
+    btn.classList.add('disabled');
+  }
+}
+
+/* ══ COUNTER ANIMATION ══ */
+function animateCounter(el, target, duration) {
+  const start = performance.now();
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+  function step(now) {
+    const elapsed  = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const value    = Math.round(easeOutCubic(progress) * target);
+    el.textContent = fmt(value);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ══ POPULATE RESULTS ══ */
+function populateResults(ageKey, incomeKey) {
+  const r = calculateResults(ageKey, incomeKey);
+
+  // Card A
+  // (counter animated later)
+  document.getElementById('hero-counter').textContent = '₹0';
+
+  // Card B — category amounts (set text, zero out progress bars)
+  const maxMonthly = r.categories[0].monthly; // food is first, typically highest
+  // actually compute real max across categories
+  let maxVal = 0;
+  r.categories.forEach(function(cat) { if (cat.monthly > maxVal) maxVal = cat.monthly; });
+
+  r.categories.forEach(function(cat) {
+    const amtEl  = document.getElementById('cat-' + cat.key + '-amt');
+    const progEl = document.getElementById('prog-' + cat.key);
+    if (amtEl) amtEl.textContent = fmt(cat.monthly) + '/mo';
+    if (progEl) { progEl.style.width = '0%'; progEl.dataset.target = String(Math.round((cat.monthly / maxVal) * 100)); }
+  });
+
+  // Card C — comparison
+  document.getElementById('bank-interest-val').textContent  = fmt(r.bank_interest);
+  document.getElementById('bank-total-val').textContent     = fmt(r.bank_interest);
+  document.getElementById('multipl-interest-val').textContent = fmt(r.multipl_interest);
+  document.getElementById('brand-savings-val').textContent  = fmt(r.brand_savings);
+  document.getElementById('multipl-total-val').textContent  = fmt(r.total_multipl);
+  document.getElementById('loss-badge-val').textContent     = fmt(r.net_gain);
+
+  // Card D
+  document.getElementById('cta-gain').textContent = fmt(r.net_gain);
+
+  return r;
+}
+
+/* ══ MAIN FLOW ══ */
+function startCalculation() {
+  if (calculating) return;
+  if (!selectedAge || !selectedIncome) return;
+  calculating = true;
+
+  const results = populateResults(selectedAge, selectedIncome);
+
+  const phase1   = document.getElementById('phase1');
+  const phase2   = document.getElementById('phase2');
+  const phase3   = document.getElementById('phase3');
+  const stickyCTA = document.getElementById('sticky-cta');
+  const ctaBtn   = document.getElementById('cta-btn');
+
+  // Disable CTA to prevent double-tap
+  ctaBtn.disabled = true;
+  ctaBtn.classList.add('disabled');
+
+  // t=0: dark bg
+  document.body.style.background = '#0C1220';
+
+  // Phase 1 exit animation
+  phase1.classList.add('exiting');
+
+  // t=350: hide phase1, show phase2
+  setTimeout(function() {
+    phase1.style.display = 'none';
+    stickyCTA.style.display = 'none';
+
+    phase2.style.display = 'flex';
+    phase2.style.opacity = '0';
+    // Force reflow
+    void phase2.offsetWidth;
+    phase2.style.transition = 'opacity 0.5s ease';
+    phase2.style.opacity = '1';
+
+    // Stagger steps from t=650 (300ms after phase2 reveal at t=350)
+    // Step offsets from loading start (t=0 of loading phase = t=350 from CTA tap)
+    const stepBase = 300; // relative to phase2 reveal
+    setTimeout(function(){ document.getElementById('step1').classList.add('visible'); }, stepBase);
+    setTimeout(function(){ document.getElementById('step2').classList.add('visible'); }, stepBase + 600);
+    setTimeout(function(){ document.getElementById('step3').classList.add('visible'); }, stepBase + 1200);
+    setTimeout(function(){ document.getElementById('step4').classList.add('visible'); }, stepBase + 1800);
+
+    // t=3500ms from loading phase start → phase2 fades out
+    setTimeout(function() {
+      phase2.style.transition = 'opacity 0.4s ease';
+      phase2.style.opacity = '0';
+
+      // t=500ms after fade start → show phase3
+      setTimeout(function() {
+        phase2.style.display = 'none';
+
+        window.scrollTo({ top: 0, behavior: 'instant' });
+
+        phase3.style.display = 'block';
+        phase3.style.opacity = '0';
+        void phase3.offsetWidth;
+        phase3.style.transition = 'opacity 0.5s ease';
+        phase3.style.opacity = '1';
+
+        // Stagger cards in
+        const cards = ['card-a','card-b','card-c','card-d'];
+        const cardDelays = [0, 120, 240, 360];
+        cards.forEach(function(id, i) {
+          setTimeout(function() {
+            document.getElementById(id).classList.add('visible');
+          }, cardDelays[i]);
+        });
+
+        // Hero counter: 300ms after reveal, 1800ms duration
+        setTimeout(function() {
+          const heroEl = document.getElementById('hero-counter');
+          animateCounter(heroEl, results.net_gain, 1800);
+        }, 300);
+
+        // Progress bars: 500ms after reveal
+        setTimeout(function() {
+          ['food','shopping','travel','home'].forEach(function(key) {
+            const el = document.getElementById('prog-' + key);
+            if (el) el.style.width = el.dataset.target + '%';
+          });
+        }, 500);
+
+      }, 500);
+
+    }, 3500);
+
+  }, 350);
+}
+
+/* ══ RECALCULATE ══ */
+function recalculate() {
+  calculating = false;
+
+  const phase1   = document.getElementById('phase1');
+  const phase2   = document.getElementById('phase2');
+  const phase3   = document.getElementById('phase3');
+  const stickyCTA = document.getElementById('sticky-cta');
+
+  // Reset selections
+  selectedAge    = null;
+  selectedIncome = null;
+  document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+
+  // Reset step lines
+  ['step1','step2','step3','step4'].forEach(function(id) {
+    document.getElementById(id).classList.remove('visible');
+  });
+
+  // Reset card wrappers
+  ['card-a','card-b','card-c','card-d'].forEach(function(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('visible');
+  });
+
+  // Reset progress bars
+  ['food','shopping','travel','home'].forEach(function(key) {
+    const el = document.getElementById('prog-' + key);
+    if (el) el.style.width = '0%';
+  });
+
+  // Phase 3 fade out
+  phase3.style.transition = 'opacity 0.4s ease';
+  phase3.style.opacity = '0';
+
+  setTimeout(function() {
+    phase3.style.display = 'none';
+    phase3.style.opacity = '0';
+    phase3.style.transition = '';
+
+    // Restore light bg
+    document.body.style.background = 'var(--bg-base)';
+
+    // Show phase1
+    phase1.style.display = 'block';
+    phase1.classList.remove('exiting');
+    phase1.style.opacity = '0';
+    stickyCTA.style.display = 'block';
+
+    void phase1.offsetWidth;
+    phase1.style.transition = 'opacity 0.4s ease';
+    phase1.style.opacity = '1';
+
+    // After fade, clear inline transition so exiting class works again
+    setTimeout(function() {
+      phase1.style.transition = '';
+    }, 400);
+
+    // Update CTA state
+    updateCTAState();
+  }, 400);
+}
+</script>
+</body>
+</html>
