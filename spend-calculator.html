@@ -402,13 +402,159 @@ header{
 }
 .btn-recalc:hover{border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.8)}
 
+/* ══ PHASE 1 REDESIGN ══ */
+
+/* Hero hook bar — warm cream card at top of Phase 1 */
+.hook-bar{
+  background:var(--surface);
+  border:1px solid var(--border-light);
+  border-radius:var(--r-card);
+  padding:16px;
+  margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.hook-bar::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--gold-grad);border-radius:16px 16px 0 0;
+}
+.hook-eyebrow{
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--teal-text);margin-bottom:6px;
+}
+.hook-stat{
+  font-size:22px;font-weight:800;color:var(--tx-dark);
+  font-variant-numeric:tabular-nums;line-height:1.1;margin-bottom:4px;
+}
+.hook-stat em{
+  background:var(--gold-grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;font-style:normal;
+}
+.hook-sub{font-size:12px;color:var(--tx-mid);line-height:1.5}
+
+/* Social proof strip */
+.proof-strip{
+  display:flex;gap:6px;margin-bottom:20px;
+}
+.proof-pill{
+  flex:1;background:var(--surface);
+  border:1px solid var(--border-light);
+  border-radius:10px;padding:10px 10px;
+  text-align:center;
+}
+.proof-pill-num{
+  font-size:15px;font-weight:800;color:var(--teal-text);
+  font-variant-numeric:tabular-nums;line-height:1;margin-bottom:2px;
+}
+.proof-pill-label{font-size:10px;color:var(--tx-mid);line-height:1.3}
+
+/* Category spend icons strip */
+.cat-strip{
+  display:flex;gap:8px;margin-bottom:24px;align-items:flex-start;
+}
+.cat-strip-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.cat-strip-icon{
+  width:40px;height:40px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.cat-strip-label{font-size:10px;color:var(--tx-mid);text-align:center;line-height:1.3}
+
+/* Chip section */
+.chip-section{
+  background:var(--surface);
+  border:1px solid var(--border-light);
+  border-radius:var(--r-card);
+  padding:16px;
+  margin-bottom:12px;
+}
+.chip-section-header{
+  display:flex;align-items:center;gap:8px;margin-bottom:12px;
+}
+.chip-section-num{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--border-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--tx-mid);flex-shrink:0;
+  transition:background .2s,color .2s;
+}
+.chip-section.done .chip-section-num{
+  background:var(--gold-grad);color:var(--tx-dark);
+}
+.chip-section-title{
+  font-size:13px;font-weight:600;color:var(--tx-dark);
+}
+.chip-section-check{
+  margin-left:auto;font-size:13px;color:var(--gold);
+  opacity:0;transition:opacity .2s;
+}
+.chip-section.done .chip-section-check{opacity:1}
+
+/* Preview teaser card */
+.preview-card{
+  background:var(--surface-dark);
+  border:1px solid var(--border-dark);
+  border-radius:var(--r-card);
+  padding:20px;margin-bottom:0;
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.preview-glow{
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:280px;height:200px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(251,215,72,0.15) 0%,transparent 65%);
+  pointer-events:none;
+}
+.preview-eyebrow{
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,0.38);margin-bottom:10px;position:relative;z-index:1;
+}
+.preview-number{
+  font-size:40px;font-weight:800;color:var(--teal);
+  font-variant-numeric:tabular-nums;line-height:1;
+  position:relative;z-index:1;
+  filter:blur(10px);
+  transition:filter .6s ease;
+  letter-spacing:-.02em;
+}
+.preview-number.revealed{filter:blur(0)}
+.preview-label{
+  font-size:12px;color:rgba(255,255,255,0.45);
+  margin-top:8px;position:relative;z-index:1;
+}
+.preview-lock{
+  margin-top:14px;position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:11px;color:rgba(255,255,255,0.38);
+}
+.preview-lock-icon{font-size:13px}
+.preview-progress{
+  margin-top:14px;position:relative;z-index:1;
+}
+.preview-progress-track{
+  height:3px;border-radius:2px;
+  background:rgba(255,255,255,0.08);
+  overflow:hidden;
+}
+.preview-progress-fill{
+  height:100%;border-radius:2px;
+  background:var(--gold-grad);
+  width:0%;transition:width .4s ease;
+}
+.preview-progress-label{
+  font-size:10px;color:rgba(255,255,255,0.38);
+  text-align:right;margin-top:5px;
+}
+
 /* ── MOBILE-FIRST (375px reference canvas) ── */
 /* Chips are compact by default */
 .chip{padding:8px 14px;font-size:13px}
 
 /* Desktop: show a "best on mobile" overlay, cap width at 390px */
 @media(min-width:600px){
-  body{display:flex;flex-direction:column;align-items:center;background:#1A1F2E !important}
+  body{display:flex;flex-direction:column;align-items:center;background:#F0EDD8}
   header{width:100%;max-width:390px;border-radius:0}
   #phase1,#phase2,#phase3{width:100%;max-width:390px}
   .sticky-cta{left:50%;transform:translateX(-50%);width:390px;border-radius:0 0 16px 16px}
@@ -420,7 +566,7 @@ header{
   align-items:center;gap:8px;
   background:rgba(251,215,72,0.08);border:1px solid rgba(251,215,72,0.20);
   border-radius:8px;padding:8px 14px;margin:10px 0 0;width:100%;max-width:390px;
-  font-size:11px;color:rgba(255,255,255,0.55);
+  font-size:11px;color:rgba(12,18,32,0.55);
 }
 .desktop-hint span{font-size:14px}
 </style>
@@ -444,39 +590,99 @@ header{
 <!-- ══ PHASE 1: INPUT ══ -->
 <div id="phase1">
   <div class="wrap">
-    <h1 class="phase1-headline">What's your profile?</h1>
-    <p class="phase1-sub">No typing needed — we'll calculate your exact earning potential.</p>
 
-    <!-- Age group -->
-    <div class="chip-label">Your age group</div>
-    <div class="chips-row" id="age-chips">
-      <button class="chip" data-group="age" data-val="a1">22–26</button>
-      <button class="chip" data-group="age" data-val="a2">27–32</button>
-      <button class="chip" data-group="age" data-val="a3">33–40</button>
-      <button class="chip" data-group="age" data-val="a4">40+</button>
+    <!-- Headline -->
+    <h1 class="phase1-headline">Your spending is<br>worth more than you think.</h1>
+    <p class="phase1-sub">You're going to spend that money anyway.<br>Here's how much extra it could earn you first.</p>
+
+    <!-- Hook stat bar -->
+    <div class="hook-bar">
+      <div class="hook-eyebrow">Most people don't know this</div>
+      <div class="hook-stat">₹38,000 <em>lost</em> per year</div>
+      <div class="hook-sub">…is what the average ₹50–80k earner leaves on the table by keeping spending money in a regular bank account.</div>
     </div>
 
-    <!-- Monthly income -->
-    <div class="chip-label mt">Monthly income</div>
-    <div class="chips-row" id="income-chips">
-      <button class="chip" data-group="income" data-val="i1">₹30–50k</button>
-      <button class="chip" data-group="income" data-val="i2">₹50–80k</button>
-      <button class="chip" data-group="income" data-val="i3">₹80–1.25L</button>
-      <button class="chip" data-group="income" data-val="i4">₹1.25–2L</button>
-      <button class="chip" data-group="income" data-val="i5">₹2L+</button>
+    <!-- Where you spend — category strip -->
+    <div class="chip-label" style="margin-bottom:10px">You already spend on these</div>
+    <div class="cat-strip">
+      <div class="cat-strip-item">
+        <div class="cat-strip-icon" style="background:rgba(251,215,72,0.12)">🍽️</div>
+        <div class="cat-strip-label">Food &amp;<br>Dining</div>
+      </div>
+      <div class="cat-strip-item">
+        <div class="cat-strip-icon" style="background:rgba(74,159,255,0.10)">🛍️</div>
+        <div class="cat-strip-label">Shopping</div>
+      </div>
+      <div class="cat-strip-item">
+        <div class="cat-strip-icon" style="background:rgba(0,212,170,0.10)">✈️</div>
+        <div class="cat-strip-label">Travel</div>
+      </div>
+      <div class="cat-strip-item">
+        <div class="cat-strip-icon" style="background:rgba(251,215,72,0.08)">🏠</div>
+        <div class="cat-strip-label">Home &amp;<br>Bills</div>
+      </div>
     </div>
 
-    <!-- Spacer so content isn't hidden behind sticky strip -->
-    <div style="height:20px"></div>
+    <!-- Step 1: Age -->
+    <div class="chip-section" id="chip-section-age">
+      <div class="chip-section-header">
+        <div class="chip-section-num">1</div>
+        <div class="chip-section-title">Your age group</div>
+        <div class="chip-section-check">✓</div>
+      </div>
+      <div class="chips-row" id="age-chips">
+        <button class="chip" data-group="age" data-val="a1">22–26</button>
+        <button class="chip" data-group="age" data-val="a2">27–32</button>
+        <button class="chip" data-group="age" data-val="a3">33–40</button>
+        <button class="chip" data-group="age" data-val="a4">40+</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Income -->
+    <div class="chip-section" id="chip-section-income">
+      <div class="chip-section-header">
+        <div class="chip-section-num">2</div>
+        <div class="chip-section-title">Monthly income</div>
+        <div class="chip-section-check">✓</div>
+      </div>
+      <div class="chips-row" id="income-chips">
+        <button class="chip" data-group="income" data-val="i1">₹30–50k</button>
+        <button class="chip" data-group="income" data-val="i2">₹50–80k</button>
+        <button class="chip" data-group="income" data-val="i3">₹80–1.25L</button>
+        <button class="chip" data-group="income" data-val="i4">₹1.25–2L</button>
+        <button class="chip" data-group="income" data-val="i5">₹2L+</button>
+      </div>
+    </div>
+
+    <!-- Preview teaser (blurred until both chips selected) -->
+    <div class="preview-card" id="preview-card">
+      <div class="preview-glow"></div>
+      <div class="preview-eyebrow">Your extra yearly earnings on Multipl</div>
+      <div class="preview-number" id="preview-number">₹31,200</div>
+      <div class="preview-label">per year · on money you already spend</div>
+      <div class="preview-lock" id="preview-lock">
+        <span class="preview-lock-icon">🔒</span>
+        Select your age &amp; income to reveal
+      </div>
+      <div class="preview-progress">
+        <div class="preview-progress-track">
+          <div class="preview-progress-fill" id="preview-fill"></div>
+        </div>
+        <div class="preview-progress-label" id="preview-progress-label">0 of 2 selected</div>
+      </div>
+    </div>
+
+    <!-- Spacer for sticky strip -->
+    <div style="height:24px"></div>
   </div>
 
   <!-- Sticky CTA strip -->
   <div class="sticky-cta" id="sticky-cta">
     <div class="sticky-cta-inner">
       <button class="btn-primary disabled" id="cta-btn" disabled onclick="startCalculation()">
-        Calculate my earning potential →
+        Show me what I'm missing →
       </button>
-      <p class="cta-caption">Powered by SEBI-regulated mutual funds</p>
+      <p class="cta-caption">Powered by SEBI-regulated mutual funds · Withdraw anytime</p>
     </div>
   </div>
 </div>
@@ -733,6 +939,27 @@ function updateCTAState() {
     btn.disabled = true;
     btn.classList.add('disabled');
   }
+
+  // Update chip-section done states
+  if (selectedAge) document.getElementById('chip-section-age').classList.add('done');
+  else document.getElementById('chip-section-age').classList.remove('done');
+  if (selectedIncome) document.getElementById('chip-section-income').classList.add('done');
+  else document.getElementById('chip-section-income').classList.remove('done');
+
+  // Update preview teaser progress
+  const selected = (selectedAge ? 1 : 0) + (selectedIncome ? 1 : 0);
+  const fillEl = document.getElementById('preview-fill');
+  const labelEl = document.getElementById('preview-progress-label');
+  const lockEl = document.getElementById('preview-lock');
+  const numEl = document.getElementById('preview-number');
+  if (fillEl) fillEl.style.width = (selected * 50) + '%';
+  if (labelEl) labelEl.textContent = selected + ' of 2 selected';
+  if (selected === 2) {
+    // Show live preview number (blurred but real)
+    const r = calculateResults(selectedAge, selectedIncome);
+    if (numEl) numEl.textContent = fmt(r.net_gain);
+    if (lockEl) lockEl.innerHTML = '<span class="preview-lock-icon">⚡</span> Tap to reveal your full breakdown';
+  }
 }
 
 /* ══ COUNTER ANIMATION ══ */
@@ -888,6 +1115,17 @@ function recalculate() {
   selectedAge    = null;
   selectedIncome = null;
   document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+
+  document.getElementById('chip-section-age').classList.remove('done');
+  document.getElementById('chip-section-income').classList.remove('done');
+  const fillEl = document.getElementById('preview-fill');
+  const labelEl = document.getElementById('preview-progress-label');
+  const lockEl = document.getElementById('preview-lock');
+  const numEl = document.getElementById('preview-number');
+  if (fillEl) fillEl.style.width = '0%';
+  if (labelEl) labelEl.textContent = '0 of 2 selected';
+  if (numEl) { numEl.textContent = '₹31,200'; numEl.classList.remove('revealed'); }
+  if (lockEl) lockEl.innerHTML = '<span class="preview-lock-icon">🔒</span> Select your age &amp; income to reveal';
 
   // Reset step lines
   ['step1','step2','step3','step4'].forEach(function(id) {
