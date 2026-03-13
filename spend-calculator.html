@@ -424,27 +424,91 @@ body{
   margin-bottom:14px;
 }
 .btn-recalc{
-  width:100%;height:44px;border-radius:var(--r-btn);
+  width:100%;height:44px;border-radius:999px;
   background:transparent;
-  border:1.5px solid var(--border-dark);
+  border:1.5px solid rgba(255,255,255,0.20);
   color:rgba(255,255,255,0.55);
   font-family:'Gilroy',sans-serif;
   font-size:13px;font-weight:500;
   cursor:pointer;
-  margin-top:12px;
   transition:border-color .18s, color .18s;
 }
-.btn-recalc:hover{border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.8)}
+.btn-recalc:hover{border-color:rgba(255,255,255,0.35);color:rgba(255,255,255,0.85)}
 
-/* Desktop centering — light bg, phone frame feel */
+/* ══ IPHONE FRAME (desktop only) ══ */
 @media(min-width:600px){
-  body{background:#EDE9D4;display:flex;flex-direction:column;align-items:center}
-  #phase1,#phase2,#phase3{width:100%;max-width:390px}
-  #phase1{min-height:100vh}
+  body{
+    background:#D6D0BC;
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    padding:40px 24px;
+  }
+  .iphone-frame{
+    width:390px;
+    height:844px;
+    border-radius:54px;
+    background:#0C1220;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.15) inset,
+      0 0 0 10px #1A1A1A,
+      0 0 0 11px #2A2A2A,
+      0 32px 80px rgba(0,0,0,0.55),
+      0 8px 24px rgba(0,0,0,0.35);
+    position:relative;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  /* Dynamic Island */
+  .iphone-frame::before{
+    content:'';
+    position:absolute;top:12px;left:50%;transform:translateX(-50%);
+    width:120px;height:34px;
+    background:#000;border-radius:999px;
+    z-index:1000;
+  }
+  /* Side button - power */
+  .iphone-frame::after{
+    content:'';
+    position:absolute;top:160px;right:-12px;
+    width:4px;height:72px;background:#2A2A2A;border-radius:0 3px 3px 0;
+    box-shadow:0 90px 0 #2A2A2A,0 -90px 0 #2A2A2A;
+    z-index:999;
+  }
+  /* Scrollable screen area */
+  .iphone-screen{
+    width:100%;height:100%;
+    overflow-y:auto;overflow-x:hidden;
+    border-radius:54px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .iphone-screen::-webkit-scrollbar{display:none}
+  /* Home indicator bar */
+  .home-indicator{
+    position:sticky;bottom:0;left:0;right:0;
+    height:34px;display:flex;align-items:center;justify-content:center;
+    background:transparent;z-index:100;pointer-events:none;
+  }
+  .home-indicator::before{
+    content:'';width:134px;height:5px;border-radius:999px;
+    background:rgba(255,255,255,0.25);
+  }
+  /* Phases fill the frame */
+  #phase1,#phase2,#phase3{width:390px;min-width:390px}
+  #phase1{min-height:810px}
+  /* Status bar: hide our custom one, the Dynamic Island provides the top chrome */
+  .status-bar{padding-top:52px}
+}
+
+/* Mobile: no frame */
+@media(max-width:599px){
+  .iphone-frame,.iphone-screen,.home-indicator{display:contents}
 }
 </style>
 </head>
 <body>
+<div class="iphone-frame">
+<div class="iphone-screen">
 
 <!-- ══ PHASE 1: INPUT ══ -->
 <div id="phase1">
@@ -682,7 +746,7 @@ body{
     <!-- Card D: CTA -->
     <div class="result-card-wrapper" id="card-d">
       <div class="cta-card">
-        <button class="btn-primary" id="results-cta-btn">
+        <button class="btn-pill" id="results-cta-btn" style="margin-bottom:12px">
           Start earning <span id="cta-gain"></span>/year →
         </button>
         <button class="btn-recalc" onclick="recalculate()">Recalculate</button>
@@ -709,20 +773,39 @@ const AGE_PROFILES = {
   a4: { weights:{food:0.22,shopping:0.25,travel:0.22,home:0.31}, mult:0.72 },
 };
 
+// Category-level brand discount rates (3–10% range, per Multipl brand partnerships)
+const CAT_DISCOUNTS = {
+  food:     0.08,  // Swiggy, Zomato, BigBasket — avg ~8%
+  shopping: 0.05,  // Flipkart, Amazon, Myntra — avg ~5%
+  travel:   0.06,  // MakeMyTrip, ixigo, Goibibo — avg ~6%
+  home:     0.03,  // Jio, Airtel, utility brands — avg ~3%
+};
+
 function calculateResults(ageKey, incomeKey) {
   const inc = INCOME_PROFILES[incomeKey];
   const age = AGE_PROFILES[ageKey];
   const multipl_interest = Math.round(inc.avg_balance * 0.07);
   const bank_interest    = Math.round(inc.avg_balance * 0.025);
-  const brand_savings    = Math.round(inc.eligible_annual * age.mult * 0.04);
-  const total_multipl    = multipl_interest + brand_savings;
-  const net_gain         = total_multipl - bank_interest;
-  const categories = [
-    { key:'food',    label:'Food & Dining',    emoji:'🍽️', monthly: Math.round(inc.monthly_spend * age.weights.food) },
-    { key:'shopping',label:'Shopping',          emoji:'🛍️', monthly: Math.round(inc.monthly_spend * age.weights.shopping) },
-    { key:'travel',  label:'Travel',            emoji:'✈️', monthly: Math.round(inc.monthly_spend * age.weights.travel) },
-    { key:'home',    label:'Home & Utilities',  emoji:'🏠', monthly: Math.round(inc.monthly_spend * age.weights.home) },
-  ];
+
+  // Brand savings: per-category eligible spend × category discount rate × age eligibility multiplier
+  const catKeys = ['food','shopping','travel','home'];
+  let brand_savings = 0;
+  const categories = catKeys.map(function(k) {
+    const monthly  = Math.round(inc.monthly_spend * age.weights[k]);
+    const annual   = monthly * 12;
+    const saving   = Math.round(annual * age.mult * CAT_DISCOUNTS[k]);
+    brand_savings += saving;
+    return {
+      key: k,
+      label: k==='food'?'Food & Dining': k==='shopping'?'Shopping': k==='travel'?'Travel':'Home & Utilities',
+      emoji: k==='food'?'🍽️': k==='shopping'?'🛍️': k==='travel'?'✈️':'🏠',
+      monthly, saving,
+      discount: Math.round(CAT_DISCOUNTS[k]*100),
+    };
+  });
+
+  const total_multipl = multipl_interest + brand_savings;
+  const net_gain      = total_multipl - bank_interest;
   return { multipl_interest, bank_interest, brand_savings, total_multipl, net_gain, avg_balance:inc.avg_balance, categories };
 }
 
@@ -980,5 +1063,9 @@ function recalculate() {
   }, 400);
 }
 </script>
+
+<div class="home-indicator"></div>
+</div><!-- /iphone-screen -->
+</div><!-- /iphone-frame -->
 </body>
 </html>
