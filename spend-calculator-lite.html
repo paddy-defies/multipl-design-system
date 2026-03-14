@@ -187,57 +187,89 @@ html,body{
 
 /* hero card */
 .res-hero{
-  padding:28px var(--pp) 24px;
+  padding:24px var(--pp) 22px;
   text-align:center;
   background:
     radial-gradient(ellipse 320px 260px at 50% 0%,rgba(251,215,72,0.20),transparent),
     radial-gradient(ellipse 280px 280px at 100% 0%,rgba(74,159,255,0.16),transparent),
     radial-gradient(ellipse 240px 240px at 0% 100%,rgba(0,212,170,0.14),transparent),
     var(--surface);
-  position:relative;overflow:hidden;
 }
 .res-eyebrow{
   font-size:11px;font-weight:600;letter-spacing:0.1em;
-  text-transform:uppercase;color:rgba(251,215,72,0.7);
-  margin-bottom:20px;
+  text-transform:uppercase;color:rgba(251,215,72,0.65);
+  margin-bottom:18px;
 }
+/* comparison row */
 .res-vs{
-  display:flex;align-items:flex-end;justify-content:center;
-  gap:16px;margin-bottom:4px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;margin-bottom:18px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:18px;padding:16px;
 }
-/* bank column */
-.res-bank-col{display:flex;flex-direction:column;align-items:center;gap:4px}
-.res-bank-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--w3)}
-.res-bank-amt{font-size:24px;font-weight:800;color:var(--coral);font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
-.res-bank-bar{width:44px;height:44px;border-radius:10px;background:rgba(224,80,64,0.15);border:1px solid rgba(224,80,64,0.2);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;overflow:hidden}
-.res-bank-bar-fill{width:28px;background:var(--coral);border-radius:4px 4px 0 0;opacity:0;transition:height 1s cubic-bezier(0.4,0,0.2,1);height:0}
+.res-bank-col{display:flex;flex-direction:column;align-items:flex-start;flex:1;min-width:0}
+.res-bank-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--w3);margin-bottom:6px}
+.res-bank-amt{font-size:26px;font-weight:800;color:var(--coral);font-variant-numeric:tabular-nums;letter-spacing:-0.5px;line-height:1}
+.res-bank-tag{font-size:10px;color:rgba(224,80,64,0.5);margin-top:5px;font-weight:500;line-height:1.3}
+.res-vs-sep{flex-shrink:0;padding:0 4px}
+.res-vs-badge{font-size:11px;font-weight:700;color:var(--w3);background:rgba(255,255,255,0.07);border-radius:999px;padding:5px 10px;border:1px solid rgba(255,255,255,0.08)}
+.res-mpl-col{display:flex;flex-direction:column;align-items:flex-end;flex:1;min-width:0}
+.res-mpl-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,212,170,0.65);margin-bottom:6px}
+.res-mpl-amt{font-size:46px;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums;letter-spacing:-2px;line-height:1}
+.res-mpl-tag{font-size:10px;color:rgba(0,212,170,0.5);margin-top:5px;font-weight:500;line-height:1.3;text-align:right}
 
-/* vs divider */
-.res-vs-sep{display:flex;flex-direction:column;align-items:center;gap:4px;padding-bottom:8px}
-.res-vs-line{width:1px;height:28px;background:rgba(255,255,255,0.1)}
-.res-vs-lbl{font-size:10px;font-weight:700;color:var(--w3);letter-spacing:0.04em}
-
-/* multipl column */
-.res-mpl-col{display:flex;flex-direction:column;align-items:center;gap:4px}
-.res-mpl-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:rgba(0,212,170,0.7)}
-.res-mpl-amt{font-size:44px;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums;letter-spacing:-2px;line-height:1}
-.res-mpl-bar{width:44px;height:44px;border-radius:10px;background:rgba(0,212,170,0.12);border:1px solid rgba(0,212,170,0.2);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;overflow:hidden}
-.res-mpl-bar-fill{width:28px;background:var(--teal);border-radius:4px 4px 0 0;opacity:0;transition:height 1.1s cubic-bezier(0.4,0,0.2,1);height:0}
-
-.res-diff{
-  font-size:13px;font-weight:500;color:var(--w2);
-  margin-top:14px;margin-bottom:4px;
-}
+.res-diff{font-size:14px;font-weight:500;color:var(--w2);margin-bottom:6px}
 .res-diff-amt{font-weight:800;color:var(--teal)}
 .res-monthly{
   display:inline-flex;align-items:center;gap:6px;
   font-size:12px;font-weight:600;
-  color:rgba(251,215,72,0.8);
+  color:rgba(251,215,72,0.85);
   background:rgba(251,215,72,0.08);
   border:1px solid rgba(251,215,72,0.16);
-  border-radius:999px;padding:5px 14px;
-  margin-top:6px;
+  border-radius:999px;padding:6px 16px;
 }
+
+/* ─── BRAND TICKER ──────────────────────────────────────────── */
+.ticker-section{
+  padding:16px 0 4px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 0.4s ease,transform 0.4s ease;
+}
+.ticker-section.show{opacity:1;transform:translateY(0)}
+.ticker-label{
+  font-size:11px;font-weight:600;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--w3);
+  margin-bottom:10px;padding:0 var(--pp);
+}
+.ticker-wrap{
+  overflow:hidden;
+  /* fade edges */
+  -webkit-mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);
+  mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);
+  margin-bottom:8px;
+}
+.ticker-row{
+  display:flex;gap:8px;width:max-content;
+  animation:tickerL 28s linear infinite;
+  padding:2px 0;
+}
+.ticker-row2{
+  animation:tickerR 24s linear infinite;
+}
+.ticker-row:hover,.ticker-row2:hover{animation-play-state:paused}
+@keyframes tickerL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes tickerR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.tc{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 13px;border-radius:999px;
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,0.08);
+  font-size:12px;font-weight:600;color:var(--w2);
+  white-space:nowrap;flex-shrink:0;
+  cursor:default;
+}
+.tc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
 /* breakdown cards */
 .res-body{padding:16px var(--pp) 0}
@@ -456,24 +488,18 @@ html,body{
         <!-- bank -->
         <div class="res-bank-col">
           <div class="res-bank-lbl">Your Bank</div>
-          <div class="res-bank-bar">
-            <div class="res-bank-bar-fill" id="bar-bank"></div>
-          </div>
           <div class="res-bank-amt" id="res-bank-amt">₹0</div>
+          <div class="res-bank-tag">2.5% interest only<br>no brand offers</div>
         </div>
-        <!-- vs -->
+        <!-- vs badge -->
         <div class="res-vs-sep">
-          <div class="res-vs-line"></div>
-          <div class="res-vs-lbl">vs</div>
-          <div class="res-vs-line"></div>
+          <div class="res-vs-badge">vs</div>
         </div>
         <!-- multipl -->
         <div class="res-mpl-col">
           <div class="res-mpl-lbl">Multipl</div>
-          <div class="res-mpl-bar">
-            <div class="res-mpl-bar-fill" id="bar-mpl"></div>
-          </div>
           <div class="res-mpl-amt" id="res-mpl-amt">₹0</div>
+          <div class="res-mpl-tag">7% yield +<br>brand cashback</div>
         </div>
       </div>
 
@@ -498,6 +524,19 @@ html,body{
           <div class="bk-label">Brand savings</div>
           <div class="bk-amt gold" id="bk-brand">₹0</div>
           <div class="bk-sub">Cashback at 50+ everyday brands</div>
+        </div>
+      </div>
+
+      <!-- Brand Ticker -->
+      <div class="ticker-section" id="ticker-section">
+        <div class="ticker-label">Where your cashback works</div>
+        <!-- Row 1: scrolls left -->
+        <div class="ticker-wrap">
+          <div class="ticker-row" id="ticker-r1"></div>
+        </div>
+        <!-- Row 2: scrolls right -->
+        <div class="ticker-wrap">
+          <div class="ticker-row ticker-row2" id="ticker-r2"></div>
         </div>
       </div>
 
@@ -722,32 +761,68 @@ function showCalculating(){
 // ── POPULATE RESULTS ─────────────────────────────────────────
 function populateResults(d){
   document.getElementById('res-bank-amt').textContent=fmt(d.bankTotal);
-  document.getElementById('res-mpl-amt').textContent='₹0'; // counter animates in
+  document.getElementById('res-mpl-amt').textContent=fmt(0); // counter animates from 0
   document.getElementById('res-diff-amt').textContent=fmt(d.totalSavings)+' extra';
-  document.getElementById('res-monthly').textContent='= '+fmt(d.totalSavings/12)+' / month more';
+  document.getElementById('res-monthly').textContent='= '+fmt(Math.round(d.totalSavings/12))+' / month more';
   document.getElementById('bk-yield').textContent=fmt(d.totalYield);
   document.getElementById('bk-brand').textContent=fmt(d.totalBrand);
   document.getElementById('bk-balance').textContent=fmt(d.recBalance);
+  // reset ticker visibility for fresh reveal
+  var ts=document.getElementById('ticker-section');
+  ts.classList.remove('show');
+}
+
+// Brand ticker data
+var TICKER_ROW1=[
+  {name:'Swiggy',color:'#FF5200'},
+  {name:'Amazon',color:'#FF9900'},
+  {name:'Myntra',color:'#FF3F6C'},
+  {name:'Zepto',color:'#8B3FE8'},
+  {name:'Uber',color:'#1C1C1C'},
+  {name:'Zomato',color:'#E23744'},
+  {name:'Nykaa',color:'#FC2779'},
+  {name:'Flipkart',color:'#2874F0'},
+  {name:'Tata Cliq',color:'#F37021'},
+  {name:'Decathlon',color:'#007DC5'},
+];
+var TICKER_ROW2=[
+  {name:'Amazon Fresh',color:'#5BA52C'},
+  {name:'Ajio',color:'#A85C1A'},
+  {name:'MakeMyTrip',color:'#0066FF'},
+  {name:'boAt',color:'#E8191B'},
+  {name:'Lenskart',color:'#00BAC6'},
+  {name:'Puma',color:'#404040'},
+  {name:'Adidas',color:'#000000'},
+  {name:'Cred',color:'#1A1A2E'},
+  {name:'Ola',color:'#1DC839'},
+  {name:'Noise',color:'#6236FF'},
+];
+
+function buildTicker(rowId, brands){
+  var el=document.getElementById(rowId);
+  // duplicate for seamless loop
+  var doubled=brands.concat(brands);
+  el.innerHTML=doubled.map(function(b){
+    return '<span class="tc"><span class="tc-dot" style="background:'+b.color+'"></span>'+b.name+'</span>';
+  }).join('');
 }
 
 function revealResults(d){
-  var bigger=Math.max(d.bankTotal,d.mplTotal);
-  // animate bars
-  setTimeout(function(){
-    document.getElementById('bar-bank').style.height=Math.round(d.bankTotal/bigger*36)+'px';
-    document.getElementById('bar-bank').style.opacity='1';
-    document.getElementById('bar-mpl').style.height='36px';
-    document.getElementById('bar-mpl').style.opacity='1';
-  },300);
   // counter for mpl amount
   setTimeout(function(){
     animCount(document.getElementById('res-mpl-amt'),d.mplTotal,1200);
-  },400);
-  // stagger cards
-  setTimeout(function(){document.getElementById('bk1').classList.add('show')},700);
-  setTimeout(function(){document.getElementById('bk2').classList.add('show')},850);
-  setTimeout(function(){document.getElementById('bk3').classList.add('show')},1000);
-  setTimeout(function(){document.getElementById('cta-block').classList.add('show')},1150);
+  },300);
+  // stagger breakdown cards
+  setTimeout(function(){document.getElementById('bk1').classList.add('show')},600);
+  setTimeout(function(){document.getElementById('bk2').classList.add('show')},750);
+  // build and reveal ticker
+  setTimeout(function(){
+    buildTicker('ticker-r1',TICKER_ROW1);
+    buildTicker('ticker-r2',TICKER_ROW2);
+    document.getElementById('ticker-section').classList.add('show');
+  },900);
+  setTimeout(function(){document.getElementById('bk3').classList.add('show')},1050);
+  setTimeout(function(){document.getElementById('cta-block').classList.add('show')},1200);
 }
 
 // ── NAVIGATION ───────────────────────────────────────────────
