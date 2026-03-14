@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Spend Calculator – Multipl India</title>
+<title>Spend Analyzer – Multipl</title>
 <style>
 /* ── GILROY ── */
 @font-face{font-family:'Gilroy';font-weight:400;font-style:normal;src:local('Gilroy-Regular'),url('assets/fonts/Gilroy/Gilroy-Regular.ttf') format('truetype')}
@@ -21,1073 +21,1809 @@
   --gold-grad:linear-gradient(90deg,#FBD748 0%,#FBEF48 100%);
   --gold-tint:rgba(251,215,72,0.08);
   --gold-border:rgba(251,215,72,0.40);
-  --bg-dark:#0C1220;--bg-base:#FDFAF0;--surface:#FFFFFF;
+  --bg-dark:#0C1220;--bg-base:#FFFEF5;--surface:#FFFFFF;
   --surface-dark:#141B2D;
   --teal:#00D4AA;--teal-text:#006B55;
-  --coral:#E53935;--blue:#4A9FFF;
-  --tx-dark:#0C1220;--tx-mid:rgba(12,18,32,0.55);--tx-light:rgba(12,18,32,0.35);
-  --tx-on-dark-1:#FFFFFF;--tx-on-dark-2:rgba(255,255,255,0.65);--tx-on-dark-3:rgba(255,255,255,0.38);
+  --coral:#E05040;--blue:#4A9FFF;
+  --tx-dark:#1f1f1f;--tx-mid:#848484;--tx-light:rgba(12,18,32,0.35);
+  --tx-on-dark-1:#FFFFFF;--tx-on-dark-2:rgba(255,255,255,0.6);--tx-on-dark-3:rgba(255,255,255,0.3);
   --border-light:rgba(12,18,32,0.10);--border-dark:rgba(255,255,255,0.10);
-  --r-btn:4px;--r-inp:8px;--r-card:16px;--r-chip:999px;
+  --r-btn:999px;--r-inp:12px;--r-card:20px;--r-chip:999px;
   --btn-h:52px;--pp:16px;
   --shadow-card:0 2px 12px rgba(0,0,0,0.08);
   --shadow-gold:0 4px 16px rgba(251,215,72,0.35);
 }
 
+html,body{
+  font-family:'Gilroy',sans-serif;
+  background:var(--bg-dark);
+  color:var(--tx-dark);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:2px}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
 
-/* ══ APP SHELL ══ */
-body{
-  font-family:'Gilroy',sans-serif;
-  background:#FFFEF5;
-  color:#1f1f1f;
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-}
-
-/* ══ PHASE 1 — FULL-SCREEN APP SCREEN ══ */
-#phase1{
-  min-height:100vh;
-  display:flex;flex-direction:column;
-  padding:0;
-  background:#FFFEF5;
-  position:relative;overflow:hidden;
-  transition:opacity .4s ease, transform .4s ease;
-}
-#phase1.exiting{opacity:0;transform:translateY(-20px)}
-
-/* Decorative arc grid at bottom — matches Figma 3D Morph Lines pattern */
-#phase1::after{
-  content:'';
-  position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
-  width:600px;height:340px;
-  background:
-    radial-gradient(ellipse 560px 300px at 50% 100%,transparent 57%,rgba(251,215,72,0.22) 57.3%,transparent 57.6%),
-    radial-gradient(ellipse 480px 255px at 50% 100%,transparent 57%,rgba(251,215,72,0.20) 57.3%,transparent 57.6%),
-    radial-gradient(ellipse 400px 210px at 50% 100%,transparent 56%,rgba(251,215,72,0.18) 56.3%,transparent 56.6%),
-    radial-gradient(ellipse 320px 165px at 50% 100%,transparent 55%,rgba(251,215,72,0.17) 55.3%,transparent 55.6%),
-    radial-gradient(ellipse 240px 120px at 50% 100%,transparent 54%,rgba(251,215,72,0.15) 54.3%,transparent 54.6%),
-    radial-gradient(ellipse 160px 78px  at 50% 100%,transparent 53%,rgba(251,215,72,0.14) 53.3%,transparent 53.6%),
-    radial-gradient(ellipse 90px  44px  at 50% 100%,transparent 50%,rgba(251,215,72,0.12) 50.5%,transparent 51%);
-  pointer-events:none;z-index:1;
-}
-
-/* Status bar */
-.status-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 20px 0;
-  font-size:12px;font-weight:600;color:var(--tx-dark);
-  position:relative;z-index:1;
-}
-.status-icons{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--tx-dark)}
-
-/* Back button */
-.back-btn{
-  width:36px;height:36px;border-radius:10px;
-  background:rgba(255,255,255,0.8);border:1px solid var(--border-light);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;margin:12px 20px 0;
-  font-size:16px;color:var(--tx-dark);font-weight:600;
-  box-shadow:0 1px 4px rgba(0,0,0,0.06);
-  position:relative;z-index:1;
-  align-self:flex-start;
-  user-select:none;
-}
-
-/* Content area */
-.p1-content{
-  padding:20px 24px 0;
-  flex:1;display:flex;flex-direction:column;
-  position:relative;z-index:1;
-}
-
-.p1-headline{
-  font-size:26px;font-weight:800;color:#1f1f1f;
-  line-height:1.25;margin-bottom:8px;
-  letter-spacing:-.01em;
-}
-.p1-sub{
-  font-size:14px;color:#848484;
-  line-height:1.55;margin-bottom:28px;
-}
-
-/* Chip group */
-.chip-group{margin-bottom:24px}
-.chip-group-label{
-  font-size:12px;font-weight:600;
-  color:var(--tx-mid);
-  letter-spacing:.02em;
-  margin-bottom:10px;
-}
-.chips-row{display:flex;flex-wrap:wrap;gap:8px}
-.chip{
-  padding:10px 18px;
-  border-radius:12px;
-  border:1.5px solid rgba(12,18,32,0.12);
-  background:#FFFFFF;
-  font-size:14px;font-weight:500;color:var(--tx-dark);
-  cursor:pointer;
-  font-family:'Gilroy',sans-serif;
-  white-space:nowrap;min-height:44px;
-  display:flex;align-items:center;
-  transition:border-color .15s,background .15s,box-shadow .15s;
-  user-select:none;
-}
-.chip:active{transform:scale(0.97)}
-.chip.selected{
-  border-color:#FBD748;
-  background:rgba(251,215,72,0.12);
-  color:#1A1A1A;font-weight:600;
-  box-shadow:0 0 0 3px rgba(251,215,72,0.18);
-}
-
-/* Bottom section — glass layer matching Figma */
-.p1-bottom{
-  padding:12px 20px 32px;
-  position:relative;z-index:2;
-  background:rgba(255,254,245,0.85);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  mix-blend-mode:normal;
-}
-.trust-row{
-  display:flex;align-items:center;justify-content:center;
-  gap:8px;flex-wrap:wrap;
-  margin-bottom:10px;
-}
-.trust-item{
-  display:flex;align-items:center;gap:4px;
-  font-size:10px;color:rgba(12,18,32,0.38);font-weight:500;
-}
-.trust-dot{width:3px;height:3px;border-radius:50%;background:rgba(12,18,32,0.18)}
-.p1-motivator{
-  font-size:13px;color:#848484;
-  text-align:center;margin-bottom:12px;line-height:1.4;
-}
-.p1-motivator strong{color:#1f1f1f}
-/* Pill CTA — vertical gradient matching Figma onboarding exactly */
-.btn-pill{
-  width:100%;height:52px;
-  border-radius:34px;
-  background:linear-gradient(180deg,#FFE600 0%,#FFC107 100%);
-  border:none;cursor:pointer;
-  font-family:'Gilroy',sans-serif;
-  font-size:16px;font-weight:700;color:#2B2301;
-  letter-spacing:-.01em;
-  transition:opacity .18s,transform .1s;
-  position:relative;
-  overflow:hidden;
-}
-/* Shine shimmer on button */
-.btn-pill::before{
-  content:'';
-  position:absolute;top:-40px;left:-60px;
-  width:40px;height:150px;
-  background:rgba(255,255,255,0.45);
-  transform:rotate(15deg);
-  pointer-events:none;
-}
-.btn-pill:active:not(:disabled){transform:scale(0.98)}
-.btn-pill:disabled,.btn-pill.disabled{
-  opacity:0.5;pointer-events:none;cursor:not-allowed;
-}
-.cta-footnote{
-  font-size:10px;color:rgba(12,18,32,0.32);
-  text-align:center;margin-top:10px;
-}
-
-/* ══ PHASE 2 — LOADING ══ */
-#phase2{
-  display:none;
+/* ── PAGE WRAPPER ── */
+.page-wrapper{
+  display:flex;
   flex-direction:column;
   align-items:center;
   min-height:100vh;
-  background:#0C1220;
-}
-#phase3{
-  background:#0C1220;
-}
-#phase2.visible{
-  opacity:1 !important;
+  background:var(--bg-dark);
+  padding:32px 16px 64px;
 }
 
-.loading-wrap{
-  width:100%;
-  padding:80px 16px 40px;
-  text-align:center;
-  display:flex;flex-direction:column;align-items:center;
+/* ── DESKTOP HEADER ── */
+.desktop-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:28px;
+  width:390px;
+  max-width:100%;
 }
+.logo-mark{
+  width:36px;height:36px;border-radius:8px;
+  background:var(--gold-grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:800;color:var(--bg-dark);
+  box-shadow:var(--shadow-gold);flex-shrink:0;
+  letter-spacing:-0.5px;
+  font-family:'Gilroy',sans-serif;
+}
+.logo-text{font-size:16px;font-weight:700;color:#fff;letter-spacing:-.02em;font-family:'Gilroy',sans-serif}
+.logo-sep{width:1px;height:20px;background:rgba(255,255,255,0.15)}
+.logo-sub{font-size:13px;font-weight:500;color:rgba(255,255,255,0.5);font-family:'Gilroy',sans-serif}
 
-.spinner{
-  width:56px;height:56px;border-radius:50%;
-  border:3.5px solid rgba(251,215,72,0.2);
-  border-top-color:#FBD748;
-  animation:spin 0.8s linear infinite;
-  margin-bottom:32px;
+/* ── PHONE SHELL ── */
+#phone-shell{
+  width:390px;
+  height:844px;
+  border-radius:54px;
+  background:var(--bg-dark);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 24px 80px rgba(0,0,0,0.6),
+    0 0 60px rgba(251,215,72,0.06);
+  position:relative;
+  overflow:hidden;
   flex-shrink:0;
 }
-@keyframes spin{to{transform:rotate(360deg)}}
 
-.step-lines{
-  display:flex;flex-direction:column;gap:16px;
-  width:100%;max-width:300px;
-  text-align:left;
+/* Right side button */
+#phone-shell::before{
+  content:'';
+  position:absolute;
+  right:-3px;top:160px;
+  width:3px;height:68px;
+  background:rgba(255,255,255,0.12);
+  border-radius:0 3px 3px 0;
+  z-index:20;
+}
+/* Left volume buttons */
+#phone-shell::after{
+  content:'';
+  position:absolute;
+  left:-3px;top:140px;
+  width:3px;height:44px;
+  background:rgba(255,255,255,0.12);
+  border-radius:3px 0 0 3px;
+  box-shadow:0 54px 0 rgba(255,255,255,0.12),0 100px 0 rgba(255,255,255,0.12);
+  z-index:20;
 }
 
-.step-line{
-  display:flex;align-items:center;gap:10px;
-  opacity:0;transition:opacity .4s ease;
-}
-.step-line.visible{opacity:1}
-
-.pulse-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--gold);
+.dynamic-island{
+  width:120px;height:34px;
+  border-radius:999px;
+  background:#000;
+  margin:14px auto 0;
+  position:relative;
+  z-index:10;
   flex-shrink:0;
-  animation:pulse-dot 1.2s ease-in-out infinite;
-}
-@keyframes pulse-dot{
-  0%,100%{opacity:1;transform:scale(1)}
-  50%{opacity:0.4;transform:scale(0.7)}
 }
 
-.step-text{
-  font-size:14px;color:rgba(255,255,255,0.65);
-  font-weight:400;line-height:1.4;
+#inner{
+  width:390px;
+  height:calc(844px - 48px - 50px);
+  overflow-y:auto;
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+  position:relative;
+}
+#inner::-webkit-scrollbar{display:none}
+
+.home-indicator{
+  width:134px;height:5px;
+  background:rgba(255,255,255,0.3);
+  border-radius:999px;
+  position:absolute;
+  bottom:10px;left:50%;transform:translateX(-50%);
+  z-index:10;
 }
 
-/* ══ PHASE 3 — RESULTS ══ */
-#phase3{
+/* ── PROGRESS BAR ── */
+#progress-bar{
+  position:sticky;top:0;
+  height:4px;
+  background:rgba(251,215,72,0.12);
+  z-index:50;
+  flex-shrink:0;
+}
+#progress-bar .progress-fill{
+  height:100%;
+  background:var(--gold-grad);
+  border-radius:0 2px 2px 0;
+  width:20%;
+  transition:width 0.35s ease;
+}
+
+/* ── PHASES CONTAINER ── */
+#phases{
+  position:relative;
+  overflow:hidden;
+}
+
+.phase{
+  background:var(--bg-base);
+  min-height:calc(844px - 48px - 50px - 4px);
   display:none;
+  position:relative;
+  flex-direction:column;
+}
+.phase.active{
+  display:flex;
 }
 
-/* Card stagger animation */
-.result-card-wrapper{
-  opacity:0;
-  transform:translateY(12px);
-  transition:opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+.phase-inner{
+  padding:20px var(--pp) 32px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
 }
-.result-card-wrapper.visible{
+
+/* Slide animations */
+.phase.slide-out{
+  animation:slideOut 0.3s ease forwards;
+}
+.phase.slide-in{
+  animation:slideIn 0.35s ease forwards;
+}
+@keyframes slideOut{
+  from{opacity:1;transform:translateX(0)}
+  to{opacity:0;transform:translateX(-24px)}
+}
+@keyframes slideIn{
+  from{opacity:0;transform:translateX(24px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* ── BACK BUTTON ── */
+.back-btn{
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:22px;
+  color:var(--tx-dark);
+  border:none;background:none;
+  flex-shrink:0;
+  margin-bottom:4px;
+  margin-left:-6px;
+  font-family:'Gilroy',sans-serif;
+  -webkit-tap-highlight-color:transparent;
+}
+.back-btn:hover{opacity:0.65}
+
+/* ── PHASE TEXT ── */
+.phase-headline{
+  font-size:24px;
+  font-weight:800;
+  color:#1f1f1f;
+  line-height:1.25;
+  margin-bottom:6px;
+  letter-spacing:-0.3px;
+}
+.phase-sub{
+  font-size:14px;
+  color:#848484;
+  margin-bottom:24px;
+  line-height:1.45;
+}
+
+/* ── CHIPS ── */
+.chips-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:28px;
+}
+.chips-grid.stacked{
+  flex-direction:column;
+  gap:10px;
+}
+.chip{
+  padding:12px 18px;
+  border-radius:999px;
+  border:1.5px solid rgba(12,18,32,0.12);
+  background:#fff;
+  font-size:14px;
+  font-weight:600;
+  color:#1f1f1f;
+  cursor:pointer;
+  transition:all 0.18s ease;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  white-space:nowrap;
+  font-family:'Gilroy',sans-serif;
+}
+.chip.wide{
+  flex:1;
+  min-width:calc(50% - 5px);
+  text-align:center;
+}
+.chip.full{
+  width:100%;
+  text-align:left;
+  border-radius:14px;
+  padding:14px 18px;
+  white-space:normal;
+}
+.chip:hover{
+  border-color:rgba(251,215,72,0.5);
+  background:rgba(251,215,72,0.04);
+}
+.chip.selected{
+  border:1.5px solid #FBD748;
+  background:rgba(251,215,72,0.08);
+  box-shadow:0 0 0 3px rgba(251,215,72,0.15);
+}
+
+/* ── CTA BUTTON ── */
+.cta-btn{
+  height:var(--btn-h);
+  border-radius:999px;
+  border:none;
+  background:var(--gold-grad);
+  color:#0C1220;
+  font-family:'Gilroy',sans-serif;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  width:100%;
+  transition:opacity 0.2s,transform 0.1s,box-shadow 0.2s;
+  box-shadow:0 4px 16px rgba(251,215,72,0.3);
+  letter-spacing:-0.1px;
+  -webkit-tap-highlight-color:transparent;
+}
+.cta-btn:active{transform:scale(0.98)}
+.cta-btn:hover:not(:disabled){box-shadow:0 6px 24px rgba(251,215,72,0.45)}
+.cta-btn:disabled{
+  background:rgba(12,18,32,0.08);
+  color:rgba(12,18,32,0.3);
+  box-shadow:none;
+  cursor:not-allowed;
+}
+
+.social-proof{
+  font-size:12px;
+  color:#848484;
+  text-align:center;
+  margin-top:14px;
+  line-height:1.45;
+}
+
+/* ── ARC DECORATION (Step 1) ── */
+.arc-deco{
+  position:absolute;
+  top:0;right:0;
+  width:200px;height:200px;
+  pointer-events:none;
+  overflow:hidden;
+}
+.arc{
+  position:absolute;
+  border-radius:50%;
+  border:1.5px solid rgba(251,215,72,0.07);
+}
+.arc-1{width:120px;height:120px;top:-20px;right:-20px}
+.arc-2{width:200px;height:200px;top:-60px;right:-60px}
+.arc-3{width:280px;height:280px;top:-100px;right:-100px}
+
+/* ── BRAND CHIPS STEP 5 ── */
+.brand-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:16px;
+}
+.brand-chip{
+  padding:9px 16px;
+  border-radius:999px;
+  border:1.5px solid rgba(12,18,32,0.12);
+  background:#fff;
+  font-size:13px;
+  font-weight:600;
+  color:#1f1f1f;
+  cursor:pointer;
+  transition:all 0.18s;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  font-family:'Gilroy',sans-serif;
+}
+.brand-chip.selected{
+  border:1.5px solid #FBD748;
+  background:rgba(251,215,72,0.08);
+  box-shadow:0 0 0 3px rgba(251,215,72,0.15);
+}
+.brand-chip:hover{
+  border-color:rgba(251,215,72,0.5);
+  background:rgba(251,215,72,0.04);
+}
+
+.skip-link{
+  font-size:14px;
+  color:#848484;
+  background:none;border:none;
+  cursor:pointer;
+  text-decoration:underline;
+  padding:6px 0;
+  font-family:'Gilroy',sans-serif;
+  font-weight:500;
+  flex-shrink:0;
+  white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.cta-row{
+  display:flex;
+  flex-direction:column;
+  margin-top:auto;
+  padding-top:20px;
+}
+.cta-row-inline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:auto;
+  padding-top:20px;
+}
+
+/* ── LOADING PHASE ── */
+#loading-phase{
+  background:var(--bg-dark);
+  min-height:calc(844px - 48px - 50px - 4px);
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  gap:28px;
+}
+
+.shimmer-card{
+  width:320px;
+  background:rgba(255,255,255,0.03);
+  border-radius:16px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+@keyframes shimmer{
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
+}
+.shimmer-row{
+  height:16px;border-radius:8px;margin:12px 0;
+  background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.08),rgba(255,255,255,0.03));
+  background-size:200% 100%;
+  animation:shimmer 1.4s ease-in-out infinite;
+}
+.shimmer-row.short{width:60%}
+.shimmer-row.medium{width:80%}
+.shimmer-row.tall{height:24px}
+.shimmer-row.first{margin-top:0}
+
+.status-pill{
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.1);
+  padding:10px 20px;
+  font-size:14px;
+  font-weight:500;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition:border-color 0.3s,box-shadow 0.3s;
+  min-width:260px;
+  justify-content:center;
+  font-family:'Gilroy',sans-serif;
+}
+.status-pill.glow-gold{
+  border-color:rgba(251,215,72,0.6);
+  box-shadow:0 0 20px rgba(251,215,72,0.2);
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.5;transform:scale(0.85)}
+}
+.gold-dot{
+  width:8px;height:8px;
+  background:#FBD748;
+  border-radius:50%;
+  animation:pulse 1.2s ease-in-out infinite;
+  display:none;
+  flex-shrink:0;
+}
+.gold-dot.visible{display:block}
+
+/* ── RESULTS PHASE ── */
+#results-phase{
+  background:var(--bg-dark);
+  min-height:calc(844px - 48px - 50px - 4px);
+  display:none;
+  flex-direction:column;
+  padding:12px var(--pp) 32px;
+  gap:12px;
+}
+
+.result-card{
+  border-radius:var(--r-card);
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity 0.5s cubic-bezier(0.34,1.56,0.64,1),transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.result-card.visible{
   opacity:1;
   transform:translateY(0);
 }
 
-/* Hero result card */
-.hero-result-card{
-  background:var(--surface-dark);
-  border:1px solid var(--border-dark);
-  border-radius:var(--r-card);
-  padding:28px 24px;
-  margin-bottom:14px;
-  position:relative;overflow:hidden;
+/* ── CARD 1 — HERO ── */
+#card-1{
+  padding:24px 20px;
   text-align:center;
+  background:
+    radial-gradient(ellipse 340px 280px at 50% 0%,rgba(251,215,72,0.22),transparent),
+    radial-gradient(ellipse 300px 300px at 100% 0%,rgba(74,159,255,0.18),transparent),
+    radial-gradient(ellipse 260px 260px at 100% 100%,rgba(0,212,170,0.16),transparent),
+    #141B2D;
 }
-.hero-glow-1{
-  position:absolute;top:-80px;left:50%;transform:translateX(-50%);
-  width:340px;height:280px;
-  background:radial-gradient(ellipse at 50% 0%,rgba(251,215,72,0.22) 0%,transparent 65%);
-  pointer-events:none;
+.card1-label{
+  font-size:14px;
+  color:rgba(255,255,255,0.6);
+  margin-bottom:8px;
+  font-weight:500;
 }
-.hero-glow-2{
-  position:absolute;top:-60px;right:-60px;
-  width:300px;height:300px;
-  background:radial-gradient(ellipse at 80% 20%,rgba(74,159,255,0.18) 0%,transparent 65%);
-  pointer-events:none;
+.card1-counter{
+  font-size:52px;
+  font-weight:800;
+  color:#00D4AA;
+  letter-spacing:-1px;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum";
+  line-height:1.1;
+  font-family:'Gilroy',sans-serif;
 }
-.hero-glow-3{
-  position:absolute;bottom:-60px;right:-40px;
-  width:260px;height:260px;
-  background:radial-gradient(ellipse at 80% 80%,rgba(0,212,170,0.16) 0%,transparent 65%);
-  pointer-events:none;
+.card1-suffix{
+  font-size:14px;
+  color:rgba(255,255,255,0.6);
+  margin-top:8px;
+  font-weight:500;
 }
-.hero-label-top{
-  font-size:13px;color:rgba(255,255,255,0.55);
-  margin-bottom:8px;position:relative;z-index:1;
+.card1-breakdown{
+  display:inline-block;
+  margin-top:14px;
+  font-size:13px;
+  color:rgba(255,255,255,0.5);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:999px;
+  padding:6px 14px;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum";
 }
-.hero-number{
-  font-size:48px;font-weight:800;color:var(--teal);
-  font-variant-numeric:tabular-nums;line-height:1;
-  position:relative;z-index:1;
-}
-.hero-label-bottom{
-  font-size:13px;color:rgba(255,255,255,0.55);
-  margin-top:8px;position:relative;z-index:1;
-}
-.hero-caption{
-  font-size:11px;color:rgba(255,255,255,0.35);
-  margin-top:16px;position:relative;z-index:1;line-height:1.5;
+.card1-caption{
+  font-size:11px;
+  color:rgba(255,255,255,0.3);
+  margin-top:10px;
+  line-height:1.5;
 }
 
-/* White surface card */
-.result-card{
-  background:var(--surface);
-  border:1px solid var(--border-light);
-  border-radius:var(--r-card);
+/* ── CARD 2 — SPEND MIX ── */
+#card-2{
+  background:#fff;
   padding:20px;
-  margin-bottom:14px;
-  box-shadow:var(--shadow-card);
 }
-.card-headline{
-  font-size:14px;font-weight:700;color:var(--tx-dark);
-  margin-bottom:16px;
+.card2-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:4px;
+  gap:8px;
 }
-
-/* Category rows */
-.category-row{margin-bottom:16px}
-.category-row:last-child{margin-bottom:0}
-.cat-header{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:8px;
-}
-.cat-icon{
-  width:32px;height:32px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:15px;flex-shrink:0;
-}
-.cat-name{
-  font-size:13px;font-weight:600;color:var(--tx-dark);
-  flex:1;
-}
-.cat-amount{
-  font-size:13px;font-weight:600;color:var(--teal-text);
+.card2-title{font-size:16px;font-weight:700;color:#1f1f1f}
+.card2-total{
+  font-size:15px;font-weight:700;color:var(--teal-text);
   font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum";
+  white-space:nowrap;
 }
-.progress-track{
-  height:8px;border-radius:4px;
-  background:var(--border-light);
-  overflow:hidden;
-  margin-bottom:8px;
+.card2-sub{font-size:12px;color:#848484;margin-bottom:16px}
+
+.spend-rows{display:flex;flex-direction:column}
+
+.spend-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:52px;
+  border-top:1px solid rgba(12,18,32,0.06);
+  padding:6px 0;
 }
-.progress-fill{
-  height:100%;border-radius:4px;
-  background:var(--gold-grad);
-  width:0%;
-  transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1);
-}
-.brand-circles{
-  display:flex;flex-direction:row;gap:6px;
-}
+.spend-row:first-child{border-top:none}
+
 .brand-circle{
-  width:28px;height:28px;border-radius:50%;
+  width:32px;height:32px;
+  border-radius:999px;
   display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:700;color:#FFFFFF;
+  font-size:13px;font-weight:700;color:#fff;
   flex-shrink:0;
+  font-family:'Gilroy',sans-serif;
+}
+.spend-brand{
+  font-size:13px;font-weight:600;color:#1f1f1f;
+  flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.spend-amount-wrap{
+  display:flex;align-items:center;gap:6px;flex-shrink:0;
+}
+.spend-amount{
+  font-size:13px;font-weight:600;color:#1f1f1f;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum";
+  cursor:pointer;
+  border-bottom:1px dashed rgba(12,18,32,0.18);
+  padding-bottom:1px;
+  white-space:nowrap;
+}
+.spend-amount:hover{border-bottom-color:#FBD748;color:#0C1220}
+.spend-amount-input{
+  font-size:13px;font-weight:600;color:#1f1f1f;
+  font-family:'Gilroy',sans-serif;
+  border:none;border-bottom:2px solid #FBD748;
+  outline:none;background:transparent;
+  width:75px;
+  font-variant-numeric:tabular-nums;
+  padding:0;
+}
+.freq-badge{
+  font-size:11px;font-weight:600;
+  color:#848484;
+  background:rgba(12,18,32,0.06);
+  border-radius:6px;
+  padding:3px 7px;
+  cursor:pointer;
+  user-select:none;
+  transition:background 0.15s,color 0.15s;
+  white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
+}
+.freq-badge:hover{background:rgba(251,215,72,0.15);color:#1f1f1f}
+.delete-btn{
+  width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;line-height:1;
+  color:rgba(12,18,32,0.28);
+  cursor:pointer;
+  border-radius:50%;
+  border:none;background:none;
+  flex-shrink:0;
+  transition:background 0.15s,color 0.15s;
+  font-family:'Gilroy',sans-serif;
+  -webkit-tap-highlight-color:transparent;
+}
+.delete-btn:hover{background:rgba(224,80,64,0.08);color:#E05040}
+
+.add-spend-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:44px;
+  border-top:1px solid rgba(12,18,32,0.06);
+  padding:10px 0 2px;
+  cursor:pointer;
+  font-size:14px;font-weight:600;
+  color:#FBD748;
+  -webkit-tap-highlight-color:transparent;
+  font-family:'Gilroy',sans-serif;
+}
+.add-spend-row:hover{opacity:0.75}
+.add-icon{
+  width:24px;height:24px;
+  border-radius:50%;
+  border:1.5px solid #FBD748;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:#FBD748;
+  line-height:1;flex-shrink:0;
 }
 
-/* Comparison card */
-.two-col-compare{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+/* Accordion */
+.accordion{margin-top:16px;border-top:1px solid rgba(12,18,32,0.06);padding-top:12px}
+.accordion-header{
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;padding:4px 0;user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
-.compare-col{
-  border-radius:12px;padding:16px;
+.accordion-header-text{font-size:13px;font-weight:600;color:#848484}
+.accordion-chevron{
+  font-size:14px;color:#848484;
+  transition:transform 0.25s;display:inline-block;
 }
-.compare-col.bank{
-  background:rgba(229,57,53,0.06);
-  border:1px solid rgba(229,57,53,0.15);
+.accordion-chevron.open{transform:rotate(180deg)}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease}
+.accordion-body.open{max-height:400px}
+.accordion-body-inner{
+  padding:10px 0;
+  font-size:13px;color:#848484;line-height:1.6;
 }
-.compare-col.multipl{
-  background:rgba(0,212,170,0.06);
-  border:1px solid rgba(0,212,170,0.20);
+
+/* flash on edit */
+@keyframes flashGold{
+  0%{background:#fff}
+  40%{background:rgba(251,215,72,0.10)}
+  100%{background:#fff}
 }
-.compare-header{
-  font-size:12px;font-weight:600;color:var(--tx-dark);
-  margin-bottom:12px;
+.flash-gold{animation:flashGold 0.6s ease}
+
+/* ── CARD 3 — COMPARISON ── */
+#card-3{background:#fff;padding:20px}
+.card3-title{font-size:16px;font-weight:700;color:#1f1f1f;margin-bottom:16px}
+.compare-cols{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;
 }
-.compare-row{
-  display:flex;justify-content:space-between;align-items:baseline;
-  margin-bottom:8px;
+.compare-col{border-radius:12px;padding:14px}
+.compare-col.bank{background:rgba(224,80,64,0.06)}
+.compare-col.multipl{background:rgba(0,107,85,0.06)}
+.compare-col-label{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;
 }
-.compare-row-label{
-  font-size:11px;color:var(--tx-mid);
+.bank .compare-col-label{color:#E05040}
+.multipl .compare-col-label{color:#006B55}
+.compare-line{
+  font-size:12px;color:#848484;margin-bottom:4px;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum";
 }
-.compare-row-val{
-  font-size:15px;font-weight:700;
-  font-variant-numeric:tabular-nums;
+.compare-total{
+  font-size:16px;font-weight:700;margin-top:8px;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum";
 }
-.compare-row-val.bank-clr{color:var(--coral)}
-.compare-row-val.bank-dim{color:rgba(229,57,53,0.5)}
-.compare-row-val.mul-clr{color:var(--teal-text)}
-.compare-divider{
-  height:1px;background:var(--border-light);
-  margin:10px 0;
-}
-.compare-total-row{
-  display:flex;justify-content:space-between;align-items:baseline;
-}
-.compare-total-label{
-  font-size:10px;color:var(--tx-light);
-}
-.compare-total-val{
-  font-size:20px;font-weight:800;
-  font-variant-numeric:tabular-nums;
-}
-.compare-total-val.bank-clr{color:var(--coral)}
-.compare-total-val.mul-clr{color:var(--teal-text)}
+.bank .compare-total{color:#E05040}
+.multipl .compare-total{color:#006B55}
 
 .loss-badge{
-  background:rgba(251,215,72,0.08);
-  border:1px solid rgba(251,215,72,0.25);
-  border-radius:10px;
-  padding:12px 16px;
-  margin-top:12px;
-  font-size:13px;color:var(--tx-dark);
-  line-height:1.55;
+  background:rgba(251,215,72,0.12);border-radius:8px;
+  padding:11px 14px;font-size:13px;color:#1f1f1f;line-height:1.45;font-weight:500;
 }
-.loss-badge strong{color:var(--teal-text)}
+.loss-gold{color:#7A6000;font-weight:800}
 
-/* CTA card (dark) */
-.cta-card{
-  background:var(--surface-dark);
-  border:1px solid var(--border-dark);
-  border-radius:var(--r-card);
+/* ── CARD 4 — ACTIVATION ── */
+#card-4{background:#141B2D;padding:24px 20px;border:1px solid rgba(255,255,255,0.06)}
+.card4-heading{
+  font-size:20px;font-weight:800;color:#fff;
+  line-height:1.25;letter-spacing:-0.2px;margin-bottom:4px;
+}
+.card4-sub{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:14px}
+.card4-body{font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:20px;line-height:1.5}
+.card4-cta{
+  height:52px;width:100%;border-radius:999px;border:none;
+  background:var(--gold-grad);color:#0C1220;
+  font-family:'Gilroy',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;margin-bottom:14px;
+  box-shadow:0 4px 20px rgba(251,215,72,0.35);
+  transition:box-shadow 0.2s,transform 0.1s;
+  -webkit-tap-highlight-color:transparent;
+}
+.card4-cta:active{transform:scale(0.98)}
+.card4-cta:hover{box-shadow:0 6px 28px rgba(251,215,72,0.5)}
+.card4-secondary{
+  background:none;border:none;
+  font-family:'Gilroy',sans-serif;font-size:14px;font-weight:500;
+  color:rgba(255,255,255,0.5);text-decoration:underline;
+  cursor:pointer;width:100%;text-align:center;
+  margin-bottom:16px;padding:4px 0;display:block;
+  -webkit-tap-highlight-color:transparent;
+}
+.card4-disclaimer{
+  font-size:11px;color:rgba(255,255,255,0.3);
+  text-align:center;line-height:1.5;
+}
+
+/* ── ADD SPEND BOTTOM SHEET ── */
+#add-spend-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.6);
+  z-index:1000;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+}
+#add-spend-overlay.open{display:flex}
+.add-spend-panel{
+  background:#fff;border-radius:20px 20px 0 0;
+  width:100%;max-width:390px;
+  max-height:70vh;overflow-y:auto;
   padding:20px;
-  margin-bottom:14px;
+  animation:slideUpPanel 0.3s ease;
 }
-.btn-recalc{
-  width:100%;height:44px;border-radius:999px;
-  background:transparent;
-  border:1.5px solid rgba(255,255,255,0.20);
-  color:rgba(255,255,255,0.55);
+@keyframes slideUpPanel{
+  from{transform:translateY(100%)}
+  to{transform:translateY(0)}
+}
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
+}
+.panel-title{font-size:17px;font-weight:700;color:#1f1f1f}
+.panel-close{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(12,18,32,0.06);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#848484;line-height:1;
   font-family:'Gilroy',sans-serif;
-  font-size:13px;font-weight:500;
-  cursor:pointer;
-  transition:border-color .18s, color .18s;
+  -webkit-tap-highlight-color:transparent;
 }
-.btn-recalc:hover{border-color:rgba(255,255,255,0.35);color:rgba(255,255,255,0.85)}
-
-/* ══ IPHONE FRAME (desktop only) ══ */
-@media(min-width:600px){
-  body{
-    background:#D6D0BC;
-    min-height:100vh;
-    display:flex;align-items:center;justify-content:center;
-    padding:40px 24px;
-  }
-  .iphone-frame{
-    width:390px;
-    height:844px;
-    border-radius:54px;
-    background:#0C1220;
-    box-shadow:
-      0 0 0 1px rgba(255,255,255,0.15) inset,
-      0 0 0 10px #1A1A1A,
-      0 0 0 11px #2A2A2A,
-      0 32px 80px rgba(0,0,0,0.55),
-      0 8px 24px rgba(0,0,0,0.35);
-    position:relative;
-    overflow:hidden;
-    flex-shrink:0;
-  }
-  /* Dynamic Island */
-  .iphone-frame::before{
-    content:'';
-    position:absolute;top:12px;left:50%;transform:translateX(-50%);
-    width:120px;height:34px;
-    background:#000;border-radius:999px;
-    z-index:1000;
-  }
-  /* Side button - power */
-  .iphone-frame::after{
-    content:'';
-    position:absolute;top:160px;right:-12px;
-    width:4px;height:72px;background:#2A2A2A;border-radius:0 3px 3px 0;
-    box-shadow:0 90px 0 #2A2A2A,0 -90px 0 #2A2A2A;
-    z-index:999;
-  }
-  /* Scrollable screen area */
-  .iphone-screen{
-    width:100%;height:100%;
-    overflow-y:auto;overflow-x:hidden;
-    border-radius:54px;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
-  .iphone-screen::-webkit-scrollbar{display:none}
-  /* Home indicator bar */
-  .home-indicator{
-    position:sticky;bottom:0;left:0;right:0;
-    height:34px;display:flex;align-items:center;justify-content:center;
-    background:transparent;z-index:100;pointer-events:none;
-  }
-  .home-indicator::before{
-    content:'';width:134px;height:5px;border-radius:999px;
-    background:rgba(255,255,255,0.25);
-  }
-  /* Phases fill the frame */
-  #phase1,#phase2,#phase3{width:390px;min-width:390px}
-  #phase1{min-height:810px}
-  /* Status bar: hide our custom one, the Dynamic Island provides the top chrome */
-  .status-bar{padding-top:52px}
+.panel-group-label{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+  color:#848484;margin:14px 0 8px;
 }
+.panel-brand-chips{display:flex;flex-wrap:wrap;gap:8px}
+.panel-brand-chip{
+  padding:8px 14px;border-radius:999px;
+  border:1.5px solid rgba(12,18,32,0.12);background:#fff;
+  font-size:13px;font-weight:600;color:#1f1f1f;
+  cursor:pointer;transition:all 0.15s;
+  font-family:'Gilroy',sans-serif;
+  -webkit-tap-highlight-color:transparent;
+}
+.panel-brand-chip:hover{border-color:#FBD748;background:rgba(251,215,72,0.06)}
 
-/* Mobile: no frame */
+/* ── MOBILE ── */
 @media(max-width:599px){
-  .iphone-frame,.iphone-screen,.home-indicator{display:contents}
+  .page-wrapper{padding:0;background:var(--bg-base);min-height:100vh}
+  .desktop-header{display:none}
+  #phone-shell{
+    width:100%;height:auto;min-height:100vh;
+    border-radius:0;box-shadow:none;overflow:visible;
+  }
+  #phone-shell::before,#phone-shell::after{display:none}
+  .dynamic-island{display:none}
+  #inner{
+    width:100%;height:auto;min-height:calc(100vh - 52px);overflow:visible;
+  }
+  .home-indicator{display:none}
+  .phase{min-height:calc(100vh - 52px - 4px)}
+  #loading-phase{min-height:calc(100vh - 52px - 4px)}
+  #results-phase{min-height:calc(100vh - 52px - 4px)}
+  .mobile-header{display:flex !important}
+  body{background:var(--bg-base)}
+}
+
+/* Mobile inner header */
+.mobile-header{
+  display:none;
+  align-items:center;
+  gap:10px;
+  height:52px;
+  padding:0 var(--pp);
+  background:var(--bg-dark);
+  position:sticky;top:0;z-index:50;
+  flex-shrink:0;
+}
+.mobile-header .logo-mark-sm{
+  width:30px;height:30px;border-radius:7px;
+  background:var(--gold-grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;color:var(--bg-dark);
+  box-shadow:var(--shadow-gold);flex-shrink:0;
+  font-family:'Gilroy',sans-serif;
+}
+.mobile-header .logo-text{font-size:14px;font-weight:700;color:#fff}
+.mobile-header .logo-sep{width:1px;height:16px;background:rgba(255,255,255,0.15)}
+.mobile-header .logo-sub{font-size:12px;font-weight:500;color:rgba(255,255,255,0.5)}
+
+@media(min-width:600px){
+  .mobile-header{display:none !important}
 }
 </style>
 </head>
 <body>
-<div class="iphone-frame">
-<div class="iphone-screen">
-
-<!-- ══ PHASE 1: INPUT ══ -->
-<div id="phase1">
-
-  <!-- iOS status bar simulation -->
-  <div class="status-bar">
-    <span>9:41</span>
-    <div class="status-icons">
-      <span>▌▌▌</span>
-      <span>WiFi</span>
-      <span>🔋</span>
-    </div>
+<div class="page-wrapper">
+  <!-- Desktop header -->
+  <div class="desktop-header">
+    <div class="logo-mark">M</div>
+    <div class="logo-text">Multipl</div>
+    <div class="logo-sep"></div>
+    <div class="logo-sub">Spend Analyzer</div>
   </div>
 
-  <!-- Back button -->
-  <div class="back-btn" onclick="history.back()">‹</div>
+  <div id="phone-shell">
+    <div class="dynamic-island"></div>
 
-  <!-- Main content -->
-  <div class="p1-content">
-
-    <h1 class="p1-headline">What could your spending be earning you?</h1>
-    <p class="p1-sub">Tell us a bit about yourself — we'll show you exactly what you're leaving on the table every month.</p>
-
-    <!-- Age group -->
-    <div class="chip-group">
-      <div class="chip-group-label">Your age</div>
-      <div class="chips-row" id="age-chips">
-        <button class="chip" data-group="age" data-val="a1">22–26</button>
-        <button class="chip" data-group="age" data-val="a2">27–32</button>
-        <button class="chip" data-group="age" data-val="a3">33–40</button>
-        <button class="chip" data-group="age" data-val="a4">40+</button>
+    <div id="inner">
+      <!-- Mobile header -->
+      <div class="mobile-header">
+        <div class="logo-mark-sm">M</div>
+        <div class="logo-text">Multipl</div>
+        <div class="logo-sep"></div>
+        <div class="logo-sub">Spend Analyzer</div>
       </div>
-    </div>
 
-    <!-- Monthly income -->
-    <div class="chip-group">
-      <div class="chip-group-label">Monthly income</div>
-      <div class="chips-row" id="income-chips">
-        <button class="chip" data-group="income" data-val="i1">₹30–50k</button>
-        <button class="chip" data-group="income" data-val="i2">₹50–80k</button>
-        <button class="chip" data-group="income" data-val="i3">₹80–1.25L</button>
-        <button class="chip" data-group="income" data-val="i4">₹1.25–2L</button>
-        <button class="chip" data-group="income" data-val="i5">₹2L+</button>
-      </div>
-    </div>
+      <!-- Progress bar -->
+      <div id="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
 
-  </div>
+      <!-- Wizard phases -->
+      <div id="phases">
 
-  <!-- Bottom CTA section -->
-  <div class="p1-bottom">
-    <div class="trust-row">
-      <span class="trust-item">SEBI/AMFI registered</span>
-      <span class="trust-dot"></span>
-      <span class="trust-item">100% secured</span>
-      <span class="trust-dot"></span>
-      <span class="trust-item">5 Lakh+ customers</span>
-    </div>
-    <p class="p1-motivator" id="p1-motivator">Select your age &amp; income to see your number</p>
-    <button class="btn-pill disabled" id="cta-btn" disabled onclick="startCalculation()">
-      Show me what I'm missing →
-    </button>
-    <p class="cta-footnote">Based on historical returns of liquid mutual funds</p>
-  </div>
-
-</div>
-
-<!-- ══ PHASE 2: LOADING ══ -->
-<div id="phase2" style="display:none;opacity:0">
-  <div class="loading-wrap">
-    <div class="spinner"></div>
-    <div class="step-lines">
-      <div class="step-line" id="step1">
-        <div class="pulse-dot"></div>
-        <span class="step-text">Mapping spending patterns for your age group...</span>
-      </div>
-      <div class="step-line" id="step2">
-        <div class="pulse-dot"></div>
-        <span class="step-text">Calculating your float earning potential...</span>
-      </div>
-      <div class="step-line" id="step3">
-        <div class="pulse-dot"></div>
-        <span class="step-text">Finding brands where you typically spend...</span>
-      </div>
-      <div class="step-line" id="step4">
-        <div class="pulse-dot"></div>
-        <span class="step-text">Building your personalized report...</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PHASE 3: RESULTS ══ -->
-<div id="phase3" style="display:none;opacity:0">
-  <div class="wrap">
-
-    <!-- Card A: Hero -->
-    <div class="result-card-wrapper" id="card-a">
-      <div class="hero-result-card">
-        <div class="hero-glow-1"></div>
-        <div class="hero-glow-2"></div>
-        <div class="hero-glow-3"></div>
-        <p class="hero-label-top">People like you earn an extra</p>
-        <div class="hero-number" id="hero-counter">₹0</div>
-        <p class="hero-label-bottom">per year on Multipl</p>
-        <p class="hero-caption">Powered by SEBI-regulated mutual funds · Withdraw anytime</p>
-      </div>
-    </div>
-
-    <!-- Card B: Spending Profile -->
-    <div class="result-card-wrapper" id="card-b">
-      <div class="result-card">
-        <div class="card-headline">Where people like you spend</div>
-
-        <!-- Food & Dining -->
-        <div class="category-row" id="cat-food">
-          <div class="cat-header">
-            <div class="cat-icon" style="background:rgba(251,215,72,0.12)">🍽️</div>
-            <span class="cat-name" style="color:#8B7000">Food &amp; Dining</span>
-            <span class="cat-amount" id="cat-food-amt"></span>
+        <!-- Step 1 — Income -->
+        <div class="phase active" id="phase-1">
+          <div class="arc-deco">
+            <div class="arc arc-1"></div>
+            <div class="arc arc-2"></div>
+            <div class="arc arc-3"></div>
           </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="prog-food"></div>
-          </div>
-          <div class="brand-circles">
-            <div class="brand-circle" style="background:#FF6600" title="Swiggy">SW</div>
-            <div class="brand-circle" style="background:#CB202D" title="Zomato">ZO</div>
-            <div class="brand-circle" style="background:#84C225" title="BigBasket">BB</div>
-            <div class="brand-circle" style="background:#0F4C81" title="Spencer's">SP</div>
-          </div>
-        </div>
-
-        <!-- Shopping -->
-        <div class="category-row" id="cat-shopping">
-          <div class="cat-header">
-            <div class="cat-icon" style="background:rgba(74,159,255,0.12)">🛍️</div>
-            <span class="cat-name" style="color:#1A5FA8">Shopping</span>
-            <span class="cat-amount" id="cat-shopping-amt"></span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="prog-shopping"></div>
-          </div>
-          <div class="brand-circles">
-            <div class="brand-circle" style="background:#2874F0" title="Flipkart">FL</div>
-            <div class="brand-circle" style="background:#FF9900;color:#000" title="Amazon">AM</div>
-            <div class="brand-circle" style="background:#FF3F6C" title="Myntra">MN</div>
-            <div class="brand-circle" style="background:#FC2779" title="Nykaa">NK</div>
-          </div>
-        </div>
-
-        <!-- Travel -->
-        <div class="category-row" id="cat-travel">
-          <div class="cat-header">
-            <div class="cat-icon" style="background:rgba(0,212,170,0.12)">✈️</div>
-            <span class="cat-name" style="color:var(--teal-text)">Travel</span>
-            <span class="cat-amount" id="cat-travel-amt"></span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="prog-travel"></div>
-          </div>
-          <div class="brand-circles">
-            <div class="brand-circle" style="background:#E8196A" title="MakeMyTrip">MK</div>
-            <div class="brand-circle" style="background:#EB3A2F" title="ixigo">IB</div>
-            <div class="brand-circle" style="background:#E8146B" title="Goibibo">GY</div>
-            <div class="brand-circle" style="background:#1a1a1a" title="IRCTC">IR</div>
-          </div>
-        </div>
-
-        <!-- Home & Utilities -->
-        <div class="category-row" id="cat-home">
-          <div class="cat-header">
-            <div class="cat-icon" style="background:rgba(251,215,72,0.08)">🏠</div>
-            <span class="cat-name" style="color:#8B7000">Home &amp; Utilities</span>
-            <span class="cat-amount" id="cat-home-amt"></span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="prog-home"></div>
-          </div>
-          <div class="brand-circles">
-            <div class="brand-circle" style="background:#7B2D8B" title="Urban Co.">UR</div>
-            <div class="brand-circle" style="background:#003087" title="Jio">JO</div>
-            <div class="brand-circle" style="background:#ED1C24" title="Airtel">AI</div>
-            <div class="brand-circle" style="background:#5C4033" title="Duke">DU</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Card C: Comparison -->
-    <div class="result-card-wrapper" id="card-c">
-      <div class="result-card">
-        <div class="card-headline">Multipl vs your bank</div>
-        <div class="two-col-compare">
-          <!-- Bank column -->
-          <div class="compare-col bank">
-            <div class="compare-header">🏦 Your Bank</div>
-            <div class="compare-row">
-              <span class="compare-row-label">Interest @2.5%</span>
-              <span class="compare-row-val bank-clr" id="bank-interest-val"></span>
+          <div class="phase-inner">
+            <div style="height:16px"></div>
+            <div class="phase-headline">What's your monthly<br>income?</div>
+            <div class="phase-sub">We'll estimate your typical spend mix</div>
+            <div class="chips-grid" id="income-chips">
+              <div class="chip" data-val="i1">&lt; ₹30k</div>
+              <div class="chip" data-val="i2">₹30–50k</div>
+              <div class="chip" data-val="i3">₹50–80k</div>
+              <div class="chip" data-val="i4">₹80–1.25L</div>
+              <div class="chip" data-val="i5">&gt; ₹1.25L</div>
             </div>
-            <div class="compare-row">
-              <span class="compare-row-label">Brand savings</span>
-              <span class="compare-row-val bank-dim">₹0</span>
-            </div>
-            <div class="compare-divider"></div>
-            <div class="compare-total-row">
-              <span class="compare-total-label">Total/year</span>
-              <span class="compare-total-val bank-clr" id="bank-total-val"></span>
-            </div>
-          </div>
-          <!-- Multipl column -->
-          <div class="compare-col multipl">
-            <div class="compare-header">⚡ Multipl</div>
-            <div class="compare-row">
-              <span class="compare-row-label">Interest @7%</span>
-              <span class="compare-row-val mul-clr" id="multipl-interest-val"></span>
-            </div>
-            <div class="compare-row">
-              <span class="compare-row-label">Brand savings</span>
-              <span class="compare-row-val mul-clr" id="brand-savings-val"></span>
-            </div>
-            <div class="compare-divider"></div>
-            <div class="compare-total-row">
-              <span class="compare-total-label">Total/year</span>
-              <span class="compare-total-val mul-clr" id="multipl-total-val"></span>
+            <div class="cta-row">
+              <button class="cta-btn" id="step1-next" disabled>Next →</button>
+              <div class="social-proof">Join 50,000+ people who found their money blind spot</div>
             </div>
           </div>
         </div>
-        <div class="loss-badge">
-          You're leaving <strong id="loss-badge-val"></strong> on the table every year
+
+        <!-- Step 2 — Age -->
+        <div class="phase" id="phase-2">
+          <div class="phase-inner">
+            <button class="back-btn" id="back-2">←</button>
+            <div class="phase-headline">How old are you?</div>
+            <div class="chips-grid" id="age-chips">
+              <div class="chip wide" data-val="18-23">18–23</div>
+              <div class="chip wide" data-val="24-30">24–30</div>
+              <div class="chip wide" data-val="31-35">31–35</div>
+              <div class="chip wide" data-val="35+">35+</div>
+            </div>
+            <div class="cta-row">
+              <button class="cta-btn" id="step2-next" disabled>Next →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 — Marital Status -->
+        <div class="phase" id="phase-3">
+          <div class="phase-inner">
+            <button class="back-btn" id="back-3">←</button>
+            <div class="phase-headline">What's your relationship<br>status?</div>
+            <div class="chips-grid" id="marital-chips">
+              <div class="chip wide" data-val="single">Single</div>
+              <div class="chip wide" data-val="married">Married</div>
+            </div>
+            <div class="cta-row">
+              <button class="cta-btn" id="step3-next" disabled>Next →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 — Spend Style -->
+        <div class="phase" id="phase-4">
+          <div class="phase-inner">
+            <button class="back-btn" id="back-4">←</button>
+            <div class="phase-headline">How do you usually pay?</div>
+            <div class="chips-grid stacked" id="style-chips">
+              <div class="chip full" data-val="upi-mix">UPI for daily, card for big buys</div>
+              <div class="chip full" data-val="credit">Everything on credit card</div>
+              <div class="chip full" data-val="upi-only">UPI for everything</div>
+            </div>
+            <div class="cta-row">
+              <button class="cta-btn" id="step4-next" disabled>Next →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 — Brands -->
+        <div class="phase" id="phase-5">
+          <div class="phase-inner">
+            <button class="back-btn" id="back-5">←</button>
+            <div class="phase-headline">Which brands do you<br>shop at?</div>
+            <div class="phase-sub">Optional — but makes your report more accurate</div>
+            <div class="brand-chips" id="brand-chips">
+              <div class="brand-chip" data-val="Swiggy">Swiggy</div>
+              <div class="brand-chip" data-val="Zomato">Zomato</div>
+              <div class="brand-chip" data-val="Amazon">Amazon</div>
+              <div class="brand-chip" data-val="Flipkart">Flipkart</div>
+              <div class="brand-chip" data-val="Myntra">Myntra</div>
+              <div class="brand-chip" data-val="Nykaa">Nykaa</div>
+              <div class="brand-chip" data-val="Ajio">Ajio</div>
+              <div class="brand-chip" data-val="Uber">Uber</div>
+              <div class="brand-chip" data-val="MakeMyTrip">MakeMyTrip</div>
+              <div class="brand-chip" data-val="Zepto">Zepto</div>
+              <div class="brand-chip" data-val="Decathlon">Decathlon</div>
+              <div class="brand-chip" data-val="Tata Cliq">Tata Cliq</div>
+            </div>
+            <div class="cta-row-inline">
+              <button class="skip-link" id="step5-skip">Skip</button>
+              <button class="cta-btn" id="step5-analyse" style="flex:1;min-width:0">Analyse my spends →</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /phases -->
+
+      <!-- Loading phase -->
+      <div id="loading-phase">
+        <div class="shimmer-card">
+          <div class="shimmer-row tall first"></div>
+          <div class="shimmer-row medium"></div>
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row short"></div>
+          <div class="shimmer-row medium"></div>
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row short"></div>
+        </div>
+        <div class="status-pill" id="status-pill">
+          <div class="gold-dot" id="gold-dot"></div>
+          <span id="status-text">Mapping your spend profile...</span>
         </div>
       </div>
-    </div>
 
-    <!-- Card D: CTA -->
-    <div class="result-card-wrapper" id="card-d">
-      <div class="cta-card">
-        <button class="btn-pill" id="results-cta-btn" style="margin-bottom:12px">
-          Start earning <span id="cta-gain"></span>/year →
-        </button>
-        <button class="btn-recalc" onclick="recalculate()">Recalculate</button>
-      </div>
-    </div>
+      <!-- Results phase -->
+      <div id="results-phase">
 
+        <!-- Card 1 — Hero -->
+        <div class="result-card" id="card-1">
+          <div class="card1-label">You could save an extra</div>
+          <div class="card1-counter" id="counter-el">₹0</div>
+          <div class="card1-suffix">every year on Multipl</div>
+          <div class="card1-breakdown" id="breakdown-pill">₹0 yield uplift · ₹0 brand savings</div>
+          <div class="card1-caption">vs leaving money in a 2.5% savings account · Withdraw anytime</div>
+        </div>
+
+        <!-- Card 2 — Spend Mix -->
+        <div class="result-card" id="card-2">
+          <div class="card2-header">
+            <div class="card2-title">Your estimated spends</div>
+            <div class="card2-total" id="card2-total">₹0/yr</div>
+          </div>
+          <div class="card2-sub">Tap any row to edit</div>
+          <div class="spend-rows" id="spend-rows"></div>
+          <div class="add-spend-row" id="add-spend-btn">
+            <div class="add-icon">+</div>
+            Add spend
+          </div>
+          <div class="accordion">
+            <div class="accordion-header" id="accordion-header">
+              <span class="accordion-header-text">How we estimated this</span>
+              <span class="accordion-chevron" id="accordion-chevron">▾</span>
+            </div>
+            <div class="accordion-body" id="accordion-body">
+              <div class="accordion-body-inner">
+                We used your income bracket, age, and lifestyle signals to model typical Indian household spend patterns. Food delivery, groceries, shopping, and travel allocations are based on aggregated anonymised transaction data. Your brand preferences (if provided) adjust brand allocations. All amounts are estimates — edit any row to match your actual spends.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 — Comparison -->
+        <div class="result-card" id="card-3">
+          <div class="card3-title">Multipl vs your bank</div>
+          <div class="compare-cols">
+            <div class="compare-col bank">
+              <div class="compare-col-label">Your Bank</div>
+              <div class="compare-line" id="bank-interest-line">Interest @2.5% = ₹0</div>
+              <div class="compare-line">Brand savings = ₹0</div>
+              <div class="compare-total" id="bank-total-line">₹0</div>
+            </div>
+            <div class="compare-col multipl">
+              <div class="compare-col-label">Multipl</div>
+              <div class="compare-line" id="multipl-interest-line">Interest @7% = ₹0</div>
+              <div class="compare-line" id="multipl-brand-line">Brand savings = ₹0</div>
+              <div class="compare-total" id="multipl-total-line">₹0</div>
+            </div>
+          </div>
+          <div class="loss-badge">
+            You're leaving <span class="loss-gold" id="loss-amt">₹0</span>/year on the table
+          </div>
+        </div>
+
+        <!-- Card 4 — Activation -->
+        <div class="result-card" id="card-4">
+          <div class="card4-heading" id="card4-heading">Keep ₹0 as your spending balance</div>
+          <div class="card4-sub">~6 months of your typical spends</div>
+          <div class="card4-body">Banks give you 2.5%. You deserve better.</div>
+          <button class="card4-cta" id="activate-btn">Activate my Spending Account →</button>
+          <button class="card4-secondary" id="recalculate-btn">Recalculate</button>
+          <div class="card4-disclaimer">Illustrative estimates. Returns are market-linked and not guaranteed.</div>
+        </div>
+
+      </div><!-- /results-phase -->
+    </div><!-- /inner -->
+
+    <div class="home-indicator"></div>
+  </div><!-- /phone-shell -->
+</div><!-- /page-wrapper -->
+
+<!-- Add Spend Bottom Sheet -->
+<div id="add-spend-overlay">
+  <div class="add-spend-panel" id="add-spend-panel">
+    <div class="panel-header">
+      <div class="panel-title">Add a spend</div>
+      <button class="panel-close" id="panel-close-btn">✕</button>
+    </div>
+    <div id="panel-brand-list"></div>
   </div>
 </div>
 
 <script>
-/* ══ DATA MODEL ══ */
-const INCOME_PROFILES = {
-  i1: { monthly_spend:22000,  avg_balance:130000,  eligible_annual:180000  },
-  i2: { monthly_spend:38000,  avg_balance:230000,  eligible_annual:300000  },
-  i3: { monthly_spend:58000,  avg_balance:350000,  eligible_annual:460000  },
-  i4: { monthly_spend:80000,  avg_balance:480000,  eligible_annual:640000  },
-  i5: { monthly_spend:110000, avg_balance:660000,  eligible_annual:880000  },
+// ─────────────────────────────────────────────────────────────────
+// TOKENS
+// ─────────────────────────────────────────────────────────────────
+const INCOME_MONTHLY = { i1:35000, i2:65000, i3:110000, i4:200000, i5:300000 };
+const BASE_RATIO     = { i1:0.70,  i2:0.62,  i3:0.55,   i4:0.48,   i5:0.42  };
+const MF_RATE=0.07, BANK_RATE=0.025, RATE_DIFF=0.045, HOLDING=0.5;
+
+const DISCOUNT = {
+  'Swiggy':0.05,'Zomato':0.05,'Zepto':0.05,'Amazon Fresh':0.05,
+  'Amazon':0.02,'Flipkart':0.02,
+  'Tata Cliq':0.06,'Nykaa':0.06,'Ajio':0.06,'Myntra':0.06,'Decathlon':0.06,
+  'Tata Cliq Luxury':0.06,'Ajio Luxe':0.06,
+  'Tanishq':0,'Kalyan Jewellers':0,'Malabar Gold':0,
+  'MakeMyTrip Flights':0.06,'MakeMyTrip Hotels':0.10,'Uber':0.05,
+  'Rent Payment':0,'Credit Card Bill Payment':0,
 };
 
-const AGE_PROFILES = {
-  a1: { weights:{food:0.35,shopping:0.20,travel:0.15,home:0.30}, mult:0.70 },
-  a2: { weights:{food:0.30,shopping:0.22,travel:0.18,home:0.30}, mult:0.78 },
-  a3: { weights:{food:0.25,shopping:0.27,travel:0.20,home:0.28}, mult:0.75 },
-  a4: { weights:{food:0.22,shopping:0.25,travel:0.22,home:0.31}, mult:0.72 },
+const BRAND_COLORS = {
+  'Swiggy':'#FF5200','Zomato':'#E23744','Amazon':'#FF9900','Amazon Fresh':'#5BA52C',
+  'Flipkart':'#2874F0','Myntra':'#FF3F6C','Nykaa':'#FC2779','Ajio':'#2C2C2C',
+  'Decathlon':'#007DC5','Zepto':'#8B3FE8','Tata Cliq':'#F37021','Uber':'#1a1a1a',
+  'MakeMyTrip Flights':'#0066FF','MakeMyTrip Hotels':'#E5332A','MakeMyTrip':'#0066FF',
+  'Rent Payment':'#6B7280','Credit Card Bill Payment':'#374151',
+  'Tata Cliq Luxury':'#C9A96E','Ajio Luxe':'#7C6B5D','Tanishq':'#B8960C',
+  'Kalyan Jewellers':'#9A2828','Malabar Gold':'#C68A00',
 };
 
-// Category-level brand discount rates (per Multipl brand partnerships)
-// Food & dining: 4% | Shopping: Amazon 2%, Nykaa/Ajio 6% → blended ~4.5%
-// Travel: MakeMyTrip flights 6% | Home/utilities: no discount
-const CAT_DISCOUNTS = {
-  food:     0.040,  // Swiggy, Zomato, BigBasket — 4%
-  shopping: 0.045,  // Amazon 2% + Nykaa/Ajio 6% → blended ~4.5%
-  travel:   0.060,  // MakeMyTrip flights 6%
-  home:     0.000,  // No brand discounts on utilities
+const BRAND_GROUPS = {
+  'Food & Groceries': ['Swiggy','Zomato','Zepto','Amazon Fresh'],
+  'Shopping': ['Amazon','Flipkart','Myntra','Nykaa','Ajio','Decathlon','Tata Cliq','Tata Cliq Luxury','Ajio Luxe'],
+  'Travel': ['Uber','MakeMyTrip Flights','MakeMyTrip Hotels'],
+  'Jewellery': ['Tanishq','Kalyan Jewellers','Malabar Gold'],
+  'Payments': ['Rent Payment','Credit Card Bill Payment'],
 };
 
-function calculateResults(ageKey, incomeKey) {
-  const inc = INCOME_PROFILES[incomeKey];
-  const age = AGE_PROFILES[ageKey];
-  const multipl_interest = Math.round(inc.avg_balance * 0.07);
-  const bank_interest    = Math.round(inc.avg_balance * 0.025);
+// ─────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────
+var persona    = { income:null, age:null, marital:null, spendStyle:null, brands:[] };
+var spendRows  = [];
+var totals     = {};
+var currentStep = 1;
+var ctaLocked  = false;
+var nextRowId  = 100;
 
-  // Brand savings: per-category eligible spend × category discount rate × age eligibility multiplier
-  const catKeys = ['food','shopping','travel','home'];
-  let brand_savings = 0;
-  const categories = catKeys.map(function(k) {
-    const monthly  = Math.round(inc.monthly_spend * age.weights[k]);
-    const annual   = monthly * 12;
-    const saving   = Math.round(annual * age.mult * CAT_DISCOUNTS[k]);
-    brand_savings += saving;
-    return {
-      key: k,
-      label: k==='food'?'Food & Dining': k==='shopping'?'Shopping': k==='travel'?'Travel':'Home & Utilities',
-      emoji: k==='food'?'🍽️': k==='shopping'?'🛍️': k==='travel'?'✈️':'🏠',
-      monthly, saving,
-      discount: Math.round(CAT_DISCOUNTS[k]*100),
-    };
-  });
+// ─────────────────────────────────────────────────────────────────
+// SEEDED RNG
+// ─────────────────────────────────────────────────────────────────
+function mulberry32(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
 
-  const total_multipl = multipl_interest + brand_savings;
-  const net_gain      = total_multipl - bank_interest;
-  return { multipl_interest, bank_interest, brand_savings, total_multipl, net_gain, avg_balance:inc.avg_balance, categories };
+function hashPersona(p) {
+  var s = '' + p.income + p.age + p.marital + p.spendStyle;
+  var h = 0;
+  for (var i=0; i<s.length; i++) { h = Math.imul(31,h) + s.charCodeAt(i) | 0; }
+  return Math.abs(h);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────────────────────────────
+function periodsPerYear(freq) {
+  return freq==='monthly' ? 12 : freq==='quarterly' ? 4 : 1;
+}
+
+function roundAmount(amount, freq) {
+  if (freq==='monthly')   { amount = Math.round(amount/100)*100;  return Math.max(500,  amount); }
+  if (freq==='quarterly') { amount = Math.round(amount/500)*500;  return Math.max(2000, amount); }
+  amount = Math.round(amount/1000)*1000; return Math.max(5000, amount);
 }
 
 function fmt(n) {
-  return '₹' + n.toLocaleString('en-IN');
+  return '₹' + Math.round(n).toLocaleString('en-IN');
 }
 
-/* ══ STATE ══ */
-let selectedAge = null;
-let selectedIncome = null;
-let calculating = false;
+function getBrandColor(brand) {
+  return BRAND_COLORS[brand] || '#6B7280';
+}
 
-/* ══ CHIP SELECTION ══ */
-document.querySelectorAll('.chip').forEach(function(chip) {
-  chip.addEventListener('click', function() {
-    const group = this.dataset.group;
-    const val   = this.dataset.val;
+function nextFreq(f) {
+  return f==='monthly' ? 'quarterly' : f==='quarterly' ? 'yearly' : 'monthly';
+}
 
-    // Deselect siblings
-    document.querySelectorAll('.chip[data-group="' + group + '"]').forEach(function(c) {
-      c.classList.remove('selected');
-    });
-    this.classList.add('selected');
+function freqLabel(freq) {
+  return freq==='monthly' ? '/mo' : freq==='quarterly' ? '/qtr' : '/yr';
+}
 
-    if (group === 'age')    selectedAge    = val;
-    if (group === 'income') selectedIncome = val;
+// ─────────────────────────────────────────────────────────────────
+// SPEND ROW GENERATION
+// ─────────────────────────────────────────────────────────────────
+function generateSpendRows(p) {
+  var rng = mulberry32(hashPersona(p));
+  var incomeKey    = p.income;
+  var incomeMonthly = INCOME_MONTHLY[incomeKey];
 
-    updateCTAState();
-  });
-});
+  var ratio = BASE_RATIO[incomeKey];
+  if (p.marital === 'married') ratio += 0.03;
+  if (p.age === '18-23')       ratio -= 0.03;
+  if (p.age === '35+')         ratio += 0.02;
+  ratio = Math.min(0.72, Math.max(0.38, ratio));
 
-function updateCTAState() {
-  const btn = document.getElementById('cta-btn');
-  const motivator = document.getElementById('p1-motivator');
+  var spendMonthly = incomeMonthly * ratio;
+  var rows = [];
+  var remainingMonthly = spendMonthly;
+  var rowId = 0;
 
-  if (selectedAge && selectedIncome) {
-    btn.disabled = false;
-    btn.classList.remove('disabled');
-    // Calculate and show teaser number
-    const r = calculateResults(selectedAge, selectedIncome);
-    if (motivator) motivator.innerHTML = 'People like you earn <strong>' + fmt(r.net_gain) + '</strong> extra/year on Multipl';
+  // RENT
+  var includeRent = incomeKey !== 'i5' && p.marital !== 'married';
+  if (includeRent) {
+    var rentPct = 0.15 + rng() * 0.13;
+    var rentMonthly = roundAmount(spendMonthly * rentPct, 'monthly');
+    rows.push({ id:rowId++, brand:'Rent Payment', amount:rentMonthly, freq:'monthly', discount:0 });
+    remainingMonthly -= rentMonthly;
+  }
+
+  // CATEGORY SHARES
+  var foodShare   = 0.08 + rng()*0.04;
+  var grocShare   = 0.10 + rng()*0.06;
+  var shopShare   = 0.10 + rng()*0.08;
+  var uberShare   = 0.04 + rng()*0.04;
+  var travelShare = 0.03 + rng()*0.05;
+
+  if (p.age === '18-23') { foodShare *= 1.15; travelShare *= 0.8; }
+  if (p.age === '35+')   { grocShare *= 1.15; foodShare   *= 0.9; }
+  if (p.marital === 'married') { grocShare *= 1.15; shopShare *= 0.85; }
+
+  var catTotal = foodShare+grocShare+shopShare+uberShare+travelShare;
+  foodShare/=catTotal; grocShare/=catTotal; shopShare/=catTotal; uberShare/=catTotal; travelShare/=catTotal;
+
+  var foodMonthly   = remainingMonthly * foodShare;
+  var grocMonthly   = remainingMonthly * grocShare;
+  var shopMonthly   = remainingMonthly * shopShare;
+  var uberMonthly   = remainingMonthly * uberShare;
+  var travelMonthly = remainingMonthly * travelShare;
+
+  var userFavs = p.brands || [];
+
+  // FOOD
+  var foodBrand = null;
+  if (userFavs.indexOf('Swiggy') !== -1 && userFavs.indexOf('Zomato') !== -1) {
+    rows.push({ id:rowId++, brand:'Swiggy', amount:roundAmount(foodMonthly*0.55,'monthly'), freq:'monthly', discount:DISCOUNT['Swiggy'] });
+    rows.push({ id:rowId++, brand:'Zomato', amount:roundAmount(foodMonthly*0.45,'monthly'), freq:'monthly', discount:DISCOUNT['Zomato'] });
+  } else if (userFavs.indexOf('Swiggy') !== -1) {
+    foodBrand = 'Swiggy';
+  } else if (userFavs.indexOf('Zomato') !== -1) {
+    foodBrand = 'Zomato';
   } else {
-    btn.disabled = true;
-    btn.classList.add('disabled');
-    if (!selectedAge && !selectedIncome) {
-      if (motivator) motivator.innerHTML = 'Select your age &amp; income to see your number';
-    } else if (selectedAge && !selectedIncome) {
-      if (motivator) motivator.innerHTML = 'Now select your income &rarr;';
-    } else if (!selectedAge && selectedIncome) {
-      if (motivator) motivator.innerHTML = 'Now select your age &rarr;';
+    foodBrand = rng() < 0.5 ? 'Swiggy' : 'Zomato';
+  }
+  if (foodBrand) {
+    rows.push({ id:rowId++, brand:foodBrand, amount:roundAmount(foodMonthly,'monthly'), freq:'monthly', discount:DISCOUNT[foodBrand] });
+  }
+
+  // GROCERIES
+  var grocBrand;
+  if (userFavs.indexOf('Zepto') !== -1)          grocBrand = 'Zepto';
+  else if (userFavs.indexOf('Amazon Fresh') !== -1) grocBrand = 'Amazon Fresh';
+  else grocBrand = rng() < 0.55 ? 'Zepto' : 'Amazon Fresh';
+  rows.push({ id:rowId++, brand:grocBrand, amount:roundAmount(grocMonthly,'monthly'), freq:'monthly', discount:DISCOUNT[grocBrand] });
+
+  // SHOPPING
+  var shopAnnual = shopMonthly * 12;
+  var isHighIncome = incomeKey==='i4' || incomeKey==='i5';
+  var shopFreqChances = { i1:0.20, i2:0.20, i3:0.35, i4:0.50, i5:0.50 };
+  var shopFreq = rng() < (shopFreqChances[incomeKey] || 0.2) ? 'monthly' : 'quarterly';
+  var fashionBrands = ['Myntra','Ajio','Nykaa','Decathlon','Tata Cliq','Flipkart'];
+  var userShopFavs  = userFavs.filter(function(b){ return fashionBrands.indexOf(b)!==-1 || b==='Amazon' || b==='Flipkart'; });
+
+  if (isHighIncome) {
+    var shopBrands = ['Amazon','Tata Cliq Luxury','Ajio Luxe'];
+    var extra = fashionBrands[Math.floor(rng()*fashionBrands.length)];
+    if (shopBrands.indexOf(extra) === -1) shopBrands.push(extra);
+    var maxShare = incomeKey==='i5' ? 0.35 : 0.45;
+    var shares = shopBrands.map(function(_,i){ return i===0 ? maxShare : (1-maxShare)/(shopBrands.length-1); });
+    shopBrands.forEach(function(b, i){
+      var amt = roundAmount(shopAnnual*shares[i]/periodsPerYear(shopFreq), shopFreq);
+      rows.push({ id:rowId++, brand:b, amount:amt, freq:shopFreq, discount:DISCOUNT[b]||0 });
+    });
+  } else {
+    var fashionPick;
+    if (userShopFavs.length > 0) fashionPick = userShopFavs[Math.floor(rng()*userShopFavs.length)];
+    else fashionPick = fashionBrands[Math.floor(rng()*fashionBrands.length)];
+    var amazonShare = 0.55 + rng()*0.05;
+    rows.push({ id:rowId++, brand:'Amazon', amount:roundAmount(shopAnnual*amazonShare/periodsPerYear(shopFreq), shopFreq), freq:shopFreq, discount:DISCOUNT['Amazon'] });
+    if (fashionPick && fashionPick !== 'Amazon') {
+      rows.push({ id:rowId++, brand:fashionPick, amount:roundAmount(shopAnnual*(1-amazonShare)/periodsPerYear(shopFreq), shopFreq), freq:shopFreq, discount:DISCOUNT[fashionPick]||0 });
     }
   }
-}
 
-/* ══ COUNTER ANIMATION ══ */
-function animateCounter(el, target, duration) {
-  const start = performance.now();
-  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
-  function step(now) {
-    const elapsed  = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const value    = Math.round(easeOutCubic(progress) * target);
-    el.textContent = fmt(value);
-    if (progress < 1) requestAnimationFrame(step);
+  // UBER
+  rows.push({ id:rowId++, brand:'Uber', amount:roundAmount(uberMonthly,'monthly'), freq:'monthly', discount:DISCOUNT['Uber'] });
+
+  // TRAVEL
+  var travelAnnual  = travelMonthly * 12;
+  var travelFreq    = isHighIncome && rng()<0.35 ? 'quarterly' : 'yearly';
+  var includeBothMMT = isHighIncome && rng()<0.4;
+
+  if (userFavs.indexOf('MakeMyTrip') !== -1 || includeBothMMT) {
+    rows.push({ id:rowId++, brand:'MakeMyTrip Flights', amount:roundAmount(travelAnnual*0.6/periodsPerYear(travelFreq), travelFreq), freq:travelFreq, discount:DISCOUNT['MakeMyTrip Flights'] });
+    rows.push({ id:rowId++, brand:'MakeMyTrip Hotels',  amount:roundAmount(travelAnnual*0.4/periodsPerYear(travelFreq), travelFreq), freq:travelFreq, discount:DISCOUNT['MakeMyTrip Hotels']  });
+  } else {
+    var mmtBrand = rng()<0.6 ? 'MakeMyTrip Flights' : 'MakeMyTrip Hotels';
+    rows.push({ id:rowId++, brand:mmtBrand, amount:roundAmount(travelAnnual/periodsPerYear(travelFreq), travelFreq), freq:travelFreq, discount:DISCOUNT[mmtBrand] });
   }
-  requestAnimationFrame(step);
+
+  nextRowId = rowId + 50;
+  return rows;
 }
 
-/* ══ POPULATE RESULTS ══ */
-function populateResults(ageKey, incomeKey) {
-  const r = calculateResults(ageKey, incomeKey);
+// ─────────────────────────────────────────────────────────────────
+// CALCULATION
+// ─────────────────────────────────────────────────────────────────
+function calculateTotals(rows) {
+  var totalAnnualSpend=0, totalBrandSavings=0, totalYieldUplift=0;
+  rows.forEach(function(r){
+    var ann = r.amount * periodsPerYear(r.freq);
+    totalAnnualSpend  += ann;
+    totalBrandSavings += ann * (r.discount || 0);
+    totalYieldUplift  += ann * HOLDING * RATE_DIFF;
+  });
+  var totalSavings        = totalBrandSavings + totalYieldUplift;
+  var recommendedBalance  = totalAnnualSpend * HOLDING;
+  var bankInterest        = recommendedBalance * BANK_RATE;
+  var multiplInterest     = recommendedBalance * MF_RATE;
+  return { totalAnnualSpend, totalBrandSavings, totalYieldUplift, totalSavings, recommendedBalance, bankInterest, multiplInterest };
+}
 
-  // Card A
-  // (counter animated later)
-  document.getElementById('hero-counter').textContent = '₹0';
+// ─────────────────────────────────────────────────────────────────
+// COUNTER ANIMATION
+// ─────────────────────────────────────────────────────────────────
+function animateCounter(el, target, duration) {
+  var start = performance.now();
+  function easeOutCubic(t) { return 1 - Math.pow(1-t, 3); }
+  function tick(now) {
+    var t = Math.min((now-start)/duration, 1);
+    el.textContent = fmt(Math.round(target * easeOutCubic(t)));
+    if (t < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
 
-  // Card B — category amounts (set text, zero out progress bars)
-  const maxMonthly = r.categories[0].monthly; // food is first, typically highest
-  // actually compute real max across categories
-  let maxVal = 0;
-  r.categories.forEach(function(cat) { if (cat.monthly > maxVal) maxVal = cat.monthly; });
+// ─────────────────────────────────────────────────────────────────
+// LOCALSTORAGE
+// ─────────────────────────────────────────────────────────────────
+function persist(p, rows) {
+  try { localStorage.setItem('multipl_calc', JSON.stringify({persona:p, rows:rows, ts:Date.now()})); } catch(e){}
+}
+function restore() {
+  try {
+    var d = JSON.parse(localStorage.getItem('multipl_calc') || 'null');
+    if (d && d.persona && d.rows && d.rows.length > 0) return d;
+  } catch(e){}
+  return null;
+}
+function clearPersist() {
+  try { localStorage.removeItem('multipl_calc'); } catch(e){}
+}
 
-  r.categories.forEach(function(cat) {
-    const amtEl  = document.getElementById('cat-' + cat.key + '-amt');
-    const progEl = document.getElementById('prog-' + cat.key);
-    if (amtEl) amtEl.textContent = fmt(cat.monthly) + '/mo';
-    if (progEl) { progEl.style.width = '0%'; progEl.dataset.target = String(Math.round((cat.monthly / maxVal) * 100)); }
+// ─────────────────────────────────────────────────────────────────
+// PROGRESS BAR
+// ─────────────────────────────────────────────────────────────────
+function setProgress(step) {
+  var fill = document.getElementById('progress-fill');
+  if (fill) fill.style.width = (step * 20) + '%';
+}
+
+// ─────────────────────────────────────────────────────────────────
+// STEP NAVIGATION
+// ─────────────────────────────────────────────────────────────────
+function showStep(from, to) {
+  var fromEl = document.getElementById('phase-' + from);
+  var toEl   = document.getElementById('phase-' + to);
+
+  fromEl.classList.add('slide-out');
+  setTimeout(function(){
+    fromEl.classList.remove('active', 'slide-out');
+    toEl.classList.add('active', 'slide-in');
+    setTimeout(function(){ toEl.classList.remove('slide-in'); }, 350);
+  }, 300);
+
+  currentStep = to;
+  setProgress(to);
+  var inner = document.getElementById('inner');
+  if (inner) inner.scrollTo({ top:0, behavior:'instant' });
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CHIP HELPERS
+// ─────────────────────────────────────────────────────────────────
+function setupChips(containerId, onSelect) {
+  var container = document.getElementById(containerId);
+  var chips = container.querySelectorAll('.chip');
+  chips.forEach(function(chip){
+    chip.addEventListener('click', function(){
+      chips.forEach(function(c){ c.classList.remove('selected'); });
+      chip.classList.add('selected');
+      onSelect(chip.dataset.val);
+    });
+  });
+}
+
+function setupMultiChips(containerId, onSelect) {
+  var container = document.getElementById(containerId);
+  var chips = container.querySelectorAll('.brand-chip');
+  chips.forEach(function(chip){
+    chip.addEventListener('click', function(){
+      chip.classList.toggle('selected');
+      var selected = Array.from(container.querySelectorAll('.brand-chip.selected')).map(function(c){ return c.dataset.val; });
+      onSelect(selected);
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────
+// RENDER SPEND ROWS
+// ─────────────────────────────────────────────────────────────────
+function renderSpendRows() {
+  var container = document.getElementById('spend-rows');
+  container.innerHTML = '';
+
+  spendRows.forEach(function(row){
+    var div = document.createElement('div');
+    div.className = 'spend-row';
+    div.dataset.id = row.id;
+
+    var fl = freqLabel(row.freq);
+    var color = getBrandColor(row.brand);
+    var initial = row.brand.charAt(0).toUpperCase();
+
+    div.innerHTML =
+      '<div class="brand-circle" style="background:' + color + '">' + initial + '</div>' +
+      '<div class="spend-brand">' + row.brand + '</div>' +
+      '<div class="spend-amount-wrap">' +
+        '<span class="spend-amount" data-rowid="' + row.id + '">' + fmt(row.amount) + '</span>' +
+        '<span class="freq-badge" data-rowid="' + row.id + '" data-freq="' + row.freq + '">' + fl + '</span>' +
+      '</div>' +
+      '<button class="delete-btn" data-rowid="' + row.id + '" title="Remove">&times;</button>';
+
+    container.appendChild(div);
   });
 
-  // Card C — comparison
-  document.getElementById('bank-interest-val').textContent  = fmt(r.bank_interest);
-  document.getElementById('bank-total-val').textContent     = fmt(r.bank_interest);
-  document.getElementById('multipl-interest-val').textContent = fmt(r.multipl_interest);
-  document.getElementById('brand-savings-val').textContent  = fmt(r.brand_savings);
-  document.getElementById('multipl-total-val').textContent  = fmt(r.total_multipl);
-  document.getElementById('loss-badge-val').textContent     = fmt(r.net_gain);
+  // Amount click → inline input
+  container.querySelectorAll('.spend-amount').forEach(function(el){
+    el.addEventListener('click', function(){
+      var rowId = parseInt(el.dataset.rowid);
+      var row   = spendRows.find(function(r){ return r.id === rowId; });
+      if (!row) return;
+      var input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'spend-amount-input';
+      input.value = row.amount;
+      el.replaceWith(input);
+      input.focus();
+      input.select();
 
-  // Card D
-  document.getElementById('cta-gain').textContent = fmt(r.net_gain);
+      var saved = false;
+      function save() {
+        if (saved) return;
+        saved = true;
+        var val = parseInt(input.value);
+        if (!isNaN(val) && val > 0) {
+          row.amount = val;
+          recalculate();
+          flashCard2();
+        } else {
+          renderSpendRows();
+        }
+      }
+      input.addEventListener('blur',  save);
+      input.addEventListener('keydown', function(e){ if(e.key==='Enter') input.blur(); });
+    });
+  });
 
-  return r;
+  // Freq cycle
+  container.querySelectorAll('.freq-badge').forEach(function(el){
+    el.addEventListener('click', function(){
+      var rowId = parseInt(el.dataset.rowid);
+      var row   = spendRows.find(function(r){ return r.id === rowId; });
+      if (!row) return;
+      row.freq = nextFreq(row.freq);
+      recalculate();
+      flashCard2();
+    });
+  });
+
+  // Delete
+  container.querySelectorAll('.delete-btn').forEach(function(el){
+    el.addEventListener('click', function(){
+      var rowId = parseInt(el.dataset.rowid);
+      spendRows = spendRows.filter(function(r){ return r.id !== rowId; });
+      recalculate();
+      flashCard2();
+    });
+  });
 }
 
-/* ══ MAIN FLOW ══ */
-function startCalculation() {
-  if (calculating) return;
-  if (!selectedAge || !selectedIncome) return;
-  calculating = true;
-
-  const results = populateResults(selectedAge, selectedIncome);
-
-  const phase1   = document.getElementById('phase1');
-  const phase2   = document.getElementById('phase2');
-  const phase3   = document.getElementById('phase3');
-  const ctaBtn   = document.getElementById('cta-btn');
-
-  // Disable CTA to prevent double-tap
-  ctaBtn.disabled = true;
-  ctaBtn.classList.add('disabled');
-
-  // t=0: iphone-screen bg stays neutral; phases have their own backgrounds
-
-  // Phase 1 exit animation
-  phase1.classList.add('exiting');
-
-  // t=350: hide phase1, show phase2
-  setTimeout(function() {
-    phase1.style.display = 'none';
-
-    phase2.style.display = 'flex';
-    phase2.style.opacity = '0';
-    // Force reflow
-    void phase2.offsetWidth;
-    phase2.style.transition = 'opacity 0.5s ease';
-    phase2.style.opacity = '1';
-
-    // Stagger steps from t=650 (300ms after phase2 reveal at t=350)
-    // Step offsets from loading start (t=0 of loading phase = t=350 from CTA tap)
-    const stepBase = 300; // relative to phase2 reveal
-    setTimeout(function(){ document.getElementById('step1').classList.add('visible'); }, stepBase);
-    setTimeout(function(){ document.getElementById('step2').classList.add('visible'); }, stepBase + 600);
-    setTimeout(function(){ document.getElementById('step3').classList.add('visible'); }, stepBase + 1200);
-    setTimeout(function(){ document.getElementById('step4').classList.add('visible'); }, stepBase + 1800);
-
-    // t=3500ms from loading phase start → phase2 fades out
-    setTimeout(function() {
-      phase2.style.transition = 'opacity 0.4s ease';
-      phase2.style.opacity = '0';
-
-      // t=500ms after fade start → show phase3
-      setTimeout(function() {
-        phase2.style.display = 'none';
-
-        window.scrollTo({ top: 0, behavior: 'instant' });
-
-        phase3.style.display = 'block';
-        phase3.style.opacity = '0';
-        void phase3.offsetWidth;
-        phase3.style.transition = 'opacity 0.5s ease';
-        phase3.style.opacity = '1';
-
-        // Stagger cards in
-        const cards = ['card-a','card-b','card-c','card-d'];
-        const cardDelays = [0, 120, 240, 360];
-        cards.forEach(function(id, i) {
-          setTimeout(function() {
-            document.getElementById(id).classList.add('visible');
-          }, cardDelays[i]);
-        });
-
-        // Hero counter: 300ms after reveal, 1800ms duration
-        setTimeout(function() {
-          const heroEl = document.getElementById('hero-counter');
-          animateCounter(heroEl, results.net_gain, 1800);
-        }, 300);
-
-        // Progress bars: 500ms after reveal
-        setTimeout(function() {
-          ['food','shopping','travel','home'].forEach(function(key) {
-            const el = document.getElementById('prog-' + key);
-            if (el) el.style.width = el.dataset.target + '%';
-          });
-        }, 500);
-
-      }, 500);
-
-    }, 3500);
-
-  }, 350);
+function flashCard2() {
+  var c2 = document.getElementById('card-2');
+  c2.classList.remove('flash-gold');
+  void c2.offsetWidth;
+  c2.classList.add('flash-gold');
 }
 
-/* ══ RECALCULATE ══ */
+// ─────────────────────────────────────────────────────────────────
+// UPDATE ALL RESULT TOTALS
+// ─────────────────────────────────────────────────────────────────
+function updateAllTotals() {
+  totals = calculateTotals(spendRows);
+
+  // Card 1
+  document.getElementById('breakdown-pill').textContent =
+    fmt(totals.totalYieldUplift) + ' yield uplift · ' + fmt(totals.totalBrandSavings) + ' brand savings';
+  document.getElementById('counter-el').textContent = fmt(totals.totalSavings);
+
+  // Card 2
+  document.getElementById('card2-total').textContent = fmt(totals.totalAnnualSpend) + '/yr';
+
+  // Card 3
+  var bankTotal    = totals.bankInterest;
+  var multiplTotal = totals.multiplInterest + totals.totalBrandSavings;
+  document.getElementById('bank-interest-line').textContent    = 'Interest @2.5% = ' + fmt(totals.bankInterest);
+  document.getElementById('multipl-interest-line').textContent = 'Interest @7% = '   + fmt(totals.multiplInterest);
+  document.getElementById('multipl-brand-line').textContent    = 'Brand savings = '   + fmt(totals.totalBrandSavings);
+  document.getElementById('bank-total-line').textContent       = fmt(bankTotal);
+  document.getElementById('multipl-total-line').textContent    = fmt(multiplTotal);
+  document.getElementById('loss-amt').textContent              = fmt(totals.totalSavings);
+
+  // Card 4
+  document.getElementById('card4-heading').textContent =
+    'Keep ' + fmt(totals.recommendedBalance) + ' as your spending balance';
+
+  persist(persona, spendRows);
+}
+
 function recalculate() {
-  calculating = false;
+  renderSpendRows();
+  updateAllTotals();
+}
 
-  const phase1 = document.getElementById('phase1');
-  const phase2 = document.getElementById('phase2');
-  const phase3 = document.getElementById('phase3');
+// ─────────────────────────────────────────────────────────────────
+// SHOW RESULTS
+// ─────────────────────────────────────────────────────────────────
+function showResults(rows, t) {
+  spendRows = rows;
+  totals    = t;
 
-  // Reset selections
-  selectedAge    = null;
-  selectedIncome = null;
-  document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+  // Populate before reveal
+  document.getElementById('counter-el').textContent = '₹0';
+  document.getElementById('breakdown-pill').textContent =
+    fmt(t.totalYieldUplift) + ' yield uplift · ' + fmt(t.totalBrandSavings) + ' brand savings';
+  document.getElementById('card2-total').textContent    = fmt(t.totalAnnualSpend) + '/yr';
+  document.getElementById('bank-interest-line').textContent    = 'Interest @2.5% = ' + fmt(t.bankInterest);
+  document.getElementById('multipl-interest-line').textContent = 'Interest @7% = '   + fmt(t.multiplInterest);
+  document.getElementById('multipl-brand-line').textContent    = 'Brand savings = '   + fmt(t.totalBrandSavings);
+  document.getElementById('bank-total-line').textContent       = fmt(t.bankInterest);
+  document.getElementById('multipl-total-line').textContent    = fmt(t.multiplInterest + t.totalBrandSavings);
+  document.getElementById('loss-amt').textContent              = fmt(t.totalSavings);
+  document.getElementById('card4-heading').textContent         = 'Keep ' + fmt(t.recommendedBalance) + ' as your spending balance';
 
-  // Reset motivator text
-  const motivator = document.getElementById('p1-motivator');
-  if (motivator) motivator.innerHTML = 'Select your age &amp; income to see your number';
+  renderSpendRows();
 
-  // Reset step lines
-  ['step1','step2','step3','step4'].forEach(function(id) {
+  document.getElementById('progress-bar').style.display = 'none';
+  var resultsPhase = document.getElementById('results-phase');
+  resultsPhase.style.display = 'flex';
+
+  // Stagger card reveal
+  ['card-1','card-2','card-3','card-4'].forEach(function(id, i){
+    var card = document.getElementById(id);
+    card.classList.remove('visible');
+    setTimeout(function(){ card.classList.add('visible'); }, i * 200);
+  });
+
+  // Counter animation after 300ms
+  setTimeout(function(){
+    animateCounter(document.getElementById('counter-el'), t.totalSavings, 1800);
+  }, 300);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// RUN ANALYSIS (wizard → loading → results)
+// ─────────────────────────────────────────────────────────────────
+function runAnalysis() {
+  if (ctaLocked) return;
+  ctaLocked = true;
+  document.getElementById('step5-analyse').style.pointerEvents = 'none';
+  document.getElementById('step5-skip').style.pointerEvents    = 'none';
+
+  // Fade out wizard
+  var phases = document.getElementById('phases');
+  phases.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+  phases.style.opacity    = '0';
+  phases.style.transform  = 'translateY(-16px)';
+  var pb = document.getElementById('progress-bar');
+  pb.style.transition = 'opacity 0.3s ease';
+  pb.style.opacity    = '0';
+
+  setTimeout(function(){
+    phases.style.display = 'none';
+
+    // Show loading
+    var loading = document.getElementById('loading-phase');
+    loading.style.display  = 'flex';
+    loading.style.opacity  = '0';
+    loading.style.transition = 'opacity 0.4s ease';
+    setTimeout(function(){ loading.style.opacity = '1'; }, 20);
+
+    var statusText = document.getElementById('status-text');
+    var goldDot    = document.getElementById('gold-dot');
+    var pill       = document.getElementById('status-pill');
+
+    // t=1200ms
+    setTimeout(function(){
+      statusText.textContent = 'Finding your brand discounts...';
+      goldDot.classList.add('visible');
+    }, 1200);
+
+    // t=2400ms
+    setTimeout(function(){
+      statusText.textContent = 'Calculating your yield uplift...';
+    }, 2400);
+
+    // t=3200ms
+    setTimeout(function(){
+      statusText.textContent = 'Building your report...';
+      pill.classList.add('glow-gold');
+    }, 3200);
+
+    // t=3800ms → generate + fade out
+    setTimeout(function(){
+      var rows = generateSpendRows(persona);
+      var t    = calculateTotals(rows);
+      persist(persona, rows);
+
+      loading.style.opacity = '0';
+      setTimeout(function(){
+        loading.style.display = 'none';
+        showResults(rows, t);
+        ctaLocked = false;
+      }, 400);
+    }, 3800);
+
+  }, 300);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// ADD SPEND PANEL
+// ─────────────────────────────────────────────────────────────────
+function buildAddSpendPanel() {
+  var list = document.getElementById('panel-brand-list');
+  list.innerHTML = '';
+  var existingBrands = {};
+  spendRows.forEach(function(r){ existingBrands[r.brand] = true; });
+  var hasAny = false;
+
+  Object.keys(BRAND_GROUPS).forEach(function(group){
+    var brands    = BRAND_GROUPS[group];
+    var available = brands.filter(function(b){ return !existingBrands[b]; });
+    if (available.length === 0) return;
+    hasAny = true;
+
+    var label = document.createElement('div');
+    label.className   = 'panel-group-label';
+    label.textContent = group;
+    list.appendChild(label);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'panel-brand-chips';
+    available.forEach(function(brand){
+      var chip = document.createElement('div');
+      chip.className   = 'panel-brand-chip';
+      chip.textContent = brand;
+      chip.addEventListener('click', function(){
+        var newRow = { id:nextRowId++, brand:brand, amount:1000, freq:'monthly', discount:DISCOUNT[brand]||0 };
+        spendRows.push(newRow);
+        closeAddSpendPanel();
+        recalculate();
+        setTimeout(flashCard2, 50);
+      });
+      wrap.appendChild(chip);
+    });
+    list.appendChild(wrap);
+  });
+
+  if (!hasAny) {
+    var msg = document.createElement('div');
+    msg.style.cssText = 'font-size:14px;color:#848484;padding:20px 0;text-align:center';
+    msg.textContent = 'All available brands are already in your list.';
+    list.appendChild(msg);
+  }
+}
+
+function openAddSpendPanel() {
+  buildAddSpendPanel();
+  document.getElementById('add-spend-overlay').classList.add('open');
+}
+
+function closeAddSpendPanel() {
+  document.getElementById('add-spend-overlay').classList.remove('open');
+}
+
+// ─────────────────────────────────────────────────────────────────
+// RECALCULATE (go back to wizard step 1)
+// ─────────────────────────────────────────────────────────────────
+function doRecalculate() {
+  clearPersist();
+  ctaLocked = false;
+
+  persona    = { income:null, age:null, marital:null, spendStyle:null, brands:[] };
+  spendRows  = [];
+  totals     = {};
+  currentStep = 1;
+
+  // Hide results
+  document.getElementById('results-phase').style.display = 'none';
+
+  // Remove card visibility
+  ['card-1','card-2','card-3','card-4'].forEach(function(id){
     document.getElementById(id).classList.remove('visible');
   });
 
-  // Reset card wrappers
-  ['card-a','card-b','card-c','card-d'].forEach(function(id) {
-    const el = document.getElementById(id);
-    el.classList.remove('visible');
+  // Reset chips
+  document.querySelectorAll('.chip.selected, .brand-chip.selected').forEach(function(c){ c.classList.remove('selected'); });
+
+  // Reset CTA buttons
+  ['step1-next','step2-next','step3-next','step4-next'].forEach(function(id){
+    var btn = document.getElementById(id);
+    if (btn) btn.disabled = true;
   });
 
-  // Reset progress bars
-  ['food','shopping','travel','home'].forEach(function(key) {
-    const el = document.getElementById('prog-' + key);
-    if (el) el.style.width = '0%';
-  });
+  // Restore step5 pointer events
+  document.getElementById('step5-analyse').style.pointerEvents = '';
+  document.getElementById('step5-skip').style.pointerEvents    = '';
 
-  // Phase 3 fade out
-  phase3.style.transition = 'opacity 0.4s ease';
-  phase3.style.opacity = '0';
+  // Restore progress bar
+  var pb = document.getElementById('progress-bar');
+  pb.style.display    = '';
+  pb.style.opacity    = '1';
+  pb.style.transition = '';
 
-  setTimeout(function() {
-    phase3.style.display = 'none';
-    phase3.style.opacity = '0';
-    phase3.style.transition = '';
+  // Restore phases
+  var phases = document.getElementById('phases');
+  phases.style.display    = '';
+  phases.style.opacity    = '1';
+  phases.style.transform  = '';
+  phases.style.transition = '';
 
-    // Phase backgrounds are set in CSS; no body override needed
+  // Reset accordion
+  document.getElementById('accordion-body').classList.remove('open');
+  document.getElementById('accordion-chevron').classList.remove('open');
 
-    // Show phase1
-    phase1.style.display = 'flex';
-    phase1.classList.remove('exiting');
-    phase1.style.opacity = '0';
+  // Activate step 1
+  document.querySelectorAll('.phase').forEach(function(p){ p.classList.remove('active','slide-out','slide-in'); });
+  document.getElementById('phase-1').classList.add('active');
 
-    void phase1.offsetWidth;
-    phase1.style.transition = 'opacity 0.4s ease';
-    phase1.style.opacity = '1';
+  setProgress(1);
 
-    // After fade, clear inline transition so exiting class works again
-    setTimeout(function() {
-      phase1.style.transition = '';
-    }, 400);
-
-    // Update CTA state
-    updateCTAState();
-  }, 400);
+  window.scrollTo({ top:0, behavior:'instant' });
+  var inner = document.getElementById('inner');
+  if (inner) inner.scrollTo({ top:0, behavior:'instant' });
 }
-</script>
 
-<div class="home-indicator"></div>
-</div><!-- /iphone-screen -->
-</div><!-- /iphone-frame -->
+// ─────────────────────────────────────────────────────────────────
+// WIRE UP EVENTS
+// ─────────────────────────────────────────────────────────────────
+
+// Chips
+setupChips('income-chips', function(val){
+  persona.income = val;
+  document.getElementById('step1-next').disabled = false;
+});
+setupChips('age-chips', function(val){
+  persona.age = val;
+  document.getElementById('step2-next').disabled = false;
+});
+setupChips('marital-chips', function(val){
+  persona.marital = val;
+  document.getElementById('step3-next').disabled = false;
+});
+setupChips('style-chips', function(val){
+  persona.spendStyle = val;
+  document.getElementById('step4-next').disabled = false;
+});
+setupMultiChips('brand-chips', function(vals){
+  persona.brands = vals;
+});
+
+// Next buttons
+document.getElementById('step1-next').addEventListener('click', function(){ if(persona.income)      showStep(1,2); });
+document.getElementById('step2-next').addEventListener('click', function(){ if(persona.age)         showStep(2,3); });
+document.getElementById('step3-next').addEventListener('click', function(){ if(persona.marital)     showStep(3,4); });
+document.getElementById('step4-next').addEventListener('click', function(){ if(persona.spendStyle)  showStep(4,5); });
+
+// Back buttons
+document.getElementById('back-2').addEventListener('click', function(){ showStep(2,1); });
+document.getElementById('back-3').addEventListener('click', function(){ showStep(3,2); });
+document.getElementById('back-4').addEventListener('click', function(){ showStep(4,3); });
+document.getElementById('back-5').addEventListener('click', function(){ showStep(5,4); });
+
+// Step 5 actions
+document.getElementById('step5-analyse').addEventListener('click', runAnalysis);
+document.getElementById('step5-skip').addEventListener('click', function(){
+  persona.brands = [];
+  runAnalysis();
+});
+
+// Add spend
+document.getElementById('add-spend-btn').addEventListener('click', openAddSpendPanel);
+document.getElementById('panel-close-btn').addEventListener('click', closeAddSpendPanel);
+document.getElementById('add-spend-overlay').addEventListener('click', function(e){
+  if (e.target === document.getElementById('add-spend-overlay')) closeAddSpendPanel();
+});
+
+// Accordion
+document.getElementById('accordion-header').addEventListener('click', function(){
+  document.getElementById('accordion-body').classList.toggle('open');
+  document.getElementById('accordion-chevron').classList.toggle('open');
+});
+
+// Activate CTA
+document.getElementById('activate-btn').addEventListener('click', function(){
+  window.open('https://multipl.app', '_blank');
+});
+
+// Recalculate
+document.getElementById('recalculate-btn').addEventListener('click', doRecalculate);
+
+// ─────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────
+(function init() {
+  setProgress(1);
+  var saved = restore();
+  if (saved) {
+    persona = saved.persona;
+    var rows = saved.rows;
+    // Ensure discount field present on all rows
+    rows.forEach(function(r){ if (r.discount === undefined) r.discount = DISCOUNT[r.brand] || 0; });
+    nextRowId = Math.max.apply(null, rows.map(function(r){ return r.id; })) + 50;
+    var t = calculateTotals(rows);
+
+    document.getElementById('phases').style.display       = 'none';
+    document.getElementById('progress-bar').style.display = 'none';
+    showResults(rows, t);
+  }
+})();
+</script>
 </body>
 </html>
