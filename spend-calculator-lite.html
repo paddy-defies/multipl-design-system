@@ -176,100 +176,190 @@ html,body{
 
 /* ─── RESULTS SCREEN ───────────────────────────────────────── */
 #results-screen{
-  background:var(--bg-dark);
   display:flex;flex-direction:column;
-  padding:0 0 40px;
   min-height:calc(100vh - 56px - 3px);
-  opacity:0;
+  opacity:0;background:var(--bg);
   transition:opacity 0.4s ease;
 }
 #results-screen.show{opacity:1}
 
-/* hero card */
+/* ── DARK HERO ── */
 .res-hero{
-  padding:24px var(--pp) 22px;
+  padding:22px var(--pp) 28px;
   text-align:center;
+  border-radius:0 0 28px 28px;
+  position:relative;overflow:hidden;
   background:
-    radial-gradient(ellipse 320px 260px at 50% 0%,rgba(251,215,72,0.20),transparent),
-    radial-gradient(ellipse 280px 280px at 100% 0%,rgba(74,159,255,0.16),transparent),
-    radial-gradient(ellipse 240px 240px at 0% 100%,rgba(0,212,170,0.14),transparent),
-    var(--surface);
+    radial-gradient(ellipse 340px 280px at 50% 0%,rgba(251,215,72,0.22),transparent),
+    radial-gradient(ellipse 300px 300px at 100% 0%,rgba(74,159,255,0.18),transparent),
+    radial-gradient(ellipse 260px 260px at 0% 100%,rgba(0,212,170,0.15),transparent),
+    #141B2D;
+}
+/* shimmer sweep across hero */
+@keyframes heroShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.res-hero::after{
+  content:'';position:absolute;
+  top:0;left:0;width:50%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,0.04),transparent);
+  animation:heroShimmer 5s ease-in-out infinite 1s;
+  pointer-events:none;
 }
 .res-eyebrow{
   font-size:11px;font-weight:600;letter-spacing:0.1em;
   text-transform:uppercase;color:rgba(251,215,72,0.65);
-  margin-bottom:18px;
+  margin-bottom:16px;
 }
-/* comparison row */
-.res-vs{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:8px;margin-bottom:18px;
-  background:rgba(255,255,255,0.04);
+/* ── COMPARISON CARDS (2-column equal grid) ── */
+.res-compare{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin-bottom:18px;
+}
+.cmp-card{
+  border-radius:16px;padding:14px;
+  background:rgba(255,255,255,0.05);
   border:1px solid rgba(255,255,255,0.07);
-  border-radius:18px;padding:16px;
+  text-align:left;
 }
-.res-bank-col{display:flex;flex-direction:column;align-items:flex-start;flex:1;min-width:0}
-.res-bank-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--w3);margin-bottom:6px}
-.res-bank-amt{font-size:26px;font-weight:800;color:var(--coral);font-variant-numeric:tabular-nums;letter-spacing:-0.5px;line-height:1}
-.res-bank-tag{font-size:10px;color:rgba(224,80,64,0.5);margin-top:5px;font-weight:500;line-height:1.3}
-.res-vs-sep{flex-shrink:0;padding:0 4px}
-.res-vs-badge{font-size:11px;font-weight:700;color:var(--w3);background:rgba(255,255,255,0.07);border-radius:999px;padding:5px 10px;border:1px solid rgba(255,255,255,0.08)}
-.res-mpl-col{display:flex;flex-direction:column;align-items:flex-end;flex:1;min-width:0}
-.res-mpl-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,212,170,0.65);margin-bottom:6px}
-.res-mpl-amt{font-size:46px;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums;letter-spacing:-2px;line-height:1}
-.res-mpl-tag{font-size:10px;color:rgba(0,212,170,0.5);margin-top:5px;font-weight:500;line-height:1.3;text-align:right}
-
-.res-diff{font-size:14px;font-weight:500;color:var(--w2);margin-bottom:6px}
-.res-diff-amt{font-weight:800;color:var(--teal)}
-.res-monthly{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:12px;font-weight:600;
-  color:rgba(251,215,72,0.85);
-  background:rgba(251,215,72,0.08);
-  border:1px solid rgba(251,215,72,0.16);
-  border-radius:999px;padding:6px 16px;
+.cmp-card.mpl{
+  background:rgba(0,212,170,0.08);
+  border-color:rgba(0,212,170,0.28);
 }
-
-/* ─── BRAND TICKER ──────────────────────────────────────────── */
-.ticker-section{
-  padding:16px 0 4px;
-  opacity:0;transform:translateY(8px);
-  transition:opacity 0.4s ease,transform 0.4s ease;
+.cmp-lbl{
+  font-size:10px;font-weight:700;letter-spacing:0.08em;
+  text-transform:uppercase;color:var(--w3);margin-bottom:8px;
 }
-.ticker-section.show{opacity:1;transform:translateY(0)}
-.ticker-label{
-  font-size:11px;font-weight:600;letter-spacing:0.06em;
-  text-transform:uppercase;color:var(--w3);
-  margin-bottom:10px;padding:0 var(--pp);
-}
-.ticker-wrap{
-  overflow:hidden;
-  /* fade edges */
-  -webkit-mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);
-  mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);
+.cmp-card.mpl .cmp-lbl{color:rgba(0,212,170,0.65)}
+.cmp-amt{
+  font-size:26px;font-weight:800;
+  font-variant-numeric:tabular-nums;letter-spacing:-0.8px;line-height:1;
   margin-bottom:8px;
 }
-.ticker-row{
-  display:flex;gap:8px;width:max-content;
-  animation:tickerL 28s linear infinite;
-  padding:2px 0;
+.cmp-amt.coral{color:var(--coral)}
+.cmp-amt.teal{color:var(--teal);font-size:30px}
+.cmp-sub{font-size:11px;color:var(--w3);line-height:1.4;margin-bottom:10px;font-weight:500}
+.cmp-bar-wrap{height:3px;background:rgba(255,255,255,0.1);border-radius:999px;overflow:hidden}
+.cmp-bar{height:100%;border-radius:999px;width:0;transition:width 1.1s cubic-bezier(0.4,0,0.2,1)}
+.cmp-bar.coral{background:var(--coral)}
+.cmp-bar.teal{background:var(--teal)}
+
+.res-diff{font-size:14px;font-weight:500;color:var(--w2);margin-bottom:8px}
+.res-diff-amt{font-weight:800;color:var(--teal)}
+.res-monthly{
+  display:inline-flex;align-items:center;
+  font-size:13px;font-weight:700;
+  color:rgba(251,215,72,0.9);
+  background:rgba(251,215,72,0.1);
+  border:1px solid rgba(251,215,72,0.2);
+  border-radius:999px;padding:7px 18px;
 }
-.ticker-row2{
-  animation:tickerR 24s linear infinite;
+
+/* ── LIGHT BODY ── */
+.res-body{
+  background:var(--bg);
+  padding:20px var(--pp) 0;
+  flex:1;
 }
-.ticker-row:hover,.ticker-row2:hover{animation-play-state:paused}
-@keyframes tickerL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@keyframes tickerR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
-.tc{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:7px 13px;border-radius:999px;
-  background:var(--surface);
-  border:1px solid rgba(255,255,255,0.08);
-  font-size:12px;font-weight:600;color:var(--w2);
-  white-space:nowrap;flex-shrink:0;
-  cursor:default;
+.res-section-lbl{
+  font-size:11px;font-weight:700;letter-spacing:0.07em;
+  text-transform:uppercase;color:var(--ink3);
+  margin-bottom:12px;
 }
-.tc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── SPEND CATEGORY CHIPS (2x2 grid) ── */
+.cat-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin-bottom:20px;
+}
+.cat-chip{
+  background:#fff;
+  border:1.5px solid rgba(12,18,32,0.07);
+  border-radius:16px;padding:14px;
+  box-shadow:0 1px 4px rgba(12,18,32,0.06);
+  opacity:0;transform:translateY(14px) scale(0.96);
+  transition:opacity 0.45s ease,transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+}
+.cat-chip.show{opacity:1;transform:translateY(0) scale(1)}
+.cat-icon-wrap{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:10px;
+}
+.cat-icon-wrap.food{background:rgba(255,82,0,0.1)}
+.cat-icon-wrap.groc{background:rgba(91,165,44,0.1)}
+.cat-icon-wrap.travel{background:rgba(74,159,255,0.1)}
+.cat-icon-wrap.fashion{background:rgba(255,63,108,0.12)}
+.cat-name{font-size:11px;font-weight:600;color:var(--ink3);margin-bottom:4px;letter-spacing:0.02em}
+.cat-amt{font-size:17px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-0.3px}
+.cat-freq{font-size:11px;font-weight:500;color:var(--ink3);margin-top:2px}
+
+/* ── ADVANTAGE CARDS (light) ── */
+.adv-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.adv-card{
+  background:#fff;border-radius:16px;padding:14px;
+  border:1.5px solid rgba(12,18,32,0.07);
+  box-shadow:0 1px 4px rgba(12,18,32,0.06);
+  opacity:0;transform:translateY(10px);
+  transition:opacity 0.4s ease,transform 0.4s ease;
+}
+.adv-card.show{opacity:1;transform:translateY(0)}
+.adv-icon{font-size:20px;margin-bottom:8px}
+.adv-lbl{font-size:11px;font-weight:600;color:var(--ink3);margin-bottom:4px}
+.adv-amt{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.4px}
+.adv-amt.teal{color:var(--teal-text)}
+.adv-amt.gold{color:#B8900A}
+.adv-sub{font-size:11px;color:var(--ink3);margin-top:3px;line-height:1.4}
+
+/* ── BALANCE CARD (light) ── */
+.balance-card{
+  background:#fff;border-radius:16px;
+  border:1.5px solid rgba(12,18,32,0.07);
+  padding:16px;margin-bottom:14px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 1px 4px rgba(12,18,32,0.06);
+  opacity:0;transform:translateY(10px);
+  transition:opacity 0.4s ease,transform 0.4s ease;
+}
+.balance-card.show{opacity:1;transform:translateY(0)}
+.balance-icon-wrap{
+  width:44px;height:44px;border-radius:14px;
+  background:rgba(251,215,72,0.14);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.balance-label{font-size:12px;color:var(--ink3);font-weight:500;margin-bottom:4px}
+.balance-amt{font-size:20px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
+.balance-sub{font-size:11px;color:var(--ink3);margin-top:3px;line-height:1.4}
+
+/* ── CTA BLOCK (light) ── */
+.cta-block{
+  padding:0;margin-bottom:32px;
+  opacity:0;transform:translateY(12px);
+  transition:opacity 0.4s ease,transform 0.4s ease;
+}
+.cta-block.show{opacity:1;transform:translateY(0)}
+.cta-primary{
+  height:var(--btn-h);border-radius:999px;border:none;
+  background:var(--gold-grad);color:var(--bg-dark);
+  font-family:'Gilroy',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;width:100%;
+  box-shadow:0 4px 20px rgba(251,215,72,0.35);
+  letter-spacing:-0.1px;margin-bottom:12px;
+  transition:transform 0.1s,box-shadow 0.2s;
+}
+.cta-primary:active{transform:scale(0.98)}
+.cta-primary:hover{box-shadow:0 6px 28px rgba(251,215,72,0.5)}
+.cta-detail{
+  display:block;text-align:center;
+  font-size:13px;font-weight:600;color:var(--ink3);
+  background:none;border:none;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;
+  font-family:'Gilroy',sans-serif;margin-bottom:14px;
+}
+.cta-detail:hover{color:var(--ink2)}
+.cta-disclaimer{
+  font-size:10px;color:var(--ink3);text-align:center;
+  line-height:1.5;opacity:0.7;
+}
 
 /* breakdown cards */
 .res-body{padding:16px var(--pp) 0}
@@ -480,26 +570,23 @@ html,body{
   <!-- ── RESULTS SCREEN ── -->
   <div id="results-screen">
 
-    <!-- Hero -->
+    <!-- DARK HERO CARD -->
     <div class="res-hero">
       <div class="res-eyebrow">Your personalised snapshot</div>
 
-      <div class="res-vs">
-        <!-- bank -->
-        <div class="res-bank-col">
-          <div class="res-bank-lbl">Your Bank</div>
-          <div class="res-bank-amt" id="res-bank-amt">₹0</div>
-          <div class="res-bank-tag">2.5% interest only<br>no brand offers</div>
+      <!-- 2-column equal comparison cards — no overlapping -->
+      <div class="res-compare">
+        <div class="cmp-card">
+          <div class="cmp-lbl">Your Bank</div>
+          <div class="cmp-amt coral" id="res-bank-amt">₹0</div>
+          <div class="cmp-sub">2.5% interest only<br>₹0 brand savings</div>
+          <div class="cmp-bar-wrap"><div class="cmp-bar coral" id="bar-bank"></div></div>
         </div>
-        <!-- vs badge -->
-        <div class="res-vs-sep">
-          <div class="res-vs-badge">vs</div>
-        </div>
-        <!-- multipl -->
-        <div class="res-mpl-col">
-          <div class="res-mpl-lbl">Multipl</div>
-          <div class="res-mpl-amt" id="res-mpl-amt">₹0</div>
-          <div class="res-mpl-tag">7% yield +<br>brand cashback</div>
+        <div class="cmp-card mpl">
+          <div class="cmp-lbl">Multipl</div>
+          <div class="cmp-amt teal" id="res-mpl-amt">₹0</div>
+          <div class="cmp-sub">7% yield + brand<br>discounts combined</div>
+          <div class="cmp-bar-wrap"><div class="cmp-bar teal" id="bar-mpl"></div></div>
         </div>
       </div>
 
@@ -509,37 +596,56 @@ html,body{
       <div class="res-monthly" id="res-monthly">= ₹0 / month more</div>
     </div>
 
-    <!-- Breakdown + CTA -->
+    <!-- LIGHT BODY -->
     <div class="res-body">
 
-      <div class="breakdown">
-        <div class="bk-card" id="bk1">
-          <div class="bk-icon">💹</div>
-          <div class="bk-label">Yield uplift</div>
-          <div class="bk-amt teal" id="bk-yield">₹0</div>
-          <div class="bk-sub">7% vs 2.5% on your spending balance</div>
+      <!-- Spend category chips -->
+      <div class="res-section-lbl">Your estimated monthly spends</div>
+      <div class="cat-grid" id="cat-grid">
+        <div class="cat-chip" id="cat-food">
+          <div class="cat-icon-wrap food">🛵</div>
+          <div class="cat-name">Food Delivery</div>
+          <div class="cat-amt" id="cat-food-amt">₹0</div>
+          <div class="cat-freq">per month</div>
         </div>
-        <div class="bk-card" id="bk2">
-          <div class="bk-icon">🏷️</div>
-          <div class="bk-label">Brand savings</div>
-          <div class="bk-amt gold" id="bk-brand">₹0</div>
-          <div class="bk-sub">Cashback at 50+ everyday brands</div>
+        <div class="cat-chip" id="cat-groc">
+          <div class="cat-icon-wrap groc">🛒</div>
+          <div class="cat-name">Groceries</div>
+          <div class="cat-amt" id="cat-groc-amt">₹0</div>
+          <div class="cat-freq">per month</div>
+        </div>
+        <div class="cat-chip" id="cat-travel">
+          <div class="cat-icon-wrap travel">✈️</div>
+          <div class="cat-name">Flights & Travel</div>
+          <div class="cat-amt" id="cat-travel-amt">₹0</div>
+          <div class="cat-freq">per year</div>
+        </div>
+        <div class="cat-chip" id="cat-fashion">
+          <div class="cat-icon-wrap fashion">👗</div>
+          <div class="cat-name">Fashion & Shopping</div>
+          <div class="cat-amt" id="cat-fashion-amt">₹0</div>
+          <div class="cat-freq">per month</div>
         </div>
       </div>
 
-      <!-- Brand Ticker -->
-      <div class="ticker-section" id="ticker-section">
-        <div class="ticker-label">Where your cashback works</div>
-        <!-- Row 1: scrolls left -->
-        <div class="ticker-wrap">
-          <div class="ticker-row" id="ticker-r1"></div>
+      <!-- Advantage breakdown -->
+      <div class="res-section-lbl">Your Multipl advantage</div>
+      <div class="adv-row">
+        <div class="adv-card" id="bk1">
+          <div class="adv-icon">💹</div>
+          <div class="adv-lbl">Yield uplift</div>
+          <div class="adv-amt teal" id="bk-yield">₹0</div>
+          <div class="adv-sub">7% vs 2.5%<br>on your balance</div>
         </div>
-        <!-- Row 2: scrolls right -->
-        <div class="ticker-wrap">
-          <div class="ticker-row ticker-row2" id="ticker-r2"></div>
+        <div class="adv-card" id="bk2">
+          <div class="adv-icon">🏷️</div>
+          <div class="adv-lbl">Brand discounts</div>
+          <div class="adv-amt gold" id="bk-brand">₹0</div>
+          <div class="adv-sub">Savings on spends<br>at 50+ brands</div>
         </div>
       </div>
 
+      <!-- Balance card -->
       <div class="balance-card" id="bk3">
         <div class="balance-icon-wrap">💳</div>
         <div>
@@ -549,6 +655,7 @@ html,body{
         </div>
       </div>
 
+      <!-- CTA -->
       <div class="cta-block" id="cta-block">
         <button class="cta-primary" id="cta-activate">Activate my Spending Account →</button>
         <button class="cta-detail" onclick="openFullCalc()">See my full spend breakdown</button>
@@ -650,7 +757,13 @@ function estimateSavings(incomeKey, ageKey){
     totalBrand:totalBrand,
     recBalance:recBalance,
     bankTotal:bankInt,
-    mplTotal:mplInt+totalBrand
+    mplTotal:mplInt+totalBrand,
+    cats:{
+      food: Math.round(capF/100)*100,
+      groc: Math.round(capG/100)*100,
+      travel: Math.round(travelM*12/1000)*1000,
+      fashion: Math.round(shopM/100)*100
+    }
   };
 }
 
@@ -767,62 +880,37 @@ function populateResults(d){
   document.getElementById('bk-yield').textContent=fmt(d.totalYield);
   document.getElementById('bk-brand').textContent=fmt(d.totalBrand);
   document.getElementById('bk-balance').textContent=fmt(d.recBalance);
-  // reset ticker visibility for fresh reveal
-  var ts=document.getElementById('ticker-section');
-  ts.classList.remove('show');
-}
-
-// Brand ticker data
-var TICKER_ROW1=[
-  {name:'Swiggy',color:'#FF5200'},
-  {name:'Amazon',color:'#FF9900'},
-  {name:'Myntra',color:'#FF3F6C'},
-  {name:'Zepto',color:'#8B3FE8'},
-  {name:'Uber',color:'#1C1C1C'},
-  {name:'Zomato',color:'#E23744'},
-  {name:'Nykaa',color:'#FC2779'},
-  {name:'Flipkart',color:'#2874F0'},
-  {name:'Tata Cliq',color:'#F37021'},
-  {name:'Decathlon',color:'#007DC5'},
-];
-var TICKER_ROW2=[
-  {name:'Amazon Fresh',color:'#5BA52C'},
-  {name:'Ajio',color:'#A85C1A'},
-  {name:'MakeMyTrip',color:'#0066FF'},
-  {name:'boAt',color:'#E8191B'},
-  {name:'Lenskart',color:'#00BAC6'},
-  {name:'Puma',color:'#404040'},
-  {name:'Adidas',color:'#000000'},
-  {name:'Cred',color:'#1A1A2E'},
-  {name:'Ola',color:'#1DC839'},
-  {name:'Noise',color:'#6236FF'},
-];
-
-function buildTicker(rowId, brands){
-  var el=document.getElementById(rowId);
-  // duplicate for seamless loop
-  var doubled=brands.concat(brands);
-  el.innerHTML=doubled.map(function(b){
-    return '<span class="tc"><span class="tc-dot" style="background:'+b.color+'"></span>'+b.name+'</span>';
-  }).join('');
+  // category amounts
+  document.getElementById('cat-food-amt').textContent=fmt(d.cats.food);
+  document.getElementById('cat-groc-amt').textContent=fmt(d.cats.groc);
+  document.getElementById('cat-travel-amt').textContent=fmt(d.cats.travel);
+  document.getElementById('cat-fashion-amt').textContent=fmt(d.cats.fashion);
+  // reset animation states
+  ['cat-food','cat-groc','cat-travel','cat-fashion','bk1','bk2','bk3','cta-block'].forEach(function(id){
+    document.getElementById(id).classList.remove('show');
+  });
+  document.getElementById('bar-bank').style.width='0';
+  document.getElementById('bar-mpl').style.width='0';
 }
 
 function revealResults(d){
-  // counter for mpl amount
+  var bigger=Math.max(d.bankTotal,d.mplTotal);
+  // counter + bars
   setTimeout(function(){
-    animCount(document.getElementById('res-mpl-amt'),d.mplTotal,1200);
+    animCount(document.getElementById('res-mpl-amt'),d.mplTotal,1100);
+    document.getElementById('bar-bank').style.width=Math.round(d.bankTotal/bigger*100)+'%';
+    document.getElementById('bar-mpl').style.width='100%';
   },300);
-  // stagger breakdown cards
-  setTimeout(function(){document.getElementById('bk1').classList.add('show')},600);
-  setTimeout(function(){document.getElementById('bk2').classList.add('show')},750);
-  // build and reveal ticker
-  setTimeout(function(){
-    buildTicker('ticker-r1',TICKER_ROW1);
-    buildTicker('ticker-r2',TICKER_ROW2);
-    document.getElementById('ticker-section').classList.add('show');
-  },900);
-  setTimeout(function(){document.getElementById('bk3').classList.add('show')},1050);
-  setTimeout(function(){document.getElementById('cta-block').classList.add('show')},1200);
+  // category chips — spring stagger
+  setTimeout(function(){document.getElementById('cat-food').classList.add('show')},550);
+  setTimeout(function(){document.getElementById('cat-groc').classList.add('show')},680);
+  setTimeout(function(){document.getElementById('cat-travel').classList.add('show')},810);
+  setTimeout(function(){document.getElementById('cat-fashion').classList.add('show')},940);
+  // advantage cards
+  setTimeout(function(){document.getElementById('bk1').classList.add('show')},1100);
+  setTimeout(function(){document.getElementById('bk2').classList.add('show')},1220);
+  setTimeout(function(){document.getElementById('bk3').classList.add('show')},1350);
+  setTimeout(function(){document.getElementById('cta-block').classList.add('show')},1480);
 }
 
 // ── NAVIGATION ───────────────────────────────────────────────
