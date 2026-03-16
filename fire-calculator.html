@@ -57,13 +57,15 @@ header{
   position:sticky;top:0;z-index:100;
 }
 .logo{display:flex;align-items:center;gap:10px}
-.logo-mark{
-  width:32px;height:32px;border-radius:8px;
-  background:var(--gold-grad);
+.logo-mark-wrap{
+  width:30px;height:30px;
+  background:#fff;
+  border-radius:7px;
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:800;color:var(--bg-dark);
-  box-shadow:var(--shadow-gold);flex-shrink:0;
+  padding:3px;
+  flex-shrink:0;
 }
+.logo-img{width:100%;height:auto;display:block}
 .logo-name{font-size:15px;font-weight:700;color:var(--tx-on-dark-1);letter-spacing:-.01em}
 .fire-badge{
   font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
@@ -527,10 +529,20 @@ footer{
   .liquid-stat{border-right:none;border-bottom:1px solid var(--border-dark)}
   .liquid-stat:last-child{border-bottom:none}
 }
+@media(max-width:480px){
+  .fire-badge{display:none}
+  .tab-btn{padding:6px 12px;font-size:11px}
+}
 @media(max-width:420px){
   .fire-types{grid-template-columns:1fr}
   header .logo-name{font-size:13px}
 }
+@media(max-width:380px){
+  .compare-grid{grid-template-columns:1.2fr 1fr 1fr;font-size:11px}
+  .ch,.cc{padding:8px 6px}
+}
+.spend-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+#fireChart{max-width:100%}
 </style>
 </head>
 <body>
@@ -538,7 +550,9 @@ footer{
 <!-- ══ STICKY HEADER ══ -->
 <header>
   <div class="logo">
-    <div class="logo-mark">M</div>
+    <div class="logo-mark-wrap">
+      <img src="assets/images/multipl-logo.png" alt="Multipl" class="logo-img">
+    </div>
     <span class="logo-name">Multipl</span>
     <span class="fire-badge">FIRE CALCULATOR</span>
   </div>
@@ -779,6 +793,7 @@ footer{
         Less commuting, more travel. Be honest — this directly sets your retirement goal.
       </p>
 
+      <div class="spend-table-wrap">
       <table class="spend-table">
         <thead>
           <tr>
@@ -798,6 +813,7 @@ footer{
           </tr>
         </tfoot>
       </table>
+      </div>
 
       <div class="spend-use-btn" onclick="applySpendToGoal()">
         <div class="spend-use-btn-text">
