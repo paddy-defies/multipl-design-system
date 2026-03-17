@@ -1188,6 +1188,7 @@ function update(){
     growthPct===0 ? 'Your monthly investment stays flat' :
     'By year 10 you\'ll be investing '+fmtINR(sipY10)+'/month';
   document.getElementById('val-inflation').textContent= inf+'%';
+  document.getElementById('goal-val').textContent = fmtFull(baseMonthly);
   const futureVal = Math.round(baseMonthly * Math.pow(1+inf/100, 10));
   document.getElementById('sub-inflation').textContent=
     'India average: ~6% per year. '+fmtFull(baseMonthly)+' today = '+fmtFull(futureVal)+' in 10 years.';
