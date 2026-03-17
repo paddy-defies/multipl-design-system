@@ -945,9 +945,14 @@ function doRecalculate(){
 }
 
 // ── ACTIVATE CTA ───────────────────────────────────────────────
-document.getElementById('c4-cta').addEventListener('click',function(){
-  window.open('https://multipl.app','_blank');
-});
+function openAppStore(){
+  var ios=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  var url=ios
+    ?'https://apps.apple.com/in/app/multipl-spending-account/id1518208782'
+    :'https://play.google.com/store/apps/details?id=xyz.multipl.multipl&hl=en_IN';
+  window.open(url,'_blank');
+}
+document.getElementById('c4-cta').addEventListener('click',openAppStore);
 
 // ── RESTORE FROM LOCALSTORAGE ──────────────────────────────────
 (function init(){
