@@ -543,6 +543,7 @@ footer{
 }
 .spend-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 #fireChart{max-width:100%}
+.spend-hint{font-size:10px;color:var(--tx-light);margin-top:3px;line-height:1.4}
 </style>
 </head>
 <body>
@@ -886,10 +887,10 @@ footer{
         <div class="slider-wrap" style="max-width:440px">
           <div class="slider-header">
             <span class="slider-label">Expected inflation (how fast prices rise)</span>
-            <span class="slider-value" id="val-inflation">6%</span>
+            <span class="slider-value" id="val-inflation">4%</span>
           </div>
           <div class="slider-sub" id="sub-inflation">India average: ~6% per year. ₹80K today = ₹1.43L in 10 years at 6%.</div>
-          <input type="range" id="s-inflation" min="2" max="10" step="0.5" value="6" oninput="update();fillSlider(this)">
+          <input type="range" id="s-inflation" min="2" max="10" step="0.5" value="4" oninput="update();fillSlider(this)">
           <div class="slider-hints"><span>2% (low)</span><span>6% India avg</span><span>10% (high)</span></div>
         </div>
       </div>
@@ -1050,7 +1051,7 @@ footer{
 <script>
 // ── CONSTANTS ──
 const ASSET_RETURNS = { equity:12.5, fd:7.0, gold:10.5, re:9.0 };
-const MODE_MULT     = { lean:0.6, regular:1.0, fat:1.75 };
+const MODE_MULT     = { lean:1.0, regular:1.25, fat:1.75 };
 const MODE_CLR      = { lean:'#00D4AA', regular:'#FBD748', fat:'#4A9FFF' };
 const MODE_NAME     = { lean:'Lean retirement', regular:'Comfortable retirement', fat:'Luxury retirement' };
 
@@ -1427,16 +1428,31 @@ function switchTab(tab, btn){
 
 // ── SPEND CATEGORIES ──
 const SPEND_CATS = [
-  { id:'rent',      icon:'🏠', label:'Rent / Home loan EMI',        now:25000, ret:15000 },
-  { id:'food',      icon:'🛒', label:'Groceries &amp; eating out',   now:12000, ret:12000 },
-  { id:'transport', icon:'🚗', label:'Transport &amp; fuel',         now:8000,  ret:3000  },
-  { id:'health',    icon:'🏥', label:'Health &amp; insurance',       now:3000,  ret:8000  },
-  { id:'travel',    icon:'✈️', label:'Holidays &amp; travel',        now:5000,  ret:15000 },
-  { id:'entertain', icon:'🎬', label:'Entertainment &amp; subs',     now:3000,  ret:3000  },
-  { id:'shopping',  icon:'🛍️', label:'Clothes &amp; shopping',      now:5000,  ret:3000  },
-  { id:'kids',      icon:'👨‍👩‍👧', label:'Kids / parents / family',     now:8000,  ret:0     },
-  { id:'other',     icon:'📦', label:'Other / miscellaneous',        now:5000,  ret:5000  },
+  { id:'rent',      icon:'🏠', label:'Rent / Home loan EMI',         now:25000,
+    hint:'Often drops or disappears once your home loan is paid off' },
+  { id:'food',      icon:'🛒', label:'Groceries &amp; eating out',    now:12000,
+    hint:'Usually stays similar — adjust if lifestyle changes' },
+  { id:'transport', icon:'🚗', label:'Transport &amp; fuel',          now:8000,
+    hint:'Typically drops 50–60% — no daily commute' },
+  { id:'health',    icon:'🏥', label:'Health &amp; medical',          now:3000,
+    hint:'Plan for 2–3x more — healthcare costs rise with age' },
+  { id:'travel',    icon:'✈️', label:'Holidays &amp; travel',         now:5000,
+    hint:'Often goes up — you\'ll have time to actually use it' },
+  { id:'entertain', icon:'🎬', label:'Entertainment &amp; subs',      now:3000,
+    hint:'' },
+  { id:'shopping',  icon:'🛍️', label:'Clothes &amp; lifestyle',      now:5000,
+    hint:'Usually drops — no office wear or work colleagues to keep up with' },
+  { id:'kids',      icon:'👨‍👩‍👧', label:'Kids / parents / family',      now:8000,
+    hint:'Likely drops to zero if kids are independent by retirement' },
+  { id:'other',     icon:'📦', label:'Other / miscellaneous',         now:5000,
+    hint:'' },
 ];
+
+function syncRet(id){
+  const nowVal = +document.getElementById('now-'+id).value||0;
+  const retEl  = document.getElementById('ret-'+id);
+  if(!retEl.dataset.touched) retEl.value = nowVal;
+}
 
 function buildSpendTable(){
   const tbody = document.getElementById('spend-tbody');
@@ -1445,11 +1461,12 @@ function buildSpendTable(){
       <td><div class="spend-cat"><span class="spend-cat-icon">${cat.icon}</span>${cat.label}</div></td>
       <td class="right">
         <input class="spend-input" type="number" id="now-${cat.id}" value="${cat.now}"
-          min="0" step="500" oninput="recalcSpend()">
+          min="0" step="500" oninput="syncRet('${cat.id}');recalcSpend()">
       </td>
       <td class="right">
-        <input class="spend-input retirement" type="number" id="ret-${cat.id}" value="${cat.ret}"
-          min="0" step="500" oninput="recalcSpend()">
+        <input class="spend-input retirement" type="number" id="ret-${cat.id}" value="${cat.now}"
+          min="0" step="500" oninput="this.dataset.touched=1;recalcSpend()">
+        ${cat.hint ? `<div class="spend-hint">${cat.hint}</div>` : ''}
       </td>
       <td class="right"><span class="spend-diff" id="diff-${cat.id}">—</span></td>
     </tr>
@@ -1484,16 +1501,25 @@ function applySpendToGoal(){
   SPEND_CATS.forEach(cat => {
     totalRet += +document.getElementById('ret-'+cat.id).value || 0;
   });
-  const snapped = Math.max(10000, Math.round(totalRet/5000)*5000);
+  const snapped = Math.max(10000, Math.round(totalRet/1000)*1000);
   document.getElementById('s-monthly-need').value = snapped;
   fillSlider(document.getElementById('s-monthly-need'));
   document.getElementById('goal-val').textContent = fmtFull(snapped);
   document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  // Success state
+  const btn = document.querySelector('.spend-use-btn');
+  const lbl = document.querySelector('.spend-use-btn-label');
+  const sub = document.querySelector('.spend-use-btn-sub');
+  const origLbl = lbl.innerHTML, origSub = sub.textContent;
+  btn.style.background='rgba(0,212,170,0.10)'; btn.style.borderColor='rgba(0,212,170,0.35)';
+  lbl.innerHTML='✓ Done! Monthly goal updated to '+fmtFull(snapped);
+  lbl.style.color='var(--teal-text)';
+  sub.textContent='Scroll down to Step 4 to see it applied';
   const goalEl = document.getElementById('goal-val');
-  goalEl.style.transition = 'color .15s';
-  goalEl.style.color = 'var(--teal-text)';
-  setTimeout(()=>{ goalEl.style.color=''; }, 600);
-  document.getElementById('goal-val').scrollIntoView({behavior:'smooth', block:'center'});
+  goalEl.style.transition='color .2s'; goalEl.style.color='var(--teal-text)';
+  setTimeout(()=>{ goalEl.style.color=''; }, 800);
+  setTimeout(()=>{ document.getElementById('goal-val').scrollIntoView({behavior:'smooth',block:'center'}); }, 300);
+  setTimeout(()=>{ btn.style.background=''; btn.style.borderColor=''; lbl.innerHTML=origLbl; lbl.style.color=''; sub.textContent=origSub; }, 3500);
   update();
 }
 
