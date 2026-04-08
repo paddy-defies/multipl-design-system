@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=375, initial-scale=1"/>
+  <title>Multipl — Home v4</title>
+  <style>
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-Regular.ttf');    font-weight:400; font-display:swap; }
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-Medium.ttf');     font-weight:500; font-display:swap; }
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-SemiBold.ttf');  font-weight:600; font-display:swap; }
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-Bold.ttf');       font-weight:700; font-display:swap; }
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-ExtraBold.ttf'); font-weight:800; font-display:swap; }
+
+    /* ── HYSA Design Tokens ── */
+    :root {
+      --bgDark:    #0C1220;
+      --bgCream:   #FFF9EE;
+      --bgCard:    #FFFFFF;
+      --gold:      #FFE600;
+      --goldEnd:   #FFC107;
+      --teal:      #00D4AA;
+      --tealBg:    rgba(0,212,170,.14);
+      --tealBdr:   rgba(0,212,170,.30);
+      --txWhite:   #FFFFFF;
+      --txWhiteMd: rgba(255,255,255,.62);
+      --txWhiteDm: rgba(255,255,255,.38);
+      --txDark:    #3D2000;
+      --txBrown:   #7A5500;
+      --txMid:     #8F7A56;
+      --txLight:   #B8A070;
+      --page:      16px;
+      --r8: 8px; --r12: 12px; --r16: 16px; --r20: 20px; --rfull: 999px;
+    }
+
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html, body {
+      font-family:'Gilroy', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #B4A070;
+    }
+
+    /* ══ Phone shell ══ */
+    .phone {
+      width:375px; min-height:812px;
+      margin:40px auto;
+      background:var(--bgDark);
+      border-radius:44px; overflow:hidden;
+      box-shadow:0 32px 80px rgba(0,0,0,.4), inset 0 0 0 1.5px rgba(255,255,255,.12);
+      display:flex; flex-direction:column;
+      position:relative;
+    }
+    /* Dynamic Island */
+    .phone::before {
+      content:''; position:absolute;
+      top:10px; left:50%; transform:translateX(-50%);
+      width:120px; height:34px;
+      background:#000; border-radius:20px; z-index:200;
+    }
+
+    /* ════════════════════════════════
+       DARK HERO SECTION
+    ════════════════════════════════ */
+    .hero {
+      background: var(--bgDark);
+      padding: 0 var(--page) 0;
+      position: relative; overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* Atmospheric glows */
+    .hero::before { /* gold top-centre */
+      content:''; position:absolute;
+      top:-70px; left:50%; transform:translateX(-50%);
+      width:320px; height:220px; border-radius:50%;
+      background:radial-gradient(ellipse, rgba(255,230,0,.18) 0%, transparent 65%);
+      filter:blur(18px); pointer-events:none; z-index:0;
+    }
+    .hero::after { /* teal bottom-right */
+      content:''; position:absolute;
+      bottom:-20px; right:-30px;
+      width:180px; height:180px; border-radius:50%;
+      background:radial-gradient(circle, rgba(0,212,170,.13) 0%, transparent 68%);
+      pointer-events:none; z-index:0;
+    }
+    .glow-blue { /* blue top-right */
+      position:absolute; top:-55px; right:-40px;
+      width:220px; height:220px; border-radius:50%;
+      background:radial-gradient(circle, rgba(74,139,255,.18) 0%, transparent 68%);
+      pointer-events:none; z-index:0;
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      height:50px; padding:18px 0 0;
+      display:flex; align-items:center; justify-content:space-between;
+      position:relative; z-index:2;
+    }
+    .status-time { font-size:14px; font-weight:700; color:var(--txWhite); letter-spacing:-.2px; }
+    .status-icons { display:flex; align-items:center; gap:5px; }
+
+    /* ── Top nav ── */
+    .top-nav {
+      padding:8px 0 14px;
+      display:flex; align-items:center; justify-content:space-between;
+      position:relative; z-index:2;
+    }
+    .nav-logo { display:flex; align-items:center; gap:8px; }
+    .logo-mark {
+      width:34px; height:34px; border-radius:50%;
+      background:linear-gradient(135deg, #FFE600, #FFC107);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .logo-mark svg { width:18px; height:18px; }
+    .logo-name { font-size:17px; font-weight:800; color:var(--txWhite); letter-spacing:-.3px; }
+    .nav-right { display:flex; align-items:center; gap:8px; }
+    .how-pill {
+      height:30px; padding:0 11px;
+      background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.16);
+      border-radius:var(--rfull);
+      font-size:11px; font-weight:600; color:rgba(255,255,255,.75);
+      display:flex; align-items:center; cursor:pointer;
+      white-space:nowrap;
+    }
+    .nav-icon-btn {
+      width:34px; height:34px; border-radius:50%;
+      background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.14);
+      display:flex; align-items:center; justify-content:center;
+      position:relative; cursor:pointer;
+    }
+    .nav-icon-btn svg { width:16px; height:16px; stroke:rgba(255,255,255,.75); fill:none; stroke-width:1.8; }
+    .notif-dot {
+      position:absolute; top:6px; right:6px;
+      width:7px; height:7px; border-radius:50%;
+      background:#E53935; border:1.5px solid var(--bgDark);
+    }
+    .avatar-pill {
+      width:34px; height:34px; border-radius:50%;
+      background:linear-gradient(135deg, #FFE600, #FFC107);
+      display:flex; align-items:center; justify-content:center;
+      font-size:13px; font-weight:800; color:#3D2000;
+    }
+
+    /* ── Greeting ── */
+    .greeting {
+      padding:4px 0 22px;
+      position:relative; z-index:2;
+    }
+    .greeting-sub {
+      font-size:11px; font-weight:500;
+      color:rgba(255,255,255,.38);
+      text-transform:uppercase; letter-spacing:.9px;
+      margin-bottom:3px;
+    }
+    .greeting-row {
+      display:flex; align-items:center; gap:6px;
+    }
+    .greeting-name {
+      font-size:23px; font-weight:800;
+      color:var(--txWhite); letter-spacing:-.5px;
+    }
+    .greeting-star {
+      font-size:14px; opacity:.7;
+    }
+
+    /* ════════════════════════════════
+       BALANCE AREA — on dark surface
+    ════════════════════════════════ */
+    .balance-area {
+      position:relative; z-index:2;
+      padding-bottom:20px;
+    }
+
+    /* Label row */
+    .balance-label-row {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .balance-label {
+      font-size:10px; font-weight:600;
+      color:rgba(255,255,255,.38);
+      text-transform:uppercase; letter-spacing:1.2px;
+    }
+    .eye-btn {
+      width:28px; height:28px; border-radius:50%;
+      background:rgba(255,255,255,.08);
+      display:flex; align-items:center; justify-content:center; cursor:pointer;
+    }
+    .eye-btn svg { width:13px; height:13px; stroke:rgba(255,255,255,.45); fill:none; stroke-width:1.8; }
+
+    /* The primary number — correct hierarchy */
+    .balance-number {
+      display:flex; align-items:flex-start;
+      margin-bottom:16px;
+      font-variant-numeric:tabular-nums;
+      font-feature-settings:"tnum";
+      line-height:1;
+    }
+    .balance-curr {
+      font-size:24px; font-weight:400;
+      color:rgba(255,255,255,.5);
+      margin-top:9px;  /* optical alignment with digit tops */
+      margin-right:1px;
+      line-height:1;
+    }
+    .balance-digits {
+      font-size:58px; font-weight:800;
+      color:var(--txWhite);
+      letter-spacing:-2.5px;
+      line-height:1;
+    }
+    .balance-paise {
+      font-size:22px; font-weight:400;
+      color:rgba(255,255,255,.4);
+      align-self:flex-end;
+      margin-bottom:9px;
+      margin-left:2px;
+      letter-spacing:0;
+    }
+
+    /* Chips row: gain + rate side by side */
+    .balance-chips {
+      display:flex; align-items:center; gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:20px;
+    }
+    .gain-chip {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:7px 12px 7px 8px;
+      background:rgba(0,212,170,.13);
+      border:1px solid rgba(0,212,170,.28);
+      border-radius:var(--rfull);
+    }
+    .gain-arrow {
+      width:18px; height:18px; border-radius:50%;
+      background:rgba(0,212,170,.22);
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .gain-arrow svg { width:10px; height:10px; stroke:var(--teal); fill:none; stroke-width:2.5; }
+    .gain-text { font-size:13px; font-weight:700; color:var(--teal); font-variant-numeric:tabular-nums; }
+    .gain-period { font-size:11px; font-weight:400; color:rgba(0,212,170,.6); }
+
+    .rate-badge {
+      display:inline-flex; align-items:center; gap:3px;
+      padding:7px 12px;
+      background:rgba(255,230,0,.11);
+      border:1px solid rgba(255,230,0,.22);
+      border-radius:var(--rfull);
+    }
+    .rate-badge-dot {
+      width:5px; height:5px; border-radius:50%;
+      background:#FFE600; opacity:.7; flex-shrink:0;
+    }
+    .rate-badge-text { font-size:12px; font-weight:700; color:rgba(255,230,0,.88); }
+
+    /* Glass pill — sub-stats */
+    .sub-pill {
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--r16);
+      display:flex; align-items:stretch;
+      position:relative; z-index:2;
+    }
+    .sub-col {
+      flex:1; padding:14px 0 14px 16px;
+      display:flex; flex-direction:column; gap:5px;
+    }
+    .sub-col:last-child {
+      border-left:1px solid rgba(255,255,255,.08);
+      padding-left:16px;
+    }
+    .sub-col-top { display:flex; align-items:center; gap:5px; }
+    .sub-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .sub-dot.gold { background:#FFE600; opacity:.85; }
+    .sub-dot.teal { background:var(--teal); opacity:.85; }
+    .sub-type {
+      font-size:10px; font-weight:500;
+      color:rgba(255,255,255,.38);
+      text-transform:uppercase; letter-spacing:.5px;
+    }
+    .sub-amount {
+      font-size:17px; font-weight:800; color:var(--txWhite);
+      letter-spacing:-.4px;
+      font-variant-numeric:tabular-nums; font-feature-settings:"tnum";
+    }
+
+    /* Hero bottom spacer — for rounded cream overlap */
+    .hero-foot { height:28px; position:relative; z-index:2; }
+
+    /* ════════════════════════════════
+       CREAM CONTENT SECTION
+    ════════════════════════════════ */
+    .content {
+      background:var(--bgCream);
+      border-radius:22px 22px 0 0;
+      margin-top:-4px;
+      padding:16px var(--page) 90px;
+      position:relative; z-index:3;
+      flex:1;
+    }
+
+    /* ── Quick actions ── */
+    .quick-actions {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:8px;
+      margin-bottom:20px;
+    }
+    .action-btn {
+      background:var(--bgCard); border-radius:var(--r12);
+      padding:12px 4px 10px;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      box-shadow:0 1px 4px rgba(0,0,0,.06);
+      border:0.5px solid rgba(0,0,0,.07);
+      cursor:pointer;
+    }
+    .action-btn.primary {
+      background:linear-gradient(90deg, #FFE600 0%, #FFC107 100%);
+      border:none;
+      box-shadow:0 4px 14px rgba(255,193,7,.4);
+    }
+    .action-icon {
+      width:36px; height:36px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .action-btn.primary .action-icon { background:rgba(0,0,0,.08); }
+    .action-btn:not(.primary) .action-icon { background:rgba(0,0,0,.04); }
+    .action-icon svg { width:18px; height:18px; stroke-width:1.8; fill:none; }
+    .action-btn.primary .action-icon svg { stroke:#3D2000; }
+    .action-btn:not(.primary) .action-icon svg { stroke:var(--txBrown); }
+    .action-label { font-size:10px; font-weight:600; text-align:center; white-space:nowrap; }
+    .action-btn.primary .action-label { color:#3D2000; }
+    .action-btn:not(.primary) .action-label { color:var(--txDark); }
+
+    /* ── Section header ── */
+    .section-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:12px;
+    }
+    .section-title { font-size:15px; font-weight:700; color:var(--txDark); }
+    .section-see-all { font-size:12px; font-weight:600; color:var(--txBrown); cursor:pointer; }
+    .section-sub { font-size:11px; color:var(--txMid); margin-top:2px; }
+
+    /* ════════════════════════════════
+       DELIGHT CARD — Beat the Bank
+    ════════════════════════════════ */
+    .delight-card {
+      background:var(--bgCard);
+      border-radius:var(--r16);
+      margin-bottom:20px;
+      border:1px solid rgba(255,193,7,.28);
+      box-shadow:0 4px 20px rgba(255,193,7,.09);
+      overflow:hidden;
+    }
+    .dc-header {
+      padding:12px 14px 10px;
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom:0.5px solid rgba(0,0,0,.05);
+    }
+    .dc-title { font-size:10px; font-weight:700; letter-spacing:1.2px; color:var(--txBrown); }
+    .dc-winning-badge {
+      display:flex; align-items:center; gap:5px;
+      background:#ECFDF5; border:1px solid #BBF7D0;
+      border-radius:var(--rfull); padding:3px 9px;
+    }
+    .dc-winning-dot { width:6px; height:6px; border-radius:50%; background:#22C55E; }
+    .dc-winning-text { font-size:9px; font-weight:700; color:#166534; letter-spacing:.4px; }
+
+    .dc-compare {
+      display:flex; align-items:stretch;
+      padding:14px 14px 12px; gap:10px;
+    }
+    .dc-side {
+      flex:1; border-radius:var(--r12); padding:12px 14px 14px;
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .dc-side.bank   { background:#F8FAFC; border:1px solid #E2E8F0; }
+    .dc-side.multipl {
+      background:linear-gradient(145deg,#FFFDE7,#FFF9C4);
+      border:1px solid rgba(255,193,7,.4);
+      position:relative; overflow:hidden;
+    }
+    @keyframes cardShimmer {
+      0%   { opacity:0; transform:translateX(-60%) rotate(15deg); }
+      50%  { opacity:1; }
+      100% { opacity:0; transform:translateX(120%) rotate(15deg); }
+    }
+    .dc-side.multipl::before {
+      content:''; position:absolute;
+      top:-20px; left:-20px; right:-20px; bottom:-20px;
+      background:linear-gradient(105deg, transparent 30%, rgba(255,255,255,.5) 50%, transparent 70%);
+      animation:cardShimmer 3s ease-in-out infinite; pointer-events:none;
+    }
+
+    .dc-entity { display:flex; align-items:center; gap:7px; margin-bottom:2px; }
+    .dc-entity-icon {
+      width:26px; height:26px; border-radius:8px;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .dc-entity-icon.bank-icon { background:#EEF2F7; }
+    .dc-entity-icon.mpl-icon  { background:rgba(255,193,7,.2); }
+    .dc-entity-icon svg { width:14px; height:14px; stroke-width:1.8; fill:none; }
+    .dc-entity-icon.bank-icon svg { stroke:#64748B; }
+    .dc-entity-icon.mpl-icon  svg { stroke:#B45309; }
+    .dc-entity-name { font-size:13px; font-weight:700; }
+    .dc-side.bank   .dc-entity-name { color:#64748B; }
+    .dc-side.multipl .dc-entity-name { color:var(--txDark); }
+    .dc-rate { font-size:11px; font-weight:600; }
+    .dc-side.bank   .dc-rate { color:#94A3B8; }
+    .dc-side.multipl .dc-rate { color:#B45309; }
+    .dc-amount {
+      font-weight:800; line-height:1; margin-top:4px;
+      font-variant-numeric:tabular-nums; font-feature-settings:"tnum";
+    }
+    .dc-side.bank   .dc-amount { font-size:20px; color:#94A3B8; }
+    .dc-side.multipl .dc-amount { font-size:28px; color:var(--txDark); }
+    .dc-sublabel { font-size:9px; font-weight:400; margin-top:2px; }
+    .dc-side.bank   .dc-sublabel { color:#94A3B8; }
+    .dc-side.multipl .dc-sublabel { color:var(--txMid); }
+
+    .dc-vs { display:flex; align-items:center; flex-shrink:0; }
+    .dc-vs-text {
+      font-size:10px; font-weight:800; color:var(--txMid);
+      background:rgba(0,0,0,.04); border-radius:var(--rfull); padding:4px 7px;
+    }
+
+    .dc-winner {
+      margin:0 14px 14px;
+      background:linear-gradient(135deg,#DCFCE7,#BBFFD0);
+      border:1px solid #86EFAC; border-radius:var(--r12);
+      padding:12px 14px;
+      display:flex; align-items:center; gap:12px;
+    }
+    .dc-trophy {
+      width:38px; height:38px; border-radius:50%;
+      background:#22C55E;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .dc-trophy svg { width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2.2; }
+    .dc-winner-body { flex:1; }
+    .dc-winner-label { font-size:10px; font-weight:600; color:#166534; margin-bottom:2px; }
+    .dc-winner-amount {
+      font-size:22px; font-weight:800; color:#15803D; line-height:1;
+      font-variant-numeric:tabular-nums; font-feature-settings:"tnum";
+    }
+    .dc-winner-right { text-align:right; flex-shrink:0; }
+    .dc-winner-sub { font-size:9px; color:#166534; opacity:.75; }
+    .dc-winner-yr  { font-size:13px; font-weight:700; color:#15803D; margin-top:2px; }
+
+    /* ── Brands ── */
+    .brands-scroll {
+      display:flex; gap:10px; overflow-x:auto;
+      margin:0 -16px; padding:0 16px 4px;
+    }
+    .brands-scroll::-webkit-scrollbar { display:none; }
+    .brand-card {
+      flex-shrink:0; width:110px;
+      background:var(--bgCard); border-radius:var(--r12);
+      overflow:hidden;
+      box-shadow:0 1px 6px rgba(0,0,0,.07);
+      border:0.5px solid rgba(0,0,0,.06); cursor:pointer;
+    }
+    .brand-header {
+      height:56px; display:flex; align-items:center; justify-content:center;
+      font-size:13px; font-weight:800;
+    }
+    .brand-body { padding:8px 10px 10px; }
+    .brand-discount {
+      display:inline-block;
+      background:#ECFDF5; border:0.5px solid #BBF7D0;
+      border-radius:var(--rfull); padding:2px 8px;
+      font-size:10px; font-weight:700; color:#15803D; margin-bottom:4px;
+    }
+    .brand-original { font-size:10px; color:var(--txLight); text-decoration:line-through; }
+    .brand-price    { font-size:13px; font-weight:800; color:var(--txDark); }
+
+    /* ── Referral card ── */
+    .referral-card {
+      background:#1E0D00; border-radius:var(--r20);
+      padding:20px; margin-bottom:24px;
+      position:relative; overflow:hidden;
+    }
+    .referral-card::before {
+      content:''; position:absolute; top:-40px; right:-30px;
+      width:160px; height:160px;
+      background:radial-gradient(circle, rgba(255,150,0,.2) 0%, transparent 65%);
+      pointer-events:none;
+    }
+    .referral-card::after {
+      content:''; position:absolute; bottom:-50px; left:-20px;
+      width:130px; height:130px;
+      background:radial-gradient(circle, rgba(255,230,0,.10) 0%, transparent 65%);
+      pointer-events:none;
+    }
+    .referral-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      background:rgba(29,158,117,.2); border:0.5px solid rgba(29,158,117,.4);
+      border-radius:var(--rfull); padding:4px 10px; margin-bottom:12px;
+    }
+    .referral-badge-dot { width:6px; height:6px; border-radius:50%; background:#1D9E75; }
+    .referral-badge-text { font-size:10px; font-weight:700; color:#1D9E75; letter-spacing:.5px; }
+    .referral-headline { font-size:22px; font-weight:800; color:#fff; line-height:1.25; margin-bottom:6px; }
+    .referral-headline span { color:#FFE600; }
+    .referral-sub { font-size:12px; color:rgba(255,255,255,.5); margin-bottom:16px; line-height:1.5; }
+    .referral-pills { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px; }
+    .referral-pill {
+      display:flex; align-items:center; gap:5px;
+      background:rgba(255,255,255,.07); border-radius:var(--rfull);
+      padding:4px 10px; font-size:11px; font-weight:500; color:rgba(255,255,255,.75);
+    }
+    .referral-pill-icon {
+      width:14px; height:14px; background:#1D9E75; border-radius:50%;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .referral-pill-icon svg { width:8px; height:8px; stroke:#fff; fill:none; stroke-width:2.5; }
+    .referral-cta {
+      display:inline-flex; align-items:center; gap:8px;
+      background:transparent; border:1.5px solid rgba(255,230,0,.65);
+      border-radius:var(--rfull); padding:10px 20px;
+      font-size:14px; font-weight:700; color:#FFE600; cursor:pointer;
+    }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      position:sticky; bottom:0;
+      background:var(--bgCard);
+      border-top:0.5px solid rgba(0,0,0,.08);
+      display:flex; align-items:center;
+      padding:8px 0 22px;
+    }
+    .nav-item {
+      flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer;
+    }
+    .nav-item svg { width:22px; height:22px; stroke-width:1.8; }
+    .nav-item.active svg { stroke:#7A5500; fill:rgba(255,212,82,.3); }
+    .nav-item:not(.active) svg { stroke:rgba(0,0,0,.3); fill:none; }
+    .nav-label { font-size:10px; font-weight:600; }
+    .nav-item.active .nav-label { color:#7A5500; }
+    .nav-item:not(.active) .nav-label { color:rgba(0,0,0,.3); }
+  </style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- ════════════ DARK HERO ════════════ -->
+  <div class="hero">
+    <div class="glow-blue"></div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="status-time">10:45</span>
+      <div class="status-icons">
+        <!-- Signal bars -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)">
+          <rect x="2"  y="15" width="3" height="6" rx="1"/>
+          <rect x="7"  y="11" width="3" height="10" rx="1" opacity=".7"/>
+          <rect x="12" y="7"  width="3" height="14" rx="1" opacity=".5"/>
+          <rect x="17" y="3"  width="3" height="18" rx="1" opacity=".35"/>
+        </svg>
+        <!-- WiFi -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+          <path d="M1.42 9a16 16 0 0 1 21.16 0" opacity=".5"/>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+          <circle cx="12" cy="20" r="1" fill="rgba(255,255,255,.7)"/>
+        </svg>
+        <!-- Battery -->
+        <svg width="18" height="14" viewBox="0 0 24 12" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="1.5">
+          <rect x="1" y="1" width="20" height="10" rx="2"/>
+          <path d="M23 4v4" stroke-linecap="round" stroke-width="2"/>
+          <rect x="3" y="3" width="13" height="6" rx="1" fill="rgba(255,255,255,.65)" stroke="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Top nav -->
+    <div class="top-nav">
+      <div class="nav-logo">
+        <div class="logo-mark">
+          <!-- M logomark in gold circle -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M4 18V8l8-5 8 5v10" stroke="#3D2000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 18v-5h6v5" stroke="#3D2000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="logo-name">multipl</span>
+      </div>
+      <div class="nav-right">
+        <div class="how-pill">How this works?</div>
+        <div class="nav-icon-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="notif-dot"></div>
+        </div>
+        <div class="avatar-pill">P</div>
+      </div>
+    </div>
+
+    <!-- Greeting -->
+    <div class="greeting">
+      <div class="greeting-sub">Good morning</div>
+      <div class="greeting-row">
+        <span class="greeting-name">Priya</span>
+        <span class="greeting-star">✦</span>
+      </div>
+    </div>
+
+    <!-- ═══ Balance area — directly on dark surface ═══ -->
+    <div class="balance-area">
+
+      <!-- Label + eye -->
+      <div class="balance-label-row">
+        <span class="balance-label">Spending Account</span>
+        <div class="eye-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- The number — ₹ small, digits large, paise muted -->
+      <div class="balance-number">
+        <span class="balance-curr">₹</span>
+        <span class="balance-digits">51,523</span>
+        <span class="balance-paise">.63</span>
+      </div>
+
+      <!-- Gain chip + rate badge -->
+      <div class="balance-chips">
+        <div class="gain-chip">
+          <div class="gain-arrow">
+            <svg viewBox="0 0 10 10">
+              <polyline points="2,7 5,3 8,7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="gain-text">₹4,121 gained</span>
+          <span class="gain-period">this month</span>
+        </div>
+        <div class="rate-badge">
+          <div class="rate-badge-dot"></div>
+          <span class="rate-badge-text">8.5% p.a.</span>
+        </div>
+      </div>
+
+      <!-- Glass pill — Invested | Available -->
+      <div class="sub-pill">
+        <div class="sub-col">
+          <div class="sub-col-top">
+            <div class="sub-dot gold"></div>
+            <span class="sub-type">Invested</span>
+          </div>
+          <span class="sub-amount">₹47,331</span>
+        </div>
+        <div class="sub-col">
+          <div class="sub-col-top">
+            <div class="sub-dot teal"></div>
+            <span class="sub-type">Available</span>
+          </div>
+          <span class="sub-amount">₹46,360</span>
+        </div>
+      </div>
+
+    </div><!-- /balance-area -->
+
+    <div class="hero-foot"></div>
+  </div><!-- /hero -->
+
+  <!-- ════════════ CREAM CONTENT ════════════ -->
+  <div class="content">
+
+    <!-- Quick actions -->
+    <div class="quick-actions">
+      <div class="action-btn primary">
+        <div class="action-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8"  y1="12" x2="16" y2="12"/>
+          </svg>
+        </div>
+        <span class="action-label">Add Money</span>
+      </div>
+      <div class="action-btn">
+        <div class="action-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+        </div>
+        <span class="action-label">Get Discounts</span>
+      </div>
+      <div class="action-btn">
+        <div class="action-icon">
+          <svg viewBox="0 0 24 24">
+            <polyline points="17 11 12 6 7 11"/>
+            <line x1="12" y1="6" x2="12" y2="18"/>
+            <path d="M5 19h14"/>
+          </svg>
+        </div>
+        <span class="action-label">Withdraw</span>
+      </div>
+      <div class="action-btn">
+        <div class="action-icon">
+          <svg viewBox="0 0 24 24">
+            <line x1="8"  y1="6"  x2="21" y2="6"/>
+            <line x1="8"  y1="12" x2="21" y2="12"/>
+            <line x1="8"  y1="18" x2="21" y2="18"/>
+            <line x1="3"  y1="6"  x2="3.01" y2="6"/>
+            <line x1="3"  y1="12" x2="3.01" y2="12"/>
+            <line x1="3"  y1="18" x2="3.01" y2="18"/>
+          </svg>
+        </div>
+        <span class="action-label">Transactions</span>
+      </div>
+    </div>
+
+    <!-- ════ Delight Card — Beat the Bank ════ -->
+    <div class="delight-card">
+
+      <div class="dc-header">
+        <span class="dc-title">LIFETIME GAINS</span>
+        <div class="dc-winning-badge">
+          <div class="dc-winning-dot"></div>
+          <span class="dc-winning-text">YOU'RE WINNING</span>
+        </div>
+      </div>
+
+      <div class="dc-compare">
+        <!-- Bank -->
+        <div class="dc-side bank">
+          <div class="dc-entity">
+            <div class="dc-entity-icon bank-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="10" width="18" height="10" rx="1"/>
+                <path d="M12 3L3 10h18L12 3z"/>
+                <line x1="12" y1="10" x2="12" y2="20"/>
+                <line x1="7"  y1="10" x2="7"  y2="20"/>
+                <line x1="17" y1="10" x2="17" y2="20"/>
+              </svg>
+            </div>
+            <span class="dc-entity-name">Bank</span>
+          </div>
+          <span class="dc-rate">2.5% p.a.</span>
+          <span class="dc-amount">₹1,331</span>
+          <span class="dc-sublabel">what you'd have earned</span>
+        </div>
+
+        <div class="dc-vs"><span class="dc-vs-text">VS</span></div>
+
+        <!-- Multipl -->
+        <div class="dc-side multipl">
+          <div class="dc-entity">
+            <div class="dc-entity-icon mpl-icon">
+              <svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                <polyline points="17 6 23 6 23 12"/>
+              </svg>
+            </div>
+            <span class="dc-entity-name">Multipl</span>
+          </div>
+          <span class="dc-rate">7% p.a.</span>
+          <span class="dc-amount">₹5,384</span>
+          <span class="dc-sublabel">what you actually earned</span>
+        </div>
+      </div>
+
+      <!-- Winner strip -->
+      <div class="dc-winner">
+        <div class="dc-trophy">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 9H3V4h3m12 5h3V4h-3M9 21h6m-3-4v4M8 4h8v9a4 4 0 0 1-8 0V4z"/>
+          </svg>
+        </div>
+        <div class="dc-winner-body">
+          <div class="dc-winner-label">Extra earned over bank</div>
+          <div class="dc-winner-amount">+ ₹4,053</div>
+        </div>
+        <div class="dc-winner-right">
+          <div class="dc-winner-sub">yearly impact</div>
+          <div class="dc-winner-yr">~₹48,000/yr</div>
+        </div>
+      </div>
+
+    </div><!-- /delight-card -->
+
+    <!-- ════ Brands ════ -->
+    <div style="margin-bottom:20px">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Save extra when you spend</div>
+          <div class="section-sub">Instant gift cards · no extra steps</div>
+        </div>
+        <span class="section-see-all">See all →</span>
+      </div>
+
+      <div class="brands-scroll">
+        <div class="brand-card">
+          <div class="brand-header" style="background:#131921;color:#FF9900;font-size:16px;letter-spacing:-.5px">amazon</div>
+          <div class="brand-body">
+            <div class="brand-discount">2% off</div>
+            <div class="brand-original">₹5,000</div>
+            <div class="brand-price">₹4,900</div>
+          </div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-header" style="background:linear-gradient(135deg,#e63946,#c1121f);color:#fff;font-size:9px;font-weight:800;text-align:center;padding:0 6px;line-height:1.3">
+            make<br><span style="font-size:13px">MyTrip</span>
+          </div>
+          <div class="brand-body">
+            <div class="brand-discount">10% off</div>
+            <div class="brand-original">₹20,000</div>
+            <div class="brand-price">₹18,000</div>
+          </div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-header" style="background:#8B2EFF;color:#fff;font-size:14px">zepto</div>
+          <div class="brand-body">
+            <div class="brand-discount">5% off</div>
+            <div class="brand-original">₹1,000</div>
+            <div class="brand-price">₹950</div>
+          </div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-header" style="background:#FC8019;color:#fff;font-size:14px">Swiggy</div>
+          <div class="brand-body">
+            <div class="brand-discount">5% off</div>
+            <div class="brand-original">₹2,000</div>
+            <div class="brand-price">₹1,900</div>
+          </div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-header" style="background:#E23744;color:#fff;font-size:14px">Zomato</div>
+          <div class="brand-body">
+            <div class="brand-discount">4% off</div>
+            <div class="brand-original">₹1,000</div>
+            <div class="brand-price">₹960</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ Referral card ════ -->
+    <div class="referral-card">
+      <div class="referral-badge">
+        <div class="referral-badge-dot"></div>
+        <span class="referral-badge-text">2,434 OTHERS EARNING TODAY</span>
+      </div>
+      <div class="referral-headline">Gift a friend <span>₹250</span> today</div>
+      <div class="referral-sub">Put them on track to save ₹30,000/year — you earn too.</div>
+      <div class="referral-pills">
+        <div class="referral-pill">
+          <div class="referral-pill-icon">
+            <svg viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3"/></svg>
+          </div>
+          7% p.a. returns
+        </div>
+        <div class="referral-pill">
+          <div class="referral-pill-icon">
+            <svg viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3"/></svg>
+          </div>
+          Save ₹30K/yr
+        </div>
+        <div class="referral-pill">
+          <div class="referral-pill-icon">
+            <svg viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3"/></svg>
+          </div>
+          Brand deals
+        </div>
+      </div>
+      <div class="referral-cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFE600" stroke-width="2" stroke-linecap="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Invite friends →
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- ════ Bottom nav ════ -->
+  <div class="bottom-nav">
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <rect x="2" y="5" width="20" height="14" rx="2"/>
+        <line x1="2" y1="10" x2="22" y2="10"/>
+      </svg>
+      <span class="nav-label">Spend</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+      <span class="nav-label">Wealth</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8"  y1="2" x2="8"  y2="6"/>
+        <line x1="3"  y1="10" x2="21" y2="10"/>
+      </svg>
+      <span class="nav-label">Journey</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <polyline points="20 12 20 22 4 22 4 12"/>
+        <rect x="2" y="7" width="20" height="5"/>
+        <path d="M12 22V7"/>
+        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+      </svg>
+      <span class="nav-label">Rewards</span>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+</body>
+</html>
