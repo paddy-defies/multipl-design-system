@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Multipl — Onboarding Flow v3 (11 Screens)</title>
+  <style>
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-Regular.ttf'); font-weight:400; }
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-Medium.ttf');  font-weight:500; }
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-SemiBold.ttf');font-weight:600; }
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-Bold.ttf');    font-weight:700; }
+    @font-face { font-family:'Gilroy'; src:url('assets/fonts/Gilroy/Gilroy-ExtraBold.ttf');font-weight:800; }
+
+    :root {
+      --bgDark:   #0C1220;
+      --bgCream:  #FFF9EE;
+      --bgBrown:  #3B1E01;
+      --yellow:   #FFE600;
+      --yellowEnd:#FFC107;
+      --gold:     linear-gradient(to right,#FFE600,#FFC107);
+      --txDark:   #161616;
+      --txBrown:  #866905;
+      --txMid:    #8F7A56;
+      --green:    #1D9E75;
+      --page:     16px;
+      --r4:4px; --r8:8px; --r12:12px; --r20:20px; --rfull:999px;
+    }
+
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+    body {
+      background:#111;
+      font-family:'Gilroy', sans-serif;
+      padding: 32px 24px 64px;
+    }
+
+    .page-title { color:#fff; font-size:22px; font-weight:700; margin-bottom:6px; }
+    .page-sub   { color:rgba(255,255,255,0.4); font-size:13px; margin-bottom:32px; }
+
+    .storyboard {
+      display:flex; gap:24px; overflow-x:auto; padding-bottom:24px;
+      scroll-snap-type:x mandatory;
+    }
+    .storyboard::-webkit-scrollbar { height:4px; }
+    .storyboard::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.2); border-radius:2px; }
+
+    .phone-wrap { flex-shrink:0; scroll-snap-align:start; }
+    .phone-label {
+      color:rgba(255,255,255,0.4); font-size:11px; font-weight:500;
+      letter-spacing:.6px; margin-bottom:8px;
+    }
+    .phone-label span {
+      display:inline-block; background:rgba(255,255,255,0.08);
+      border-radius:4px; padding:2px 8px; margin-right:6px;
+    }
+    .phone-label .new-badge {
+      display:inline-block; background:rgba(0,212,170,0.15);
+      border:0.5px solid rgba(0,212,170,.4);
+      border-radius:4px; padding:2px 8px; margin-left:4px;
+      color:rgba(0,212,170,.9); font-size:10px;
+    }
+    .phone-label .kept {
+      display:inline-block; background:rgba(255,255,255,.07);
+      border:0.5px solid rgba(255,255,255,.15);
+      border-radius:4px; padding:2px 8px; margin-left:4px;
+      color:rgba(255,255,255,.4); font-size:10px;
+    }
+    .phone {
+      width:375px; height:812px; border-radius:40px; overflow:hidden;
+      position:relative;
+      box-shadow:0 20px 60px rgba(0,0,0,.6), inset 0 0 0 1.5px rgba(255,255,255,.08);
+    }
+    .phone::before {
+      content:''; position:absolute; top:0; left:50%;
+      transform:translateX(-50%); width:120px; height:30px;
+      background:#000; border-radius:0 0 16px 16px; z-index:100;
+    }
+
+    /* ── Shared ── */
+    .status-bar {
+      height:44px; display:flex; align-items:center; justify-content:space-between;
+      padding:0 20px; position:relative; z-index:10;
+    }
+    .status-time { font-size:12px; font-weight:700; }
+    .status-icons { font-size:12px; }
+    .nav-row { display:flex; align-items:center; padding:0 var(--page); padding-bottom:16px; }
+    .back-icon { color:#fff; font-size:16px; cursor:pointer; }
+    .progress-wrap { display:flex; flex-direction:column; align-items:center; gap:3px; }
+    .progress-bar { width:120px; height:3px; background:rgba(255,255,255,.15); border-radius:99px; overflow:hidden; }
+    .progress-fill { height:100%; background:var(--yellow); border-radius:99px; }
+    .progress-text { font-size:10px; color:rgba(255,255,255,.45); }
+    .gold-btn {
+      width:100%; height:60px;
+      background: linear-gradient(to right,#FFE600,#FFC107);
+      border-radius:var(--r12);
+      display:flex; align-items:center; justify-content:center;
+      font-size:16px; font-weight:700; color:#161616; cursor:pointer;
+    }
+    .ghost-btn {
+      width:100%; height:60px; border:1px solid rgba(255,255,255,.2);
+      border-radius:var(--r12);
+      display:flex; align-items:center; justify-content:center;
+      font-size:16px; font-weight:600; color:rgba(255,255,255,.55);
+    }
+    .cta-bar-cream {
+      position:absolute; bottom:0; left:0; right:0;
+      background:var(--bgCream); border-top:0.5px solid #E8E0CC;
+      padding:12px 16px 30px;
+    }
+    .cta-bar-dark {
+      position:absolute; bottom:0; left:0; right:0;
+      background:var(--bgDark); border-top:0.5px solid rgba(255,255,255,.08);
+      padding:12px 16px 30px;
+    }
+    .dark-header { background:var(--bgDark); }
+    .eyebrow-pill {
+      display:inline-flex; align-items:center;
+      background:rgba(255,230,0,.15); border:0.5px solid rgba(255,230,0,.4);
+      border-radius:var(--rfull); padding:5px 12px;
+      font-size:10px; font-weight:600; color:#756B0D; letter-spacing:.8px;
+    }
+    .headline-gold { font-size:21px; font-weight:700; color:#866905; line-height:1.35; margin-top:14px; }
+    .body-mid { font-size:13px; color:var(--txMid); line-height:1.6; margin-top:8px; }
+    .trust-row { display:flex; gap:8px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
+    .trust-badge-cream {
+      background:#F5F0E8; border:0.5px solid #E8D4A0; border-radius:var(--rfull);
+      padding:4px 10px; font-size:10px; font-weight:500; color:#7A6010;
+    }
+
+    /* ══════════════════════════════════════════
+       SCREEN 1 — Welcome / Hook (kept from v2)
+    ══════════════════════════════════════════ */
+    .s1 { background:var(--bgBrown); position:relative; overflow:hidden; }
+    .circles-bg { position:absolute; inset:0; pointer-events:none; }
+    .circles-bg svg { width:100%; height:100%; }
+    .spend-chip {
+      position:absolute; display:flex; align-items:center;
+      background:#F8F8F8; border:0.8px solid #EBEBEB;
+      border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,.08);
+      overflow:hidden; height:44px;
+    }
+    .spend-chip.small { height:34px; }
+    .chip-icon { width:34px; height:44px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+    .spend-chip.small .chip-icon { width:27px; height:34px; font-size:12px; }
+    .chip-text { padding:0 8px; }
+    .chip-label { font-size:10px; font-weight:500; color:#333; display:block; }
+    .chip-amount { font-size:14px; font-weight:700; color:#000; display:block; }
+    .spend-chip.small .chip-label { font-size:8px; }
+    .spend-chip.small .chip-amount { font-size:11px; }
+    .bank-center {
+      position:absolute; top:118px; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+    }
+    .bank-circle {
+      width:80px; height:80px; background:#6B3B10;
+      border-radius:50%; border:1.5px solid rgba(255,255,255,.15);
+      display:flex; align-items:center; justify-content:center; font-size:36px;
+    }
+    .bank-rate-badge {
+      background:rgba(255,255,255,.09); border:0.5px solid rgba(255,255,255,.18);
+      border-radius:var(--rfull); padding:3px 10px;
+      font-size:10px; font-weight:700; color:rgba(255,255,255,.5);
+      letter-spacing:.3px;
+    }
+    .welcome-card {
+      position:absolute; bottom:0; left:0; right:0;
+      background:#FEF4DE; border-radius:24px 24px 0 0;
+      padding:20px 16px 30px;
+    }
+    .idle-banner {
+      background:linear-gradient(135deg,#3D1F01,#5A2D00);
+      border:0.5px solid rgba(255,200,80,.25);
+      border-radius:var(--r12); padding:12px 14px; margin-bottom:16px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .idle-banner-eyebrow { font-size:10px; font-weight:600; color:rgba(255,200,80,.6); letter-spacing:.8px; margin-bottom:3px; }
+    .idle-banner-amount { font-size:28px; font-weight:800; color:#FF9A36; letter-spacing:-.5px; line-height:1; }
+    .idle-banner-sub { font-size:11px; color:rgba(255,255,255,.4); margin-top:3px; }
+    .idle-vs-pill { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+    .idle-vs-row { display:flex; align-items:center; gap:5px; }
+    .idle-vs-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .idle-vs-label { font-size:9px; font-weight:500; color:rgba(255,255,255,.35); }
+    .idle-vs-val { font-size:11px; font-weight:700; }
+    .welcome-headline { font-size:21px; font-weight:700; color:#341F06; line-height:1.35; }
+    .welcome-sub { font-size:13px; color:#88653C; margin-top:10px; line-height:1.5; }
+    .social-proof { display:flex; align-items:center; gap:6px; margin-top:14px; font-size:12px; color:#6F3D04; }
+
+    /* ══════════════════════════════════════════
+       SCREEN 2 — Goal Question (new)
+    ══════════════════════════════════════════ */
+    .s2 { background:var(--bgCream); }
+    .goal-option {
+      display:flex; align-items:center; gap:12px; padding:14px 16px;
+      background:#fff; border-radius:var(--r8); border:0.5px solid #E8E0CC;
+      margin-bottom:10px; cursor:pointer;
+    }
+    .goal-option.selected {
+      background:var(--bgDark); border-color:var(--bgDark); border-width:1.5px;
+    }
+    .goal-emoji { font-size:20px; flex-shrink:0; }
+    .goal-text { flex:1; }
+    .goal-label { font-size:14px; font-weight:600; color:var(--txDark); }
+    .goal-option.selected .goal-label { color:var(--yellow); }
+    .goal-sub { font-size:11px; color:var(--txMid); margin-top:2px; }
+    .goal-option.selected .goal-sub { color:rgba(255,255,255,.4); }
+    .goal-radio { width:20px; height:20px; border-radius:50%; border:1.5px solid #D0C8B8; flex-shrink:0; }
+    .goal-radio.checked { background:var(--yellow); border-color:var(--yellow); display:flex; align-items:center; justify-content:center; font-size:10px; color:#161616; }
+
+    /* ══════════════════════════════════════════
+       SCREEN 3 — Pain Discovery (kept from v2)
+    ══════════════════════════════════════════ */
+    .s3 { background:var(--bgCream); }
+    .pain-chip {
+      display:flex; align-items:center; gap:12px; padding:14px 16px;
+      background:#fff; border-radius:var(--r8); border:0.5px solid #E8E0CC; margin-bottom:8px;
+    }
+    .pain-chip.selected { background:var(--bgDark); border-color:var(--bgDark); border-width:1.5px; }
+    .pain-chip-label { font-size:14px; font-weight:500; color:var(--txDark); flex:1; }
+    .pain-chip.selected .pain-chip-label { color:var(--yellow); }
+    .pain-emoji { font-size:20px; }
+    .check-circle { width:20px; height:20px; border-radius:50%; border:1.5px solid #E8E0CC; flex-shrink:0; }
+    .check-circle.checked {
+      background:var(--yellow); border-color:var(--yellow);
+      display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--txDark);
+    }
+    .pain-headline { font-size:20px; font-weight:700; color:var(--txDark); line-height:1.35; margin-bottom:6px; }
+    .pain-sub { font-size:12px; color:var(--txMid); margin-bottom:20px; }
+
+    /* ══════════════════════════════════════════
+       SCREEN 4 — Tinder Swipe Cards (NEW)
+    ══════════════════════════════════════════ */
+    .s4-tinder { background:var(--bgDark); }
+    .tinder-dots { display:flex; gap:6px; justify-content:center; margin-bottom:20px; }
+    .tinder-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.2); }
+    .tinder-dot.active { background:var(--yellow); width:20px; border-radius:4px; }
+    .tinder-stack { position:relative; height:240px; margin-bottom:20px; }
+    /* Cards stacked behind */
+    .tcard-back2 {
+      position:absolute; top:12px; left:12px; right:12px; bottom:0;
+      background:rgba(255,255,255,.04); border:0.5px solid rgba(255,255,255,.07);
+      border-radius:20px;
+    }
+    .tcard-back1 {
+      position:absolute; top:6px; left:6px; right:6px; bottom:0;
+      background:rgba(255,255,255,.06); border:0.5px solid rgba(255,255,255,.09);
+      border-radius:20px;
+    }
+    /* Active card */
+    .tcard {
+      position:absolute; top:0; left:0; right:0; bottom:0;
+      background:linear-gradient(155deg,#15243A,#0C1220);
+      border:1px solid rgba(255,255,255,.12); border-radius:20px;
+      padding:28px 24px; display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .tcard-tag {
+      display:inline-flex; align-items:center; gap:5px;
+      background:rgba(255,230,0,.1); border:0.5px solid rgba(255,230,0,.25);
+      border-radius:var(--rfull); padding:4px 10px;
+      font-size:10px; font-weight:600; color:rgba(255,230,0,.7); letter-spacing:.6px;
+      width:fit-content;
+    }
+    .tcard-quote {
+      font-size:20px; font-weight:700; color:#fff; line-height:1.45; flex:1;
+      display:flex; align-items:center; padding:16px 0;
+    }
+    .tcard-hint {
+      font-size:11px; color:rgba(255,255,255,.3); text-align:center;
+    }
+    /* Agree / Nope buttons */
+    .tinder-btns { display:flex; gap:12px; margin-bottom:20px; }
+    .tinder-nope {
+      flex:1; height:56px; border-radius:var(--r12);
+      border:1.5px solid rgba(255,255,255,.15);
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      font-size:15px; font-weight:700; color:rgba(255,255,255,.5); cursor:pointer;
+    }
+    .tinder-agree {
+      flex:1; height:56px; border-radius:var(--r12);
+      background:rgba(29,158,117,.15); border:1.5px solid rgba(29,158,117,.4);
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      font-size:15px; font-weight:700; color:#1D9E75; cursor:pointer;
+    }
+    .tinder-count {
+      text-align:center; font-size:12px; color:rgba(255,255,255,.3);
+    }
+
+    /* ══════════════════════════════════════════
+       SCREEN 5 — Solution Mirror (kept from v2)
+    ══════════════════════════════════════════ */
+    .s5-sol { background:var(--bgCream); }
+    .solution-card {
+      background:#fff; border-radius:var(--r8); border:0.5px solid #E8E0CC;
+      padding:16px; margin-bottom:12px;
+    }
+    .pain-struck {
+      font-size:11px; color:rgba(0,0,0,.4); text-decoration:line-through;
+      display:flex; align-items:center; gap:4px; margin-bottom:10px;
+    }
+    .solution-row { display:flex; align-items:flex-start; gap:12px; }
+    .solution-icon {
+      width:36px; height:36px; border-radius:50%;
+      background:rgba(255,230,0,.12);
+      display:flex; align-items:center; justify-content:center;
+      font-size:16px; flex-shrink:0;
+    }
+    .solution-text { font-size:14px; font-weight:600; color:var(--txDark); line-height:1.4; }
+    .solution-stat { font-size:11px; color:var(--green); margin-top:4px; }
+    .dark-reassurance {
+      background:var(--bgDark); border-radius:var(--r8);
+      padding:16px; display:flex; gap:12px; margin-top:20px; align-items:flex-start;
+    }
+    .dark-reassurance-title { font-size:13px; font-weight:600; color:#fff; }
+    .dark-reassurance-sub { font-size:11px; color:rgba(255,255,255,.5); margin-top:3px; line-height:1.5; }
+
+    /* ══════════════════════════════════════════
+       SCREEN 6 — Before / After Table (NEW)
+    ══════════════════════════════════════════ */
+    .s6-compare { background:var(--bgCream); }
+    .compare-table { margin:20px 0 16px; }
+    /* Header row */
+    .ct-header {
+      display:grid; grid-template-columns:1fr 1fr 1fr;
+      gap:0; margin-bottom:0;
+    }
+    .ct-header-spacer { } /* empty first col */
+    .ct-col-head {
+      padding:10px 8px; text-align:center;
+      font-size:11px; font-weight:700; letter-spacing:.5px;
+      border-radius:var(--r8) var(--r8) 0 0;
+    }
+    .ct-col-head.bank-head {
+      background:#F1F5F9; color:#64748B; border:0.5px solid #E2E8F0; border-bottom:none;
+    }
+    .ct-col-head.multipl-head {
+      background:linear-gradient(160deg,#FFFDE7,#FFF8B8);
+      color:#7A5500; border:1.5px solid rgba(255,193,7,.5); border-bottom:none;
+      position:relative;
+    }
+    /* Data rows */
+    .ct-row {
+      display:grid; grid-template-columns:1fr 1fr 1fr;
+      border-bottom:0.5px solid #EDE8DC;
+    }
+    .ct-row:last-child { border-bottom:none; }
+    .ct-row-label {
+      padding:13px 10px; font-size:12px; font-weight:500; color:#64748B;
+      display:flex; align-items:center;
+    }
+    .ct-cell {
+      padding:13px 8px; text-align:center;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+    }
+    .ct-cell.bank-cell {
+      background:#F8FAFC; border-left:0.5px solid #E2E8F0; border-right:0.5px solid #E2E8F0;
+    }
+    .ct-cell.multipl-cell {
+      background:linear-gradient(180deg,#FFFDE7,#FFFBCC);
+      border-left:1.5px solid rgba(255,193,7,.4); border-right:1.5px solid rgba(255,193,7,.4);
+    }
+    .ct-cell-val {
+      font-size:14px; font-weight:700; line-height:1.2;
+    }
+    .ct-cell.bank-cell .ct-cell-val { color:#94A3B8; }
+    .ct-cell.multipl-cell .ct-cell-val { color:#3D2000; }
+    .ct-cell-val.green { color:#1D9E75 !important; }
+    .ct-cell-icon { font-size:11px; margin-bottom:2px; }
+    /* Bottom total row */
+    .ct-total-row {
+      display:grid; grid-template-columns:1fr 1fr 1fr;
+      border-top:1.5px solid #E8D4A0; margin-top:0;
+    }
+    .ct-total-label {
+      padding:14px 10px; font-size:11px; font-weight:700; color:#64748B;
+      letter-spacing:.4px; display:flex; align-items:center;
+    }
+    .ct-total-cell {
+      padding:14px 8px; text-align:center;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+    }
+    .ct-total-cell.bank-total {
+      background:#F8FAFC; border:0.5px solid #E2E8F0; border-top:none;
+      border-radius:0 0 var(--r8) var(--r8);
+    }
+    .ct-total-cell.multipl-total {
+      background:linear-gradient(160deg,#FFFDE7,#FFF8B8);
+      border:1.5px solid rgba(255,193,7,.5); border-top:none;
+      border-radius:0 0 var(--r8) var(--r8);
+    }
+    .ct-total-val { font-size:16px; font-weight:800; }
+    .ct-total-cell.bank-total .ct-total-val { color:#94A3B8; }
+    .ct-total-cell.multipl-total .ct-total-val { color:#1D9E75; }
+    .compare-callout {
+      background:linear-gradient(135deg,rgba(255,230,0,.1),rgba(255,193,7,.08));
+      border:0.5px solid rgba(255,193,7,.3); border-radius:var(--r8);
+      padding:12px 16px; display:flex; gap:10px; align-items:center;
+    }
+
+    /* ══════════════════════════════════════════
+       SCREEN 7 — Social Proof (kept from v2)
+    ══════════════════════════════════════════ */
+    .s7-social { background:var(--bgDark); }
+    .stats-bar { display:flex; align-items:center; gap:0; margin-bottom:28px; }
+    .stat-item { flex:1; text-align:center; }
+    .stat-value { font-size:22px; font-weight:700; color:var(--yellow); letter-spacing:-.3px; }
+    .stat-label { font-size:11px; color:rgba(255,255,255,.5); margin-top:2px; }
+    .vert-divider { width:0.5px; height:40px; background:rgba(255,255,255,.15); }
+    .section-eyebrow { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+    .section-eyebrow-text { font-size:11px; font-weight:600; color:#E0C080; letter-spacing:1.2px; }
+    .testimonial-card {
+      background:rgba(255,255,255,.06); border-radius:var(--r8);
+      border:0.5px solid rgba(255,255,255,.08); padding:16px; margin-bottom:12px;
+    }
+    .testimonial-quote { font-size:14px; font-weight:500; color:#fff; line-height:1.5; }
+    .testimonial-author { display:flex; align-items:center; gap:10px; margin-top:12px; }
+    .avatar {
+      width:32px; height:32px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:13px; font-weight:700;
+    }
+    .author-name { font-size:12px; color:rgba(255,255,255,.7); font-weight:500; }
+    .stars { font-size:10px; }
+    .trust-badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+    .trust-badge-dark {
+      display:flex; align-items:center; gap:5px;
+      background:rgba(255,255,255,.07); border:0.5px solid rgba(255,255,255,.12);
+      border-radius:var(--rfull); padding:6px 12px;
+      font-size:11px; font-weight:500; color:rgba(255,255,255,.6);
+    }
+
+    /* ══════════════════════════════════════════
+       SCREEN 8 — Category Preference (kept from v2)
+    ══════════════════════════════════════════ */
+    .s8-cat { background:var(--bgCream); }
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+    .cat-tile {
+      background:#fff; border-radius:var(--r8); border:0.5px solid #E8E0CC;
+      padding:12px; height:88px;
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .cat-tile.selected { background:var(--bgDark); border-color:var(--bgDark); border-width:1.5px; }
+    .cat-top { display:flex; justify-content:space-between; align-items:center; }
+    .cat-emoji { font-size:22px; }
+    .cat-check { width:18px; height:18px; border-radius:50%; border:1.5px solid #D0C8B8; }
+    .cat-check.checked { background:var(--yellow); border-color:var(--yellow); display:flex; align-items:center; justify-content:center; font-size:10px; }
+    .cat-name { font-size:13px; font-weight:600; color:var(--txDark); }
+    .cat-tile.selected .cat-name { color:var(--yellow); }
+    .cat-sub { font-size:10px; color:var(--txMid); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cat-tile.selected .cat-sub { color:rgba(255,255,255,.4); }
+
+    /* ══════════════════════════════════════════
+       SCREEN 9 — Processing Moment
+    ══════════════════════════════════════════ */
+    .s9-proc { background:var(--bgDark); }
+    .loader-circle { width:64px; height:64px; border-radius:50%; border:3px solid rgba(255,255,255,.1); border-top-color:var(--yellow); margin:0 auto 24px; }
+    .loader-title { font-size:18px; font-weight:700; color:#fff; margin-bottom:6px; }
+    .loader-sub { font-size:13px; color:rgba(255,255,255,.45); }
+    .checklist { margin-top:32px; display:flex; flex-direction:column; gap:12px; }
+    .check-item { display:flex; align-items:center; gap:12px; }
+    .check-dot { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
+    .check-dot.done { background:var(--green); color:#fff; }
+    .check-dot.active { background:var(--yellow); color:var(--txDark); }
+    .check-dot.wait { background:rgba(255,255,255,.1); color:transparent; }
+    .check-text { font-size:14px; color:#fff; font-weight:500; }
+    .check-item.wait .check-text { color:rgba(255,255,255,.35); }
+
+    /* ══════════════════════════════════════════
+       SCREEN 10 — Personalised Projection (NEW)
+    ══════════════════════════════════════════ */
+    .s10-proj { background:var(--bgDark); }
+    /* Account balance card */
+    .proj-balance-card {
+      background:linear-gradient(135deg,#0E1B12,#0C1220);
+      border:1px solid rgba(29,158,117,.3); border-radius:var(--r12);
+      padding:18px; margin-bottom:16px;
+    }
+    .proj-acct-label { font-size:11px; color:rgba(255,255,255,.4); font-weight:500; margin-bottom:10px; }
+    .proj-balance-row { display:flex; align-items:baseline; gap:4px; margin-bottom:6px; }
+    .proj-curr { font-size:20px; font-weight:400; color:rgba(255,255,255,.5); margin-top:5px; }
+    .proj-amount { font-size:42px; font-weight:800; color:#fff; letter-spacing:-1.5px; line-height:1; }
+    .proj-earning-row { display:flex; align-items:center; gap:6px; }
+    .proj-earning-val { font-size:14px; font-weight:700; color:#1D9E75; }
+    .proj-earning-label { font-size:12px; color:rgba(255,255,255,.35); }
+    .proj-rate-pill {
+      display:inline-flex; align-items:center; gap:4px;
+      background:rgba(29,158,117,.15); border:0.5px solid rgba(29,158,117,.35);
+      border-radius:var(--rfull); padding:3px 8px;
+      font-size:10px; font-weight:700; color:#1D9E75; margin-top:6px;
+    }
+    /* Your first month breakdown */
+    .proj-month-card {
+      background:rgba(255,255,255,.05); border:0.5px solid rgba(255,255,255,.1);
+      border-radius:var(--r12); padding:16px; margin-bottom:14px;
+    }
+    .proj-month-title { font-size:12px; font-weight:600; color:rgba(255,255,255,.4); letter-spacing:.7px; margin-bottom:14px; }
+    .proj-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:9px 0; border-bottom:0.5px solid rgba(255,255,255,.06);
+    }
+    .proj-row:last-child { border-bottom:none; }
+    .proj-row-left { display:flex; align-items:center; gap:10px; }
+    .proj-row-icon { font-size:16px; width:28px; text-align:center; }
+    .proj-row-label { font-size:13px; font-weight:500; color:rgba(255,255,255,.7); }
+    .proj-row-sub { font-size:10px; color:rgba(255,255,255,.3); margin-top:2px; }
+    .proj-row-val { font-size:14px; font-weight:700; }
+    .proj-row-val.green { color:#1D9E75; }
+    .proj-row-val.orange { color:#FC8019; }
+    /* Total banner */
+    .proj-total {
+      background:linear-gradient(135deg,rgba(255,230,0,.12),rgba(255,193,7,.08));
+      border:1px solid rgba(255,230,0,.25); border-radius:var(--r12);
+      padding:16px; display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:12px;
+    }
+    .proj-total-label { font-size:12px; font-weight:500; color:rgba(255,255,255,.5); }
+    .proj-total-heading { font-size:14px; font-weight:700; color:#fff; margin-bottom:2px; }
+    .proj-total-val { font-size:28px; font-weight:800; color:var(--yellow); letter-spacing:-.5px; }
+    .proj-total-period { font-size:11px; color:rgba(255,255,255,.35); margin-top:2px; }
+    .proj-trust {
+      text-align:center; font-size:10px; color:rgba(255,255,255,.25); line-height:1.6;
+    }
+    .proj-trust span { color:rgba(255,255,255,.45); font-weight:600; }
+
+    /* ══════════════════════════════════════════
+       SCREEN 11 — Account Gate (kept from v2)
+    ══════════════════════════════════════════ */
+    .s11-gate { background:var(--bgDark); }
+    .gate-center { text-align:center; }
+    .gate-logo { width:64px; height:64px; border-radius:50%; background:linear-gradient(to right,var(--yellow),var(--yellowEnd)); display:inline-flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; color:var(--txDark); margin-bottom:20px; }
+    .gate-headline { font-size:24px; font-weight:700; color:#fff; line-height:1.3; }
+    .gate-sub { font-size:14px; color:rgba(255,255,255,.5); margin-top:10px; }
+    .perks-card { background:rgba(255,255,255,.05); border:0.5px solid rgba(255,230,0,.2); border-radius:var(--r8); padding:16px; margin:28px 0; }
+    .perk-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; }
+    .perk-row:last-child { margin-bottom:0; }
+    .perk-text { font-size:13px; font-weight:500; color:rgba(255,255,255,.8); flex:1; line-height:1.4; }
+    .perk-check { color:#1D9E75; font-size:16px; }
+    .auth-btn { width:100%; height:52px; border-radius:var(--r12); display:flex; align-items:center; justify-content:center; gap:10px; font-size:15px; font-weight:600; margin-bottom:10px; border:1px solid rgba(255,255,255,.15); color:#fff; background:rgba(255,255,255,.06); }
+    .login-link { text-align:center; font-size:13px; color:rgba(255,255,255,.4); margin-top:16px; }
+    .login-link span { color:var(--yellow); font-weight:600; }
+    .legal { text-align:center; font-size:10px; color:rgba(255,255,255,.25); line-height:1.6; margin-top:16px; }
+
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="page-title">Multipl — Onboarding Flow v3</div>
+<div class="page-sub">11 screens · New: Goal Question (2), Tinder Swipe Cards (4), Comparison Table (6), Personalised Projection (10) · Removed: idle calculator + interactive demo</div>
+
+<div class="storyboard">
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 1: WELCOME / HOOK  (kept from v2)
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>01</span> Welcome / Hook <span class="kept">kept</span></div>
+    <div class="phone s1">
+      <svg class="circles-bg" viewBox="0 0 375 812" fill="none">
+        <circle cx="187" cy="227" r="60"  stroke="rgba(255,204,102,0.13)" stroke-width=".8"/>
+        <circle cx="187" cy="227" r="100" stroke="rgba(255,204,102,0.13)" stroke-width=".8"/>
+        <circle cx="187" cy="227" r="140" stroke="rgba(255,204,102,0.13)" stroke-width=".8"/>
+        <circle cx="187" cy="227" r="180" stroke="rgba(255,204,102,0.11)" stroke-width=".8"/>
+        <circle cx="187" cy="227" r="220" stroke="rgba(255,204,102,0.09)" stroke-width=".8"/>
+        <circle cx="187" cy="227" r="260" stroke="rgba(255,204,102,0.07)" stroke-width=".8"/>
+        <circle cx="187" cy="227" r="300" stroke="rgba(255,204,102,0.05)" stroke-width=".8"/>
+      </svg>
+      <div class="spend-chip" style="top:90px;left:24px">
+        <div class="chip-icon" style="background:#AB07DC">🛍️</div>
+        <div class="chip-text"><span class="chip-label">Shopping</span><span class="chip-amount">₹20,000</span></div>
+      </div>
+      <div class="spend-chip" style="top:80px;right:20px">
+        <div class="chip-icon" style="background:#0B27DA">✈️</div>
+        <div class="chip-text"><span class="chip-label">Travel</span><span class="chip-amount">₹40,000</span></div>
+      </div>
+      <div class="spend-chip small" style="top:195px;left:10px">
+        <div class="chip-icon" style="background:#BF0B0B">🏢</div>
+        <div class="chip-text"><span class="chip-label">Hotels</span><span class="chip-amount">₹25,000</span></div>
+      </div>
+      <div class="spend-chip small" style="top:195px;right:8px">
+        <div class="chip-icon" style="background:#D80A86">📱</div>
+        <div class="chip-text"><span class="chip-label">Electronics</span><span class="chip-amount">₹15,000</span></div>
+      </div>
+      <div class="spend-chip small" style="top:300px;left:12px">
+        <div class="chip-icon" style="background:#EC630D">🍔</div>
+        <div class="chip-text"><span class="chip-label">Food delivery</span><span class="chip-amount">₹12,000</span></div>
+      </div>
+      <div class="spend-chip small" style="top:295px;right:6px">
+        <div class="chip-icon" style="background:#1DC845">🥦</div>
+        <div class="chip-text"><span class="chip-label">Groceries</span><span class="chip-amount">₹20,000</span></div>
+      </div>
+      <div class="bank-center">
+        <div class="bank-circle">🏦</div>
+        <div class="bank-rate-badge">earns 0.02% p.a.</div>
+      </div>
+      <div class="welcome-card">
+        <div class="idle-banner">
+          <div>
+            <div class="idle-banner-eyebrow">IDLE MONEY COST</div>
+            <div class="idle-banner-amount">₹38,000 / yr</div>
+            <div class="idle-banner-sub">typical Indian family · ₹1L spending float</div>
+          </div>
+          <div class="idle-vs-pill">
+            <div class="idle-vs-row">
+              <div class="idle-vs-dot" style="background:#E03030"></div>
+              <span class="idle-vs-label">Bank gives</span>
+              <span class="idle-vs-val" style="color:#E07070">₹8/day</span>
+            </div>
+            <div class="idle-vs-row">
+              <div class="idle-vs-dot" style="background:#1D9E75"></div>
+              <span class="idle-vs-label">Possible</span>
+              <span class="idle-vs-val" style="color:#1D9E75">₹27/day</span>
+            </div>
+          </div>
+        </div>
+        <div class="welcome-headline">Your spending money earns ₹8 a day. It could be earning ₹27.</div>
+        <div class="welcome-sub">The ₹1L you keep for groceries, travel and shopping — your bank gives it almost nothing while it waits to be spent.</div>
+        <div class="social-proof">👥 Join <strong style="color:#6F3D04">&nbsp;5 Lakh+ Indians</strong>&nbsp;who found this out — and fixed it.</div>
+        <div style="margin-top:18px" class="gold-btn">Show me how to fix this →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 2: GOAL QUESTION  (new)
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>02</span> Goal Question <span class="new-badge">new</span></div>
+    <div class="phone s2">
+      <div class="dark-header">
+        <div class="status-bar"><span class="status-time" style="color:#fff">9:41</span><span class="status-icons" style="color:#fff">●●●</span></div>
+        <div class="nav-row">
+          <span class="back-icon">‹</span>
+          <div style="flex:1"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:9.1%"></div></div>
+            <div class="progress-text">2 of 11</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:18px"></div>
+        </div>
+      </div>
+      <div style="padding:20px 16px 100px;overflow-y:auto;height:calc(100% - 100px)">
+        <div style="font-size:22px;font-weight:700;color:#161616;line-height:1.35;margin-bottom:6px">What brings you here today?</div>
+        <div style="font-size:13px;color:#8F7A56;margin-bottom:24px">We'll personalise your experience around your goal.</div>
+
+        <div class="goal-option selected">
+          <span class="goal-emoji">📈</span>
+          <div class="goal-text">
+            <div class="goal-label">Make my idle money work harder</div>
+            <div class="goal-sub">Earn more than my savings account gives me</div>
+          </div>
+          <div class="goal-radio checked">✓</div>
+        </div>
+        <div class="goal-option">
+          <span class="goal-emoji">🎁</span>
+          <div class="goal-text">
+            <div class="goal-label">Save money on everyday brands</div>
+            <div class="goal-sub">Swiggy, Zomato, Amazon discounts</div>
+          </div>
+          <div class="goal-radio"></div>
+        </div>
+        <div class="goal-option">
+          <span class="goal-emoji">🏦</span>
+          <div class="goal-text">
+            <div class="goal-label">Find a better alternative to bank savings</div>
+            <div class="goal-sub">More returns without locking money away</div>
+          </div>
+          <div class="goal-radio"></div>
+        </div>
+        <div class="goal-option">
+          <span class="goal-emoji">🚀</span>
+          <div class="goal-text">
+            <div class="goal-label">Start investing without the complexity</div>
+            <div class="goal-sub">Something simple that just works</div>
+          </div>
+          <div class="goal-radio"></div>
+        </div>
+        <div class="goal-option">
+          <span class="goal-emoji">🤔</span>
+          <div class="goal-text">
+            <div class="goal-label">Just curious — seeing what this is</div>
+            <div class="goal-sub">No specific goal yet</div>
+          </div>
+          <div class="goal-radio"></div>
+        </div>
+      </div>
+      <div class="cta-bar-cream"><div class="gold-btn">Continue →</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 3: PAIN DISCOVERY  (kept from v2)
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>03</span> Pain Discovery <span class="kept">kept</span></div>
+    <div class="phone s3">
+      <div class="dark-header">
+        <div class="status-bar"><span class="status-time" style="color:#fff">9:41</span><span class="status-icons" style="color:#fff">●●●</span></div>
+        <div class="nav-row">
+          <span class="back-icon">‹</span>
+          <div style="flex:1"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:18.2%"></div></div>
+            <div class="progress-text">3 of 11</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:18px"></div>
+        </div>
+      </div>
+      <div style="padding:20px 16px 100px;overflow-y:auto;height:calc(100% - 100px)">
+        <div class="pain-headline">What's held you back from doing more with your money?</div>
+        <div class="pain-sub">Select all that apply.</div>
+        <div class="pain-chip"><span class="pain-emoji">😰</span><span class="pain-chip-label">Investing feels complicated</span><div class="check-circle"></div></div>
+        <div class="pain-chip selected"><span class="pain-emoji">🔒</span><span class="pain-chip-label">I don't want my money locked away</span><div class="check-circle checked">✓</div></div>
+        <div class="pain-chip"><span class="pain-emoji">🤷</span><span class="pain-chip-label">I didn't know products like this existed</span><div class="check-circle"></div></div>
+        <div class="pain-chip selected"><span class="pain-emoji">😬</span><span class="pain-chip-label">I'm not sure it's safe</span><div class="check-circle checked">✓</div></div>
+        <div class="pain-chip"><span class="pain-emoji">⏰</span><span class="pain-chip-label">I never get around to it</span><div class="check-circle"></div></div>
+        <div class="pain-chip"><span class="pain-emoji">💸</span><span class="pain-chip-label">I thought you need a big amount to start</span><div class="check-circle"></div></div>
+      </div>
+      <div class="cta-bar-cream"><div class="gold-btn">Continue</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 4: TINDER SWIPE CARDS — Pain Amplification (new)
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>04</span> Tinder Cards — Pain Amplification <span class="new-badge">new</span></div>
+    <div class="phone s4-tinder">
+      <div class="dark-header">
+        <div class="status-bar"><span class="status-time" style="color:#fff">9:41</span><span class="status-icons" style="color:#fff">●●●</span></div>
+        <div class="nav-row">
+          <span class="back-icon">‹</span>
+          <div style="flex:1"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:27.3%"></div></div>
+            <div class="progress-text">4 of 11</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:18px"></div>
+        </div>
+      </div>
+      <div style="padding:16px 16px 0;height:calc(100% - 100px)">
+        <div style="font-size:21px;font-weight:700;color:#fff;line-height:1.35;margin-bottom:6px">Which of these sounds like you?</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.45);margin-bottom:24px">Tap Agree or Nope for each one.</div>
+
+        <!-- Dot progress -->
+        <div class="tinder-dots">
+          <div class="tinder-dot active"></div>
+          <div class="tinder-dot"></div>
+          <div class="tinder-dot"></div>
+          <div class="tinder-dot"></div>
+        </div>
+
+        <!-- Card stack -->
+        <div class="tinder-stack">
+          <!-- Cards behind -->
+          <div class="tcard-back2"></div>
+          <div class="tcard-back1"></div>
+          <!-- Active card -->
+          <div class="tcard">
+            <div class="tcard-tag">CARD 1 OF 4</div>
+            <div class="tcard-quote">"I never think about the money sitting in my bank — it's just there."</div>
+            <div class="tcard-hint">Tap below — or swipe left / right</div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="tinder-btns">
+          <div class="tinder-nope">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Nope
+          </div>
+          <div class="tinder-agree">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6.5 12.5L13.5 4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Agree
+          </div>
+        </div>
+
+        <div class="tinder-count">Card 1 of 4 · skip all →</div>
+      </div>
+
+      <!-- The other 3 card statements shown as ghost preview below -->
+      <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(12,18,32,.95);border-top:0.5px solid rgba(255,255,255,.08);padding:10px 16px 16px">
+        <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:.8px;margin-bottom:8px">COMING UP</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.3);line-height:1.4">"I always pay full price at Swiggy — surely there's a smarter way?"</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.2);margin-top:4px;line-height:1.4">"I've heard of mutual funds but they feel risky and complicated."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 5: SOLUTION MIRROR  (kept from v2)
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>05</span> Solution Mirror <span class="kept">kept</span></div>
+    <div class="phone s5-sol">
+      <div class="dark-header">
+        <div class="status-bar"><span class="status-time" style="color:#fff">9:41</span><span class="status-icons" style="color:#fff">●●●</span></div>
+        <div class="nav-row">
+          <span class="back-icon">‹</span>
+          <div style="flex:1"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:36.4%"></div></div>
+            <div class="progress-text">5 of 11</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:18px"></div>
+        </div>
+      </div>
+      <div style="padding:24px 16px 100px;overflow-y:auto;height:calc(100% - 100px)">
+        <div class="eyebrow-pill">BUILT FOR YOU</div>
+        <div class="headline-gold">Multipl solves exactly what holds most people back</div>
+        <div class="body-mid">Here's how we've fixed each concern — for 5 Lakh+ users before you.</div>
+        <div style="height:24px"></div>
+        <div class="solution-card">
+          <div class="pain-struck">→ I don't want my money locked away</div>
+          <div class="solution-row">
+            <div class="solution-icon">💧</div>
+            <div>
+              <div class="solution-text">Withdraw anytime, 24×7 — including weekends</div>
+              <div class="solution-stat">Zero lock-in. Credit in minutes.</div>
+            </div>
+          </div>
+        </div>
+        <div class="solution-card">
+          <div class="pain-struck">→ I'm not sure it's safe</div>
+          <div class="solution-row">
+            <div class="solution-icon">🏛️</div>
+            <div>
+              <div class="solution-text">Regulated by SEBI & AMFI — not a bank, safer category</div>
+              <div class="solution-stat">4.7★ on App Store · 5 Lakh+ users</div>
+            </div>
+          </div>
+        </div>
+        <div class="solution-card">
+          <div class="pain-struck">→ Investing feels complicated</div>
+          <div class="solution-row">
+            <div class="solution-icon">✨</div>
+            <div>
+              <div class="solution-text">Works like a savings account — just add money and it earns</div>
+              <div class="solution-stat">No jargon. No minimum. Just add money.</div>
+            </div>
+          </div>
+        </div>
+        <div class="dark-reassurance">
+          <span style="font-size:20px">🔒</span>
+          <div>
+            <div class="dark-reassurance-title">Your money is always yours</div>
+            <div class="dark-reassurance-sub">SEBI & AMFI regulated. Held in your name in a mutual fund — not on our balance sheet.</div>
+          </div>
+        </div>
+      </div>
+      <div class="cta-bar-cream"><div class="gold-btn">See the numbers →</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 6: BEFORE / AFTER COMPARISON TABLE  (new)
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>06</span> Before / After Table <span class="new-badge">new</span></div>
+    <div class="phone s6-compare">
+      <div class="dark-header">
+        <div class="status-bar"><span class="status-time" style="color:#fff">9:41</span><span class="status-icons" style="color:#fff">●●●</span></div>
+        <div class="nav-row">
+          <span class="back-icon">‹</span>
+          <div style="flex:1"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:45.5%"></div></div>
+            <div class="progress-text">6 of 11</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:18px"></div>
+        </div>
+      </div>
+      <div style="padding:20px 16px 100px;overflow-y:auto;height:calc(100% - 100px)">
+        <div style="font-size:22px;font-weight:700;color:#161616;line-height:1.3;margin-bottom:6px">What actually changes?</div>
+        <div style="font-size:13px;color:#8F7A56;margin-bottom:4px;line-height:1.5">Same ₹50,000. One decision. Very different outcomes.</div>
+
+        <!-- Comparison table -->
+        <div class="compare-table">
+          <!-- Header -->
+          <div class="ct-header">
+            <div class="ct-header-spacer"></div>
+            <div class="ct-col-head bank-head">Your Bank</div>
+            <div class="ct-col-head multipl-head">
+              Multipl ✦
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="ct-row">
+            <div class="ct-row-label">Interest rate</div>
+            <div class="ct-cell bank-cell">
+              <div class="ct-cell-icon">😐</div>
+              <div class="ct-cell-val">0.02% p.a.</div>
+            </div>
+            <div class="ct-cell multipl-cell">
+              <div class="ct-cell-icon">🚀</div>
+              <div class="ct-cell-val green">7% p.a.</div>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="ct-row">
+            <div class="ct-row-label">Monthly earnings on ₹50K</div>
+            <div class="ct-cell bank-cell">
+              <div class="ct-cell-val">₹8</div>
+            </div>
+            <div class="ct-cell multipl-cell">
+              <div class="ct-cell-val green">₹292</div>
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="ct-row">
+            <div class="ct-row-label">Swiggy ₹1,000 order</div>
+            <div class="ct-cell bank-cell">
+              <div class="ct-cell-val" style="font-size:12px">Pay ₹1,000</div>
+            </div>
+            <div class="ct-cell multipl-cell">
+              <div class="ct-cell-val green" style="font-size:12px">Pay ₹950</div>
+              <div style="font-size:9px;color:#1D9E75;margin-top:2px">5% off</div>
+            </div>
+          </div>
+
+          <!-- Row 4 -->
+          <div class="ct-row">
+            <div class="ct-row-label">Can withdraw anytime?</div>
+            <div class="ct-cell bank-cell">
+              <div class="ct-cell-val">✓</div>
+            </div>
+            <div class="ct-cell multipl-cell">
+              <div class="ct-cell-val green">✓ 24×7</div>
+            </div>
+          </div>
+
+          <!-- Total row -->
+          <div class="ct-total-row">
+            <div class="ct-total-label">YEARLY EXTRA</div>
+            <div class="ct-total-cell bank-total">
+              <div class="ct-total-val" style="color:#94A3B8">₹0</div>
+            </div>
+            <div class="ct-total-cell multipl-total">
+              <div class="ct-total-val">+₹4,200</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-callout">
+          <span style="font-size:18px">💡</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#756B0D">That's ₹350 extra every month</div>
+            <div style="font-size:12px;color:#8F7A56;margin-top:2px">On the same money you're already sitting on — with zero lock-in.</div>
+          </div>
+        </div>
+
+        <div class="trust-row" style="margin-top:16px">
+          <span class="trust-badge-cream">AMFI-regulated</span>
+          <span class="trust-badge-cream">No lock-in</span>
+          <span class="trust-badge-cream">Withdraw in minutes</span>
+        </div>
+      </div>
+      <div class="cta-bar-cream"><div class="gold-btn">See who else is doing this →</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 7: SOCIAL PROOF  (kept from v2)
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>07</span> Social Proof <span class="kept">kept</span></div>
+    <div class="phone s7-social">
+      <div class="dark-header">
+        <div class="status-bar"><span class="status-time" style="color:#fff">9:41</span><span class="status-icons" style="color:#fff">●●●</span></div>
+        <div class="nav-row">
+          <span class="back-icon">‹</span>
+          <div style="flex:1"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:54.5%"></div></div>
+            <div class="progress-text">7 of 11</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:18px"></div>
+        </div>
+      </div>
+      <div style="padding:24px 16px 100px;overflow-y:auto;height:calc(100% - 100px)">
+        <div class="stats-bar">
+          <div class="stat-item"><div class="stat-value">₹110Cr+</div><div class="stat-label">AUM managed</div></div>
+          <div class="vert-divider"></div>
+          <div class="stat-item"><div class="stat-value">5L+</div><div class="stat-label">users</div></div>
+          <div class="vert-divider"></div>
+          <div class="stat-item"><div class="stat-value">4.7★</div><div class="stat-label">App Store</div></div>
+        </div>
+        <div class="section-eyebrow"><span>❤️</span><span class="section-eyebrow-text">PEOPLE JUST LIKE YOU</span></div>
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"Moved my monthly spends here from my bank. I get ~7% returns. It is a no brainer — the money was just sitting there doing nothing."</div>
+          <div class="testimonial-author">
+            <div class="avatar" style="background:rgba(74,144,217,.3);border:1px solid rgba(74,144,217,.5);color:#4A90D9">R</div>
+            <div><div class="author-name">Rahul M., Bengaluru · Salaried professional</div><div class="stars">⭐⭐⭐⭐⭐</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"Loving the brand discounts on top of returns. Using it for my Swiggy and Nykaa spends — effectively getting 7% interest AND 5% off."</div>
+          <div class="testimonial-author">
+            <div class="avatar" style="background:rgba(212,160,192,.3);border:1px solid rgba(212,160,192,.5);color:#D4A0C0">M</div>
+            <div><div class="author-name">Manasvini, Bengaluru · Working mom</div><div class="stars">⭐⭐⭐⭐⭐</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card" style="margin-bottom:0">
+          <div class="testimonial-quote">"I was sceptical at first about the mutual fund part. But it's SEBI regulated, 4.7 stars, and my money is accessible any time. Switched my entire spending float."</div>
+          <div class="testimonial-author">
+            <div class="avatar" style="background:rgba(29,158,117,.3);border:1px solid rgba(29,158,117,.5);color:#1D9E75">K</div>
+            <div><div class="author-name">Kiran S., Hyderabad · Freelancer</div><div class="stars">⭐⭐⭐⭐⭐</div></div>
+          </div>
+        </div>
+        <div class="trust-badges">
+          <div class="trust-badge-dark">🏛️ AMFI Regulated</div>
+          <div class="trust-badge-dark">🔒 Bank-grade security</div>
+          <div class="trust-badge-dark">📱 4.7★ Rated</div>
+          <div class="trust-badge-dark">💧 Liquid anytime</div>
+        </div>
+      </div>
+      <div class="cta-bar-dark"><div class="gold-btn">Join them →</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 8: CATEGORY PREFERENCE  (kept from v2)
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>08</span> Category Preference <span class="kept">kept</span></div>
+    <div class="phone s8-cat">
+      <div class="dark-header">
+        <div class="status-bar"><span class="status-time" style="color:#fff">9:41</span><span class="status-icons" style="color:#fff">●●●</span></div>
+        <div class="nav-row">
+          <span class="back-icon">‹</span>
+          <div style="flex:1"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:63.6%"></div></div>
+            <div class="progress-text">8 of 11</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:18px"></div>
+        </div>
+      </div>
+      <div style="padding:20px 16px 100px;overflow-y:auto;height:calc(100% - 100px)">
+        <div style="font-size:20px;font-weight:700;color:#161616;line-height:1.35;margin-bottom:6px">Where do you spend most each month?</div>
+        <div style="font-size:12px;color:#8F7A56;margin-bottom:20px">We'll calculate your personal savings for each category.</div>
+        <div class="cat-grid">
+          <div class="cat-tile selected">
+            <div class="cat-top"><span class="cat-emoji">🍔</span><div class="cat-check checked">✓</div></div>
+            <div><div class="cat-name">Food & Dining</div><div class="cat-sub">Swiggy, Zomato</div></div>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-top"><span class="cat-emoji">🛒</span><div class="cat-check"></div></div>
+            <div><div class="cat-name">Groceries</div><div class="cat-sub">BigBasket, Blinkit</div></div>
+          </div>
+          <div class="cat-tile selected">
+            <div class="cat-top"><span class="cat-emoji">🛍️</span><div class="cat-check checked">✓</div></div>
+            <div><div class="cat-name">Shopping</div><div class="cat-sub">Amazon, Flipkart</div></div>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-top"><span class="cat-emoji">✈️</span><div class="cat-check"></div></div>
+            <div><div class="cat-name">Travel</div><div class="cat-sub">MakeMyTrip, IRCTC</div></div>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-top"><span class="cat-emoji">💄</span><div class="cat-check"></div></div>
+            <div><div class="cat-name">Beauty & Health</div><div class="cat-sub">Nykaa, Pharmeasy</div></div>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-top"><span class="cat-emoji">🚗</span><div class="cat-check"></div></div>
+            <div><div class="cat-name">Rides & Fuel</div><div class="cat-sub">Uber, Ola, petrol</div></div>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-top"><span class="cat-emoji">💡</span><div class="cat-check"></div></div>
+            <div><div class="cat-name">Bills & Recharge</div><div class="cat-sub">Electricity, mobile</div></div>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-top"><span class="cat-emoji">🎮</span><div class="cat-check"></div></div>
+            <div><div class="cat-name">Entertainment</div><div class="cat-sub">Gaming, OTT</div></div>
+          </div>
+        </div>
+        <div style="background:rgba(255,230,0,.1);border:0.5px solid rgba(255,230,0,.3);border-radius:8px;padding:12px 16px;display:flex;gap:10px;align-items:center">
+          <span>✨</span>
+          <span style="font-size:12px;font-weight:500;color:#756B0D;line-height:1.4">2 categories selected — we'll calculate your personalised projection.</span>
+        </div>
+      </div>
+      <div class="cta-bar-cream"><div class="gold-btn">Calculate my savings →</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 9: PROCESSING MOMENT
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>09</span> Processing Moment</div>
+    <div class="phone s9-proc">
+      <div style="padding:44px 16px">
+        <div style="text-align:center;padding:60px 0 32px">
+          <div class="loader-circle" style="animation:spin 1s linear infinite"></div>
+          <div class="loader-title">Building your<br>personal projection...</div>
+          <div class="loader-sub">Based on your spending categories & goals</div>
+        </div>
+        <div class="checklist">
+          <div class="check-item"><div class="check-dot done">✓</div><span class="check-text">Food & dining spend modelled</span></div>
+          <div class="check-item"><div class="check-dot done">✓</div><span class="check-text">Shopping categories calculated</span></div>
+          <div class="check-item"><div class="check-dot active">→</div><span class="check-text">Adding brand discount savings...</span></div>
+          <div class="check-item wait"><div class="check-dot wait"></div><span class="check-text">Comparing to your bank rate</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 10: PERSONALISED PROJECTION  (new — replaces interactive demo)
+       Shows the demo value as a static result card, zero interaction needed
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>10</span> Personalised Projection <span class="new-badge">new</span></div>
+    <div class="phone s10-proj">
+      <div class="dark-header">
+        <div class="status-bar"><span class="status-time" style="color:#fff">9:41</span><span class="status-icons" style="color:#fff">●●●</span></div>
+        <div class="nav-row">
+          <span class="back-icon">‹</span>
+          <div style="flex:1"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:81.8%"></div></div>
+            <div class="progress-text">10 of 11</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:18px"></div>
+        </div>
+      </div>
+      <div style="padding:16px 16px 120px;overflow-y:auto;height:calc(100% - 100px)">
+        <div style="font-size:20px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:4px">Here's your first month with Multipl</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:16px;line-height:1.5">Based on Food & Shopping · ₹50,000 spending float</div>
+
+        <!-- Balance card -->
+        <div class="proj-balance-card">
+          <div class="proj-acct-label">Your Multipl spending account</div>
+          <div class="proj-balance-row">
+            <span class="proj-curr">₹</span>
+            <span class="proj-amount">50,000</span>
+          </div>
+          <div class="proj-earning-row">
+            <span class="proj-earning-val">+₹292 / month</span>
+            <span class="proj-earning-label">earning from day 1</span>
+          </div>
+          <div class="proj-rate-pill">
+            <span>7% p.a.</span>
+            <span style="opacity:.5">·</span>
+            <span>SEBI-regulated liquid fund</span>
+          </div>
+        </div>
+
+        <!-- Month breakdown -->
+        <div class="proj-month-card">
+          <div class="proj-month-title">YOUR MONTH 1 BREAKDOWN</div>
+          <div class="proj-row">
+            <div class="proj-row-left">
+              <span class="proj-row-icon">📈</span>
+              <div>
+                <div class="proj-row-label">Interest earned</div>
+                <div class="proj-row-sub">7% p.a. on ₹50,000</div>
+              </div>
+            </div>
+            <div class="proj-row-val green">+₹292</div>
+          </div>
+          <div class="proj-row">
+            <div class="proj-row-left">
+              <span class="proj-row-icon">🧡</span>
+              <div>
+                <div class="proj-row-label">Swiggy discount</div>
+                <div class="proj-row-sub">5% off on ₹3,000 orders</div>
+              </div>
+            </div>
+            <div class="proj-row-val orange">+₹150</div>
+          </div>
+          <div class="proj-row">
+            <div class="proj-row-left">
+              <span class="proj-row-icon">📦</span>
+              <div>
+                <div class="proj-row-label">Amazon discount</div>
+                <div class="proj-row-sub">2% off on ₹5,000 orders</div>
+              </div>
+            </div>
+            <div class="proj-row-val orange">+₹100</div>
+          </div>
+          <div class="proj-row" style="border-bottom:none">
+            <div class="proj-row-left">
+              <span class="proj-row-icon">💧</span>
+              <div>
+                <div class="proj-row-label">Withdraw anytime</div>
+                <div class="proj-row-sub">No lock-in · 24×7</div>
+              </div>
+            </div>
+            <div class="proj-row-val" style="color:rgba(255,255,255,.4);font-size:12px">always free</div>
+          </div>
+        </div>
+
+        <!-- Total banner -->
+        <div class="proj-total">
+          <div>
+            <div class="proj-total-label">VS YOUR BANK THIS MONTH</div>
+            <div class="proj-total-heading">Total extra in your pocket</div>
+            <div class="proj-total-period">every single month</div>
+          </div>
+          <div style="text-align:right">
+            <div class="proj-total-val">+₹542</div>
+            <div style="font-size:11px;color:rgba(255,230,0,.5);margin-top:2px">₹6,504 / year</div>
+          </div>
+        </div>
+
+        <div class="proj-trust">
+          Powered by <span>SEBI-regulated liquid mutual fund</span><br>
+          No exit load · No minimum balance · Withdraw in minutes
+        </div>
+      </div>
+      <div class="cta-bar-dark"><div class="gold-btn">Start earning this →</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 11: ACCOUNT GATE  (kept from v2)
+  ══════════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label"><span>11</span> Account Gate <span class="kept">kept</span></div>
+    <div class="phone s11-gate">
+      <div class="dark-header">
+        <div class="status-bar"><span class="status-time" style="color:#fff">9:41</span><span class="status-icons" style="color:#fff">●●●</span></div>
+        <div class="nav-row">
+          <span class="back-icon">‹</span>
+          <div style="flex:1"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+            <div class="progress-text">11 of 11</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:18px"></div>
+        </div>
+      </div>
+      <div style="padding:24px 16px 120px;overflow-y:auto;height:calc(100% - 100px);text-align:center">
+        <div class="gate-center">
+          <div class="gate-logo">M</div>
+          <div class="gate-headline">Create your free account<br>to unlock your ₹542/month</div>
+          <div class="gate-sub">Your personalised projection is ready to activate.</div>
+        </div>
+        <div class="perks-card" style="text-align:left">
+          <div class="perk-row"><span style="font-size:16px">📈</span><span class="perk-text">Your money starts earning 7% p.a. from day 1</span><span class="perk-check">✓</span></div>
+          <div class="perk-row"><span style="font-size:16px">🎁</span><span class="perk-text">5–10% off on Swiggy, Zomato, Amazon & more</span><span class="perk-check">✓</span></div>
+          <div class="perk-row"><span style="font-size:16px">💧</span><span class="perk-text">Withdraw anytime — no lock-in, no fees</span><span class="perk-check">✓</span></div>
+          <div class="perk-row"><span style="font-size:16px">🏛️</span><span class="perk-text">AMFI-regulated, SEBI-supervised mutual fund</span><span class="perk-check">✓</span></div>
+        </div>
+        <div class="auth-btn">🇬 &nbsp; Continue with Google</div>
+        <div class="auth-btn"> &nbsp;  Continue with Apple</div>
+        <div class="auth-btn">📱 &nbsp; Continue with Phone</div>
+        <div class="login-link">Already have an account? <span>Log in</span></div>
+        <div class="legal">By continuing, you agree to our Terms of Service and Privacy Policy.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /storyboard -->
+
+</body>
+</html>
