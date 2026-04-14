@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multipl — Onboarding Flow v4</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+/* ─── DESIGN TOKENS (DESIGN.md) ─────────────────────────────── */
+:root {
+  --hero-grad: linear-gradient(to bottom, #FFA914 3%, #FFC91A 31%, #FFED7A 64%, #FFFFFF 97%);
+  --nav-grad:  linear-gradient(to bottom, #FFA914, #FFC91A);
+  --cta-grad:  linear-gradient(to bottom, #FDEE5A, #F9B824);
+  --cta-bdr:   #C9A028;
+  --cta-tx:    #514104;
+  --cta-sh:    0px 5px 10px rgba(132,99,7,.16), inset 0px 2px 0px rgba(255,252,220,.85);
+  --tx-hero:   #5C3300;
+  --tx-1:      #1A1A1A;
+  --tx-2:      #595959;
+  --tx-3:      #767676;
+  --tx-dis:    #ADADAD;
+  --gold-tx:   #856B10;
+  --gold-bg:   #FEDC67;
+  --gold-surf: #FEF3D0;
+  --border-c:  #EFE2BF;
+  --border-d:  #E0E0E0;
+  --ok-tx:     #1A7A3C;  --ok-bg:   #EDFAF1;
+  --err-tx:    #C0392B;  --err-bg:  #FFF0EE;
+  --card-sh:   0px 2px 6px rgba(180,120,20,.08), 0px 8px 24px rgba(180,120,20,.06);
+  --r8:  8px; --r12: 12px; --r16: 16px; --rfull: 999px;
+}
+
+/* ─── PAGE ───────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Satoshi',system-ui,sans-serif;background:#EDE7DC;min-height:100vh;padding:48px 32px 80px}
+.v-pill{display:inline-block;background:var(--gold-surf);border:1px solid var(--border-c);color:var(--gold-tx);font-size:11px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:var(--rfull);margin-bottom:14px}
+h1.page-title{font-family:'Satoshi',sans-serif;font-weight:700;font-size:22px;color:var(--tx-1);margin-bottom:5px}
+p.page-sub{font-size:14px;color:var(--tx-2);margin-bottom:40px}
+
+/* ─── STORYBOARD ─────────────────────────────────────────────── */
+.storyboard{display:flex;gap:32px;overflow-x:auto;padding-bottom:24px;align-items:flex-start}
+.storyboard::-webkit-scrollbar{height:6px}
+.storyboard::-webkit-scrollbar-track{background:rgba(0,0,0,.06);border-radius:3px}
+.storyboard::-webkit-scrollbar-thumb{background:rgba(0,0,0,.2);border-radius:3px}
+
+/* ─── PHONE ──────────────────────────────────────────────────── */
+.phone-wrap{flex:0 0 375px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.phone-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);background:#fff;border:1px solid var(--border-d);padding:4px 12px;border-radius:var(--rfull)}
+.phone{width:375px;height:812px;border-radius:44px;background:#fff;overflow:hidden;position:relative;box-shadow:0 0 0 10px #1A1A1A,0 0 0 12px #3A3A3A,0 24px 60px rgba(0,0,0,.35);display:flex;flex-direction:column}
+.phone::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:120px;height:32px;background:#1A1A1A;border-radius:20px;z-index:20}
+.status-bar{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font-size:12px;font-weight:600;position:relative;z-index:10}
+.sb-time{font-family:'Satoshi',sans-serif;font-weight:700}
+.sb-icons{display:flex;gap:6px;align-items:center}
+.sb-icons svg{width:15px;height:15px}
+.screen{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}
+
+/* ─── SHARED COMPONENTS ──────────────────────────────────────── */
+.prog-strip{height:3px;background:rgba(92,51,0,.12);position:relative;flex:none;z-index:5}
+.prog-fill{position:absolute;top:0;left:0;height:100%;background:#5C3300;border-radius:0 99px 99px 0}
+.nav-hdr{background:var(--nav-grad);padding:10px 20px 12px;display:flex;align-items:center;justify-content:space-between;flex:none}
+.nav-back{width:32px;height:32px;border-radius:var(--rfull);background:rgba(92,51,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.nav-back svg{width:18px;height:18px;stroke:#5C3300;stroke-width:2;fill:none}
+.nav-step{font-size:12px;font-weight:600;color:rgba(92,51,0,.7)}
+.cta{width:100%;height:48px;border-radius:var(--r8);background:var(--cta-grad);border:1px solid var(--cta-bdr);color:var(--cta-tx);font-family:'Satoshi',sans-serif;font-size:15px;font-weight:700;box-shadow:var(--cta-sh);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.cta-sec{width:100%;height:44px;border-radius:var(--r8);background:#fff;border:1px solid var(--border-d);color:#4A566E;font-family:'Satoshi',sans-serif;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.s-body{flex:1;overflow-y:auto;overflow-x:hidden}
+.s-body::-webkit-scrollbar{width:3px}
+.s-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:2px}
+.s-pad{padding:20px 20px 24px}
+.s-foot{padding:12px 20px 28px;flex:none;background:#fff;border-top:1px solid var(--border-d)}
+.card{background:#fff;border:1px solid var(--border-c);border-radius:var(--r12);padding:16px;box-shadow:var(--card-sh)}
+.outfit{font-family:'Outfit',sans-serif;font-weight:700}
+.mono{font-family:'DM Mono',monospace}
+
+/* ─── STATUS BAR COLOURS ─────────────────────────────────────── */
+.sb-warm .sb-time,.sb-warm .sb-icons{color:#5C3300}
+.sb-warm .sb-icons path,.sb-warm .sb-icons rect,.sb-warm .sb-icons polyline{stroke:#5C3300}
+.sb-dark .sb-time,.sb-dark .sb-icons{color:var(--tx-1)}
+
+/* ─── S1: PRODUCT EXPLAINER CAROUSEL ────────────────────────── */
+.s1-wrap{flex:1;position:relative;overflow:hidden}
+.carousel{display:flex;height:100%;transition:transform .35s cubic-bezier(.25,1,.5,1)}
+.slide{min-width:375px;height:100%;display:flex;flex-direction:column}
+/* Slide common */
+.slide-inner{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;text-align:center}
+.slide-foot{padding:16px 20px 32px;flex:none}
+/* Slide 1 — Problem */
+.sl1-bg{background:var(--hero-grad)}
+.s1-brand{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7);border-radius:var(--rfull);padding:5px 12px 5px 8px;backdrop-filter:blur(4px);margin-bottom:28px}
+.s1-brand-icon{width:22px;height:22px;background:linear-gradient(135deg,#FFA914,#F9B824);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:var(--cta-tx)}
+.s1-brand-name{font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;color:#5C3300}
+.sl1-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(92,51,0,.55);margin-bottom:10px}
+.sl1-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:26px;line-height:1.2;color:#5C3300;margin-bottom:8px}
+.sl1-sub{font-size:14px;color:rgba(92,51,0,.68);line-height:1.5;margin-bottom:22px}
+.compare-duo{width:100%;display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.cmp-col{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.8);border-radius:var(--r12);padding:14px 10px;text-align:center;backdrop-filter:blur(8px)}
+.cmp-col.win{background:rgba(255,255,255,.88);border:1.5px solid rgba(133,107,16,.3)}
+.cmp-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);margin-bottom:5px}
+.cmp-amt{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--tx-1)}
+.cmp-amt.ok{color:var(--ok-tx)}
+.cmp-rate{font-family:'DM Mono',monospace;font-size:11px;color:var(--tx-3);margin-top:2px}
+.cmp-rate.ok{color:var(--ok-tx);font-weight:500}
+.vs-badge{width:28px;height:28px;background:rgba(92,51,0,.1);border-radius:var(--rfull);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#5C3300}
+/* Slide 2 — Solution */
+.sl2-bg{background:var(--hero-grad)}
+.vp-grid{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.vp-card{background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.8);border-radius:var(--r12);padding:14px 12px;text-align:center;backdrop-filter:blur(6px)}
+.vp-icon{width:36px;height:36px;background:rgba(255,255,255,.7);border-radius:9px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.vp-icon svg{width:20px;height:20px;stroke:#5C3300;stroke-width:1.7;fill:none}
+.vp-num{font-family:'Outfit',sans-serif;font-weight:700;font-size:20px;color:#5C3300}
+.vp-txt{font-size:11px;font-weight:600;color:rgba(92,51,0,.7);margin-top:2px;line-height:1.3}
+/* Slide 3 — Trust */
+.sl3-bg{background:#FFFFFF}
+.trust-items{width:100%;display:flex;flex-direction:column;gap:12px;margin-top:4px}
+.trust-row{display:flex;align-items:flex-start;gap:12px;background:var(--gold-surf);border:1px solid var(--border-c);border-radius:var(--r12);padding:14px}
+.trust-icon{width:36px;height:36px;background:#fff;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+.trust-icon svg{width:20px;height:20px;stroke:var(--gold-tx);stroke-width:1.7;fill:none}
+.trust-body{}
+.trust-head{font-size:14px;font-weight:700;color:var(--tx-1)}
+.trust-desc{font-size:12px;color:var(--tx-2);margin-top:2px;line-height:1.4}
+.sl3-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:24px;color:var(--tx-1);margin-bottom:6px}
+.sl3-sub{font-size:14px;color:var(--tx-2);margin-bottom:20px}
+/* Carousel dots */
+.car-dots{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.dot-pip{width:6px;height:6px;border-radius:var(--rfull);background:rgba(92,51,0,.2);transition:all .25s}
+.dot-pip.active{width:18px;background:#5C3300}
+.dot-pip.white{background:rgba(255,255,255,.4)}
+.dot-pip.white.active{background:#5C3300;width:18px}
+/* Skip link */
+.skip-link{font-size:12px;color:rgba(92,51,0,.5);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:'Satoshi',sans-serif}
+.s1-skip-row{display:flex;justify-content:flex-end;padding:6px 20px 0}
+
+/* ─── S2: WELCOME / LOSS HOOK ────────────────────────────────── */
+.s2-body{flex:1;display:flex;flex-direction:column;padding:24px 20px 0}
+.loss-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.55);border:1px solid rgba(192,57,43,.25);border-radius:var(--rfull);padding:4px 10px;font-size:11px;font-weight:700;color:var(--err-tx);margin-bottom:18px;align-self:flex-start}
+.loss-tag .rdot{width:6px;height:6px;background:var(--err-tx);border-radius:var(--rfull)}
+.s2-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:26px;line-height:1.15;color:#5C3300;margin-bottom:10px}
+.s2-hero-num{display:block;font-size:44px;line-height:1.05}
+.s2-sub{font-size:13px;color:rgba(92,51,0,.68);line-height:1.55;margin-bottom:22px}
+.earn-pair{display:flex;gap:10px}
+.ep-card{flex:1;border-radius:var(--r12);padding:13px 14px}
+.ep-bank{background:rgba(255,255,255,.5);border:1px solid rgba(192,57,43,.2)}
+.ep-ml{background:rgba(255,255,255,.75);border:1.5px solid rgba(26,122,60,.28)}
+.ep-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}
+.ep-bank .ep-lbl{color:var(--err-tx)}
+.ep-ml .ep-lbl{color:var(--ok-tx)}
+.ep-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:17px;color:var(--tx-1)}
+.ep-ml .ep-val{color:var(--ok-tx)}
+.ep-sub{font-size:10px;color:var(--tx-3);margin-top:2px}
+.s2-foot{padding:16px 20px 32px;flex:none}
+
+/* ─── S3: PHONE OTP ──────────────────────────────────────────── */
+.s3-hero{background:var(--hero-grad);padding:28px 20px 24px;flex:none}
+.s3-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:24px;line-height:1.2;color:#5C3300;margin-bottom:6px}
+.s3-sub{font-size:14px;color:rgba(92,51,0,.68);line-height:1.5}
+.phone-field{display:flex;align-items:center;border:1.5px solid var(--border-d);border-radius:var(--r8);overflow:hidden;background:#fff}
+.phone-prefix{display:flex;align-items:center;gap:6px;padding:0 12px;border-right:1px solid var(--border-d);height:48px;flex:none}
+.india-flag{width:20px;height:20px;border-radius:var(--rfull);overflow:hidden;border:1px solid var(--border-d)}
+.cc-txt{font-size:14px;font-weight:600;color:var(--tx-2)}
+.phone-input{flex:1;height:48px;border:none;padding:0 14px;font-family:'Satoshi',sans-serif;font-size:16px;color:var(--tx-1);background:transparent;outline:none}
+.phone-field.focused{border-color:#FFA914;box-shadow:0 0 0 3px rgba(255,169,20,.12)}
+.field-label{font-size:12px;font-weight:700;color:var(--tx-2);margin-bottom:6px;display:block}
+.s3-terms{font-size:11px;color:var(--tx-3);text-align:center;line-height:1.5;margin-top:10px}
+.s3-terms a{color:var(--gold-tx);text-decoration:underline}
+.otp-note{display:flex;align-items:center;gap:6px;background:var(--ok-bg);border:1px solid rgba(26,122,60,.2);border-radius:var(--r8);padding:10px 12px;margin-top:14px}
+.otp-note svg{width:15px;height:15px;stroke:var(--ok-tx);stroke-width:2;fill:none;flex:none}
+.otp-note-txt{font-size:12px;color:var(--ok-tx);font-weight:500}
+.divline{display:flex;align-items:center;gap:10px;margin:16px 0}
+.divline hr{flex:1;border:none;border-top:1px solid var(--border-d)}
+.divline span{font-size:12px;color:var(--tx-3)}
+
+/* ─── S4: GOAL QUESTION ──────────────────────────────────────── */
+.goal-list{display:flex;flex-direction:column;gap:10px;padding:18px 20px 0}
+.goal-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--border-d);border-radius:var(--r12);background:#fff;cursor:pointer}
+.goal-item.sel{border-color:#FFA914;background:var(--gold-surf)}
+.goal-ico{width:40px;height:40px;border-radius:10px;background:var(--gold-surf);display:flex;align-items:center;justify-content:center;flex:none}
+.goal-ico svg{width:22px;height:22px;stroke:var(--gold-tx);stroke-width:1.7;fill:none}
+.goal-txt-wrap{flex:1}
+.goal-name{font-size:14px;font-weight:600;color:var(--tx-1)}
+.goal-desc{font-size:11px;color:var(--tx-3);margin-top:1px}
+.goal-radio{width:20px;height:20px;border-radius:var(--rfull);border:2px solid var(--border-d);flex:none;position:relative}
+.goal-item.sel .goal-radio{border-color:#FFA914;background:#FFA914}
+.goal-item.sel .goal-radio::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#fff;border-radius:var(--rfull)}
+.scr-head{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--tx-1);padding:20px 20px 4px}
+.scr-sub{font-size:13px;color:var(--tx-2);padding:0 20px 14px;line-height:1.5}
+
+/* ─── S5: PAIN POINTS ────────────────────────────────────────── */
+.pain-list{display:flex;flex-direction:column;gap:9px;padding:14px 20px 0}
+.pain-item{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border:1.5px solid var(--border-d);border-radius:var(--r12);background:#fff;cursor:pointer}
+.pain-item.chk{border-color:#FFA914;background:var(--gold-surf)}
+.pain-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--border-d);flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;position:relative}
+.pain-item.chk .pain-check{background:#FFA914;border-color:#FFA914}
+.pain-item.chk .pain-check::after{content:'';display:block;width:11px;height:7px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px)}
+.pain-txt{font-size:13px;font-weight:500;color:var(--tx-1);line-height:1.45}
+.multi-hint{font-size:11px;color:var(--tx-3);padding:0 20px 4px;display:flex;align-items:center;gap:4px}
+
+/* ─── S6: SOLUTION MIRROR ────────────────────────────────────── */
+.sol-hero{background:var(--hero-grad);padding:22px 20px 18px;flex:none}
+.sol-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;line-height:1.2;color:#5C3300;margin-bottom:5px}
+.sol-sub{font-size:13px;color:rgba(92,51,0,.7);line-height:1.5}
+.sol-list{padding:16px 20px;display:flex;flex-direction:column;gap:11px}
+.sol-item{display:flex;gap:12px;padding:14px;border:1px solid var(--border-c);border-radius:var(--r12);background:#fff;box-shadow:var(--card-sh)}
+.sol-ico{width:38px;height:38px;background:var(--gold-surf);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+.sol-ico svg{width:20px;height:20px;stroke:var(--gold-tx);stroke-width:1.7;fill:none}
+.sol-pain{font-size:11px;color:var(--tx-3);margin-bottom:3px}
+.sol-ans{font-size:13px;font-weight:600;color:var(--tx-1);line-height:1.4}
+.sol-ans .hi{color:var(--ok-tx);font-family:'DM Mono',monospace;font-size:12px;font-weight:500}
+
+/* ─── S7: BEFORE/AFTER ───────────────────────────────────────── */
+.ct-wrap{margin:0 20px;border:1px solid var(--border-d);border-radius:var(--r12);overflow:hidden;box-shadow:var(--card-sh)}
+.ct-hdr{display:grid;grid-template-columns:1fr 1fr 1fr}
+.ct-hcell{padding:11px 8px;font-size:11px;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.06em}
+.ct-hcell.lbl{color:var(--tx-3);background:#F8F8F8;text-align:left;padding-left:12px;font-size:10px}
+.ct-hcell.bank{color:var(--tx-2);background:#F8F8F8}
+.ct-hcell.ml{color:var(--cta-tx);background:linear-gradient(to bottom,rgba(253,238,90,.2),rgba(249,184,36,.1));border-left:2px solid var(--cta-bdr)}
+.ct-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border-d)}
+.ct-cell{padding:12px 8px;font-size:12px;text-align:center;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px}
+.ct-cell.lbl{align-items:flex-start;padding-left:12px;color:var(--tx-2);font-size:11px;font-weight:500;background:#FAFAFA;text-align:left}
+.ct-cell.bank{background:#fff}
+.ct-cell.ml{background:rgba(253,238,90,.07);border-left:2px solid rgba(201,160,40,.2)}
+.bv{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--tx-2)}
+.cx{color:var(--err-tx);font-size:14px}
+.mv{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--ok-tx)}
+.ck{color:var(--ok-tx);font-size:14px}
+.ct-total{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border-d);background:linear-gradient(to right,#fafafa,rgba(253,238,90,.1))}
+.ba-note{margin:12px 20px 0;background:var(--gold-surf);border:1px solid var(--border-c);border-radius:var(--r8);padding:10px 12px;font-size:11px;color:var(--gold-tx);line-height:1.5}
+
+/* ─── S8: SOCIAL PROOF ───────────────────────────────────────── */
+.sp-hero{background:var(--hero-grad);padding:22px 20px 18px;flex:none}
+.sp-stats{display:flex;gap:10px;margin-top:12px}
+.sp-stat{flex:1;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7);border-radius:var(--r8);padding:10px 8px;text-align:center;backdrop-filter:blur(4px)}
+.sp-snum{font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;color:#5C3300}
+.sp-slbl{font-size:10px;color:rgba(92,51,0,.65);font-weight:500}
+.testimonials{padding:14px 20px;display:flex;flex-direction:column;gap:11px}
+.tcard{border:1px solid var(--border-c);border-radius:var(--r12);padding:14px;background:#fff;box-shadow:var(--card-sh)}
+.tc-top{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.t-av{width:34px;height:34px;border-radius:var(--rfull);background:var(--gold-surf);border:1.5px solid var(--border-c);display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:var(--gold-tx);flex:none}
+.t-nm{font-size:13px;font-weight:700;color:var(--tx-1)}
+.t-persona{font-size:11px;color:var(--tx-3)}
+.t-stars{color:#F59E0B;font-size:11px;letter-spacing:1px}
+.t-body{font-size:12px;color:var(--tx-2);line-height:1.55;font-style:italic}
+.t-body::before{content:'\201C'}.t-body::after{content:'\201D'}
+
+/* ─── S9: AGE + INCOME ───────────────────────────────────────── */
+.s9-hero{background:var(--hero-grad);padding:22px 20px 18px;flex:none}
+.pill-group{display:flex;flex-wrap:wrap;gap:8px}
+.pill-opt{padding:9px 16px;border-radius:var(--rfull);border:1.5px solid var(--border-d);background:#fff;font-size:13px;font-weight:600;color:var(--tx-2);cursor:pointer;transition:all .15s}
+.pill-opt.sel{background:var(--gold-surf);border-color:#FFA914;color:#5C3300}
+.grp-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);margin-bottom:10px}
+.section-block{margin-bottom:20px}
+
+/* ─── S10: LEAKAGE CALCULATOR ────────────────────────────────── */
+.lc-hero{background:var(--hero-grad);padding:18px 20px 16px;flex:none}
+.lc-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;line-height:1.2;color:#5C3300;margin-bottom:4px}
+.lc-sub{font-size:13px;color:rgba(92,51,0,.68)}
+.lc-cohort{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7);border-radius:var(--rfull);padding:3px 10px;font-size:11px;font-weight:600;color:#5C3300;margin-top:8px}
+/* hero number */
+.lc-hero-num{background:linear-gradient(135deg,rgba(253,238,90,.2),rgba(249,184,36,.12));border:1.5px solid var(--cta-bdr);border-radius:var(--r12);padding:16px;text-align:center;margin:16px 20px 12px}
+.lc-loss-lbl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--err-tx);margin-bottom:4px}
+.lc-loss-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:38px;color:var(--err-tx);line-height:1}
+.lc-loss-sub{font-size:12px;color:var(--tx-3);margin-top:4px}
+/* breakdown rows */
+.breakdown{margin:0 20px;border:1px solid var(--border-d);border-radius:var(--r12);overflow:hidden;box-shadow:var(--card-sh)}
+.bd-hdr{display:grid;grid-template-columns:1fr auto auto;background:#F8F8F8;padding:10px 14px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tx-3);gap:8px}
+.bd-hdr span:last-child,.bd-hdr span:nth-child(2){text-align:right}
+.bd-row{display:grid;grid-template-columns:1fr auto auto;padding:11px 14px;border-top:1px solid var(--border-d);gap:8px;align-items:center}
+.bd-cat{font-size:13px;font-weight:500;color:var(--tx-1)}
+.bd-idle{font-family:'DM Mono',monospace;font-size:11px;color:var(--tx-3);text-align:right}
+.bd-loss{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--err-tx);text-align:right}
+.bd-total{display:grid;grid-template-columns:1fr auto;padding:12px 14px;border-top:1.5px solid var(--cta-bdr);background:rgba(253,238,90,.08)}
+.bd-total-lbl{font-size:13px;font-weight:700;color:var(--tx-1)}
+.bd-total-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;color:var(--err-tx)}
+/* vs card */
+.vs-card{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 20px 0}
+.vs-col{border-radius:var(--r12);padding:12px}
+.vs-col.bank{background:#FFF5F5;border:1px solid rgba(192,57,43,.15)}
+.vs-col.ml{background:var(--ok-bg);border:1px solid rgba(26,122,60,.2)}
+.vs-clbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.vs-col.bank .vs-clbl{color:var(--err-tx)}
+.vs-col.ml .vs-clbl{color:var(--ok-tx)}
+.vs-cval{font-family:'Outfit',sans-serif;font-weight:700;font-size:20px}
+.vs-col.bank .vs-cval{color:var(--err-tx)}
+.vs-col.ml .vs-cval{color:var(--ok-tx)}
+.vs-crate{font-family:'DM Mono',monospace;font-size:10px;color:var(--tx-3);margin-top:2px}
+
+/* ─── S11: EMAIL + ACCOUNT ───────────────────────────────────── */
+.s11-hero{background:var(--hero-grad);padding:24px 20px 20px;flex:none;text-align:center}
+.s11-brand-lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(92,51,0,.5);margin-bottom:6px}
+.s11-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:24px;line-height:1.2;color:#5C3300;margin-bottom:8px}
+.s11-stars{color:#F59E0B;font-size:13px;letter-spacing:1px}
+.s11-rating{font-size:12px;font-weight:700;color:#5C3300;margin-top:2px}
+.your-earn{background:linear-gradient(135deg,rgba(253,238,90,.2),rgba(249,184,36,.12));border:1.5px solid var(--cta-bdr);border-radius:var(--r12);padding:14px;text-align:center;margin-bottom:16px}
+.ye-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gold-tx);margin-bottom:3px}
+.ye-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:28px;color:var(--ok-tx)}
+.ye-sub{font-size:11px;color:var(--tx-3);margin-top:2px}
+.text-field{width:100%;height:48px;border:1.5px solid var(--border-d);border-radius:var(--r8);padding:0 14px;font-family:'Satoshi',sans-serif;font-size:15px;color:var(--tx-1);background:#fff;outline:none}
+.field-wrap{margin-bottom:12px}
+.soc-row{display:flex;gap:10px;margin-bottom:10px}
+.soc-btn{flex:1;height:44px;border-radius:var(--r8);border:1.5px solid var(--border-d);background:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:600;color:var(--tx-1);cursor:pointer}
+.feat-mini{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.feat-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tx-1);font-weight:500}
+.fchk{width:18px;height:18px;background:var(--ok-bg);border-radius:var(--rfull);display:flex;align-items:center;justify-content:center;flex:none}
+.fchk svg{width:10px;height:10px;stroke:var(--ok-tx);stroke-width:3;fill:none}
+.disclaimer{font-size:10px;color:var(--tx-3);text-align:center;line-height:1.5;margin-top:8px}
+</style>
+</head>
+<body>
+
+<div class="v-pill">V4 · 11 screens · Engine v2 ICP numbers</div>
+<h1 class="page-title">Multipl Onboarding Flow v4</h1>
+<p class="page-sub">3-slide carousel · Phone OTP early · Age + income personalisation · ₹14,826/yr ICP yield loss · DESIGN.md tokens throughout</p>
+
+<div class="storyboard">
+
+<!-- ══════════ S1 — PRODUCT EXPLAINER (3-slide carousel) ══════ -->
+<div class="phone-wrap">
+  <div class="phone-label">1 of 11 — Product Explainer</div>
+  <div class="phone">
+    <div class="status-bar sb-warm" style="background:#FFA914">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg>
+      </div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:9%"></div></div>
+    <div class="s1-skip-row"><button class="skip-link" onclick="goToSlide(0,2)">Skip →</button></div>
+
+    <div class="s1-wrap">
+      <div class="carousel" id="car0">
+
+        <!-- Slide 1 — Problem -->
+        <div class="slide sl1-bg">
+          <div class="slide-inner">
+            <div class="s1-brand">
+              <div class="s1-brand-icon">M</div>
+              <span class="s1-brand-name">Multipl</span>
+            </div>
+            <div class="sl1-eyebrow">Your money is sleeping</div>
+            <div class="sl1-h">Most Indians lose<br>₹15,000/year without<br>knowing it</div>
+            <div class="sl1-sub">Your bank keeps your idle money at 2.5% p.a. while quietly earning the difference. Multipl changes that.</div>
+            <div class="compare-duo">
+              <div class="cmp-col">
+                <div class="cmp-lbl">Your Bank</div>
+                <div class="cmp-amt">₹686</div>
+                <div class="cmp-rate">/month · 2.5% p.a.</div>
+              </div>
+              <div class="vs-badge">VS</div>
+              <div class="cmp-col win">
+                <div class="cmp-lbl">✦ Multipl</div>
+                <div class="cmp-amt ok">₹1,922</div>
+                <div class="cmp-rate ok">/month · 7% p.a.</div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-foot">
+            <div class="car-dots" id="dots0">
+              <div class="dot-pip active" onclick="goToSlide(0,0)"></div>
+              <div class="dot-pip" onclick="goToSlide(0,1)"></div>
+              <div class="dot-pip" onclick="goToSlide(0,2)"></div>
+            </div>
+            <button class="cta" onclick="goToSlide(0,1)">Next →</button>
+          </div>
+        </div>
+
+        <!-- Slide 2 — Solution -->
+        <div class="slide sl2-bg">
+          <div class="slide-inner">
+            <div class="sl1-eyebrow" style="margin-bottom:12px">What Multipl does</div>
+            <div class="sl1-h" style="margin-bottom:8px">Your idle balance — now earning for you</div>
+            <div class="vp-grid">
+              <div class="vp-card">
+                <div class="vp-icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.5h-2v-4H9l3-5 3 5h-2v4z"/></svg>
+                </div>
+                <div class="vp-num">7%</div>
+                <div class="vp-txt">p.a. on idle balance</div>
+              </div>
+              <div class="vp-card">
+                <div class="vp-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h16c1.11 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                </div>
+                <div class="vp-num">15%</div>
+                <div class="vp-txt">off top brands</div>
+              </div>
+              <div class="vp-card">
+                <div class="vp-icon">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="vp-num">Same<br><span style="font-size:13px">day</span></div>
+                <div class="vp-txt">withdrawal</div>
+              </div>
+              <div class="vp-card">
+                <div class="vp-icon">
+                  <svg viewBox="0 0 24 24"><path d="M13 2.003A10.014 10.014 0 0 0 12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10c0-.338-.017-.672-.05-1H13V2.003z"/><path d="M13 2v9h9a10.013 10.013 0 0 0-9-9z"/></svg>
+                </div>
+                <div class="vp-num">₹23K</div>
+                <div class="vp-txt">avg. annual gain</div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-foot">
+            <div class="car-dots" id="dots0b">
+              <div class="dot-pip" onclick="goToSlide(0,0)"></div>
+              <div class="dot-pip active" onclick="goToSlide(0,1)"></div>
+              <div class="dot-pip" onclick="goToSlide(0,2)"></div>
+            </div>
+            <button class="cta" onclick="goToSlide(0,2)">Next →</button>
+          </div>
+        </div>
+
+        <!-- Slide 3 — Trust -->
+        <div class="slide sl3-bg">
+          <div class="slide-inner" style="padding:0 20px">
+            <div class="sl3-h">Safe, flexible,<br>takes 4 minutes</div>
+            <div class="sl3-sub">Built on SEBI-regulated liquid mutual funds — the same instruments used by large corporations to park idle cash.</div>
+            <div class="trust-items">
+              <div class="trust-row">
+                <div class="trust-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="trust-body">
+                  <div class="trust-head">SEBI-regulated</div>
+                  <div class="trust-desc">Liquid mutual fund — same safety as an FD, fully RBI-compliant</div>
+                </div>
+              </div>
+              <div class="trust-row">
+                <div class="trust-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="trust-body">
+                  <div class="trust-head">Withdraw same day</div>
+                  <div class="trust-desc">No exit load. No lock-in. Your money is always accessible.</div>
+                </div>
+              </div>
+              <div class="trust-row">
+                <div class="trust-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.7"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                </div>
+                <div class="trust-body">
+                  <div class="trust-head">Set up in 4 minutes</div>
+                  <div class="trust-desc">KYC via PAN + Aadhaar. Earning starts from Day 1.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-foot">
+            <div class="car-dots">
+              <div class="dot-pip" onclick="goToSlide(0,0)"></div>
+              <div class="dot-pip" onclick="goToSlide(0,1)"></div>
+              <div class="dot-pip active" onclick="goToSlide(0,2)"></div>
+            </div>
+            <button class="cta">Show me my number →</button>
+          </div>
+        </div>
+
+      </div><!-- /carousel -->
+    </div><!-- /s1-wrap -->
+  </div>
+</div>
+
+<!-- ══════════ S2 — WELCOME / LOSS HOOK ══════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">2 of 11 — Loss Hook</div>
+  <div class="phone">
+    <div class="status-bar sb-warm" style="background:#FFA914">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg>
+      </div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:18%"></div></div>
+    <div class="screen" style="background:var(--hero-grad)">
+      <div class="s2-body">
+        <div class="loss-tag">
+          <span class="rdot"></span> You're losing this right now
+        </div>
+        <div class="s2-h">
+          You're leaving
+          <span class="s2-hero-num">₹14,826</span>
+          on the table — every year
+        </div>
+        <div class="s2-sub">
+          That's how much more a 26-year-old earning ₹14L/year could make on their idle balance — if they switched from their savings account to Multipl today.
+        </div>
+        <div class="earn-pair">
+          <div class="ep-card ep-bank">
+            <div class="ep-lbl">Bank gives you</div>
+            <div class="ep-val">₹8,237 / yr</div>
+            <div class="ep-sub">2.5% p.a. · ₹686/month</div>
+          </div>
+          <div class="ep-card ep-ml">
+            <div class="ep-lbl">Multipl gives you</div>
+            <div class="ep-val">₹23,063 / yr</div>
+            <div class="ep-sub">7% p.a. · ₹1,922/month</div>
+          </div>
+        </div>
+      </div>
+      <div class="s2-foot" style="background:transparent;border-top:none">
+        <button class="cta" style="margin-bottom:10px">I want to stop this →</button>
+        <div style="text-align:center;font-size:11px;color:rgba(92,51,0,.5)">Based on ₹3.29L avg. idle balance · ICP 24–30 yrs · 10–18L income</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ S3 — PHONE OTP (early gate) ═══════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">3 of 11 — Phone + OTP</div>
+  <div class="phone">
+    <div class="status-bar" style="background:#FFA914;color:#5C3300">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg>
+      </div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:27%"></div></div>
+    <div class="s3-hero">
+      <div class="s3-h">Enter your<br>mobile number</div>
+      <div class="s3-sub">We'll send a one-time code. Takes 30 seconds — then we personalise your report.</div>
+    </div>
+    <div class="s-body">
+      <div class="s-pad">
+        <label class="field-label">Mobile number</label>
+        <div class="phone-field focused">
+          <div class="phone-prefix">
+            <!-- India flag SVG -->
+            <svg class="india-flag" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <rect width="20" height="6.67" fill="#FF9933"/>
+              <rect y="6.67" width="20" height="6.67" fill="#FFFFFF"/>
+              <rect y="13.33" width="20" height="6.67" fill="#138808"/>
+              <circle cx="10" cy="10" r="2.5" fill="none" stroke="#000080" stroke-width="0.6"/>
+            </svg>
+            <span class="cc-txt">+91</span>
+          </div>
+          <input class="phone-input" type="tel" placeholder="98765 43210" value="">
+        </div>
+
+        <div class="otp-note">
+          <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+          <span class="otp-note-txt">Your number is used only for OTP verification — we don't call or spam</span>
+        </div>
+
+        <div class="divline">
+          <hr><span>or continue with</span><hr>
+        </div>
+
+        <div class="soc-row">
+          <div class="soc-btn">
+            <svg viewBox="0 0 24 24" width="17" height="17">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Google
+          </div>
+          <div class="soc-btn">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="#000"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.42.07 2.4.74 3.23.8 1.22-.24 2.4-.93 3.72-.84 1.58.12 2.77.75 3.55 1.9-3.27 1.94-2.5 5.9.58 7.05-.68 1.65-1.54 3.27-3.08 3.97zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            Apple
+          </div>
+        </div>
+
+        <div class="s3-terms">
+          By continuing you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="s-foot">
+      <button class="cta">Send OTP →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ S4 — GOAL QUESTION ════════════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">4 of 11 — Goal Question</div>
+  <div class="phone">
+    <div class="status-bar" style="background:#FFA914;color:#5C3300">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons"><svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:36%"></div></div>
+    <div class="nav-hdr">
+      <div class="nav-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <span class="nav-step">Step 1 of 4</span>
+      <div style="width:32px"></div>
+    </div>
+    <div class="scr-head">What brings you here?</div>
+    <div class="scr-sub">Select the one that fits best</div>
+    <div class="s-body">
+      <div class="goal-list">
+        <div class="goal-item sel">
+          <div class="goal-ico"><svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14c1.1 0 2 .9 2 2v1h-9a2 2 0 00-2 2v8a2 2 0 002 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" fill="none" stroke="#856B10" stroke-width="1.5"/></svg></div>
+          <div class="goal-txt-wrap">
+            <div class="goal-name">Earn more on idle money</div>
+            <div class="goal-desc">My savings just sit there doing nothing</div>
+          </div>
+          <div class="goal-radio"></div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+          <div class="goal-txt-wrap">
+            <div class="goal-name">Save on everyday spending</div>
+            <div class="goal-desc">Discounts on Swiggy, Amazon, Zomato</div>
+          </div>
+          <div class="goal-radio"></div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+          <div class="goal-txt-wrap">
+            <div class="goal-name">Replace my fixed deposit</div>
+            <div class="goal-desc">Better returns, but flexible — not locked in</div>
+          </div>
+          <div class="goal-radio"></div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
+          <div class="goal-txt-wrap">
+            <div class="goal-name">Start my investment journey</div>
+            <div class="goal-desc">First step into mutual funds, low risk</div>
+          </div>
+          <div class="goal-radio"></div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          <div class="goal-txt-wrap">
+            <div class="goal-name">Just exploring</div>
+            <div class="goal-desc">I want to understand what this is</div>
+          </div>
+          <div class="goal-radio"></div>
+        </div>
+      </div>
+    </div>
+    <div class="s-foot"><button class="cta">Continue →</button></div>
+  </div>
+</div>
+
+<!-- ══════════ S5 — PAIN POINTS ══════════════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">5 of 11 — Pain Points</div>
+  <div class="phone">
+    <div class="status-bar" style="background:#FFA914;color:#5C3300">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons"><svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:45%"></div></div>
+    <div class="nav-hdr">
+      <div class="nav-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <span class="nav-step">Step 2 of 4</span>
+      <div style="width:32px"></div>
+    </div>
+    <div class="scr-head">What gets in your way?</div>
+    <div class="scr-sub">Pick everything that applies</div>
+    <div class="multi-hint"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#767676" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> Select multiple</div>
+    <div class="s-body">
+      <div class="pain-list">
+        <div class="pain-item chk"><div class="pain-check"></div><div class="pain-txt">I never check what interest I'm earning — the number feels too small to matter</div></div>
+        <div class="pain-item chk"><div class="pain-check"></div><div class="pain-txt">I pay full price on Swiggy and Zomato even though I know there must be a smarter way</div></div>
+        <div class="pain-item"><div class="pain-check"></div><div class="pain-txt">Mutual funds feel risky and complicated — I don't know where to start</div></div>
+        <div class="pain-item"><div class="pain-check"></div><div class="pain-txt">I've tried saving but always dip into it when I need cash</div></div>
+        <div class="pain-item"><div class="pain-check"></div><div class="pain-txt">My FD is locked in and I hate not being able to touch it</div></div>
+        <div class="pain-item"><div class="pain-check"></div><div class="pain-txt">I don't want another complicated app — I just want my money to work harder</div></div>
+      </div>
+    </div>
+    <div class="s-foot">
+      <button class="cta" style="margin-bottom:8px">Show me the fix →</button>
+      <div style="font-size:11px;color:var(--tx-3);text-align:center">2 selected</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ S6 — SOLUTION MIRROR ══════════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">6 of 11 — Solution Mirror</div>
+  <div class="phone">
+    <div class="status-bar" style="background:#FFA914;color:#5C3300">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons"><svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:55%"></div></div>
+    <div class="sol-hero">
+      <div class="sol-h">Here's exactly how<br>Multipl fixes this</div>
+      <div class="sol-sub">Based on what you told us — what changes on Day 1.</div>
+    </div>
+    <div class="s-body">
+      <div class="sol-list">
+        <div class="sol-item">
+          <div class="sol-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.7"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+          <div>
+            <div class="sol-pain">Never check your interest?</div>
+            <div class="sol-ans">Balance earns <span class="hi">7% p.a.</span> automatically. No forms. You just see it grow daily.</div>
+          </div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.7"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg></div>
+          <div>
+            <div class="sol-pain">Paying full price on Swiggy?</div>
+            <div class="sol-ans">Spend from Multipl, get <span class="hi">5–15% off</span> Swiggy, Zomato, Amazon, BigBasket &amp; 50+ brands.</div>
+          </div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.7"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+          <div>
+            <div class="sol-pain">Worried about lock-ins?</div>
+            <div class="sol-ans">Withdraw <span class="hi">same day, any time.</span> No exit load. SEBI-regulated liquid fund.</div>
+          </div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/></svg></div>
+          <div>
+            <div class="sol-pain">Don't want another app?</div>
+            <div class="sol-ans">Multipl is your spending account. One card, one app. Earn &amp; spend from the same balance.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="s-foot"><button class="cta">See the numbers →</button></div>
+  </div>
+</div>
+
+<!-- ══════════ S7 — BEFORE / AFTER TABLE ═════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">7 of 11 — Before / After</div>
+  <div class="phone">
+    <div class="status-bar" style="background:#FFA914;color:#5C3300">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons"><svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:64%"></div></div>
+    <div class="nav-hdr">
+      <div class="nav-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <div style="width:32px"></div>
+    </div>
+    <div class="s-body">
+      <div class="scr-head" style="padding-top:14px">What changes when<br>you switch</div>
+      <div class="scr-sub">The difference is real, and it compounds every day.</div>
+      <div class="ct-wrap">
+        <div class="ct-hdr">
+          <div class="ct-hcell lbl">Feature</div>
+          <div class="ct-hcell bank">Your Bank</div>
+          <div class="ct-hcell ml">Multipl</div>
+        </div>
+        <div class="ct-row">
+          <div class="ct-cell lbl">Interest rate</div>
+          <div class="ct-cell bank"><span class="bv">2.5% p.a.</span><span class="cx">✗</span></div>
+          <div class="ct-cell ml"><span class="mv">7% p.a.</span><span class="ck">✓</span></div>
+        </div>
+        <div class="ct-row">
+          <div class="ct-cell lbl">Monthly yield</div>
+          <div class="ct-cell bank"><span class="bv">₹686</span><span class="cx">✗</span></div>
+          <div class="ct-cell ml"><span class="mv">₹1,922</span><span class="ck">✓</span></div>
+        </div>
+        <div class="ct-row">
+          <div class="ct-cell lbl">Brand discounts</div>
+          <div class="ct-cell bank"><span class="bv">Full price</span><span class="cx">✗</span></div>
+          <div class="ct-cell ml"><span class="mv">5–15% off</span><span class="ck">✓</span></div>
+        </div>
+        <div class="ct-row">
+          <div class="ct-cell lbl">Withdrawal</div>
+          <div class="ct-cell bank"><span class="bv">FD locked</span><span class="cx">✗</span></div>
+          <div class="ct-cell ml"><span class="mv">Same day</span><span class="ck">✓</span></div>
+        </div>
+        <div class="ct-total">
+          <div class="ct-cell lbl" style="font-weight:700;color:var(--tx-1);background:transparent">Yield loss / year</div>
+          <div class="ct-cell bank" style="background:transparent"></div>
+          <div class="ct-cell ml" style="background:transparent">
+            <span style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--err-tx)">₹14,826</span>
+          </div>
+        </div>
+      </div>
+      <div class="ba-note">Based on ICP: 24–30 yrs · ₹10–18L income · ₹3.29L avg. idle balance. Illustrative. Returns market-linked.</div>
+    </div>
+    <div class="s-foot"><button class="cta">See what others earned →</button></div>
+  </div>
+</div>
+
+<!-- ══════════ S8 — SOCIAL PROOF ════════════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">8 of 11 — Social Proof</div>
+  <div class="phone">
+    <div class="status-bar" style="background:#FFA914;color:#5C3300">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons"><svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:73%"></div></div>
+    <div class="sp-hero">
+      <div class="sol-h" style="font-size:21px">Thousands are already<br>earning more</div>
+      <div class="sp-stats">
+        <div class="sp-stat"><div class="sp-snum">4.8★</div><div class="sp-slbl">App Store</div></div>
+        <div class="sp-stat"><div class="sp-snum">50K+</div><div class="sp-slbl">Active users</div></div>
+        <div class="sp-stat"><div class="sp-snum">₹2.1Cr</div><div class="sp-slbl">Earned this month</div></div>
+      </div>
+    </div>
+    <div class="s-body">
+      <div class="testimonials">
+        <div class="tcard">
+          <div class="tc-top">
+            <div class="t-av">R</div>
+            <div style="flex:1"><div class="t-nm">Rohan M.</div><div class="t-persona">Software engineer, Bangalore</div></div>
+            <div class="t-stars">★★★★★</div>
+          </div>
+          <div class="t-body">Had ₹80K sitting in savings. First month on Multipl: ₹467 interest + ₹340 saved on Swiggy orders. Cannot go back to a normal savings account.</div>
+        </div>
+        <div class="tcard">
+          <div class="tc-top">
+            <div class="t-av">P</div>
+            <div style="flex:1"><div class="t-nm">Priya S.</div><div class="t-persona">Marketing lead, Mumbai</div></div>
+            <div class="t-stars">★★★★★</div>
+          </div>
+          <div class="t-body">Skeptical about another fintech app. But it's a SEBI-regulated liquid fund — not a wallet. Set up in 4 minutes, now I don't think about it.</div>
+        </div>
+        <div class="tcard">
+          <div class="tc-top">
+            <div class="t-av">A</div>
+            <div style="flex:1"><div class="t-nm">Arjun K.</div><div class="t-persona">Freelancer, Delhi</div></div>
+            <div class="t-stars">★★★★★</div>
+          </div>
+          <div class="t-body">Irregular income so I needed flexibility. Multipl lets me withdraw instantly. The Amazon discount works too — saved ₹890 last week alone.</div>
+        </div>
+      </div>
+    </div>
+    <div class="s-foot"><button class="cta">Calculate my number →</button></div>
+  </div>
+</div>
+
+<!-- ══════════ S9 — AGE + INCOME ══════════════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">9 of 11 — Personalise</div>
+  <div class="phone">
+    <div class="status-bar" style="background:#FFA914;color:#5C3300">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons"><svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:82%"></div></div>
+    <div class="s9-hero">
+      <div class="sol-h" style="font-size:22px">Personalise your<br>yield report</div>
+      <div class="sol-sub" style="font-size:13px;color:rgba(92,51,0,.68)">Two quick taps — we calculate your exact annual number using your income and age bracket.</div>
+    </div>
+    <div class="s-body">
+      <div class="s-pad">
+        <div class="section-block">
+          <div class="grp-label">Your age</div>
+          <div class="pill-group">
+            <div class="pill-opt">18–23</div>
+            <div class="pill-opt sel">24–30</div>
+            <div class="pill-opt">31–35</div>
+            <div class="pill-opt">35+</div>
+          </div>
+        </div>
+        <div class="section-block">
+          <div class="grp-label">Annual income</div>
+          <div class="pill-group">
+            <div class="pill-opt">Under 6L</div>
+            <div class="pill-opt">6L – 10L</div>
+            <div class="pill-opt sel">10L – 18L</div>
+            <div class="pill-opt">18L – 30L</div>
+            <div class="pill-opt">Above 30L</div>
+          </div>
+        </div>
+
+        <div style="background:var(--gold-surf);border:1px solid var(--border-c);border-radius:var(--r12);padding:14px;margin-top:4px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gold-tx);margin-bottom:4px">Your estimated yield loss</div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:32px;color:var(--err-tx)">₹14,826 / year</div>
+          <div style="font-size:11px;color:var(--tx-3);margin-top:3px">24–30 yrs · 10–18L income · ₹3.29L avg. idle balance</div>
+        </div>
+
+        <div style="margin-top:12px;font-size:11px;color:var(--tx-3);line-height:1.5">
+          Based on spending patterns of your cohort. No personal financial data is collected at this stage. Illustrative — returns are market-linked and not guaranteed.
+        </div>
+      </div>
+    </div>
+    <div class="s-foot"><button class="cta">Show me my full report →</button></div>
+  </div>
+</div>
+
+<!-- ══════════ S10 — LEAKAGE CALCULATOR ══════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">10 of 11 — Leakage Report</div>
+  <div class="phone">
+    <div class="status-bar" style="background:#FFA914;color:#5C3300">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons"><svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:91%"></div></div>
+    <div class="lc-hero">
+      <div class="lc-h">Your personal<br>yield loss report</div>
+      <div class="lc-sub">Here's exactly where your money leaks every year</div>
+      <div class="lc-cohort">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#5C3300" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/></svg>
+        24–30 yrs · 10–18L income
+      </div>
+    </div>
+    <div class="s-body">
+      <!-- Hero loss number -->
+      <div class="lc-hero-num">
+        <div class="lc-loss-lbl">You lose every year</div>
+        <div class="lc-loss-val">₹14,826</div>
+        <div class="lc-loss-sub">by keeping spending money in a savings account at 2.5%</div>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="breakdown">
+        <div class="bd-hdr">
+          <span>Category</span>
+          <span>Idle time</span>
+          <span>Loss / yr</span>
+        </div>
+        <div class="bd-row">
+          <div>
+            <div class="bd-cat">Monthly spends</div>
+            <div style="font-size:10px;color:var(--tx-3)">Food · Grocery · Rides · Rent</div>
+          </div>
+          <div class="bd-idle">2 months</div>
+          <div class="bd-loss">₹2,547</div>
+        </div>
+        <div class="bd-row">
+          <div>
+            <div class="bd-cat">Shopping</div>
+            <div style="font-size:10px;color:var(--tx-3)">Apparel · Electronics · Home</div>
+          </div>
+          <div class="bd-idle">4 months</div>
+          <div class="bd-loss">₹1,620</div>
+        </div>
+        <div class="bd-row">
+          <div>
+            <div class="bd-cat">Travel</div>
+            <div style="font-size:10px;color:var(--tx-3)">Flights · Hotels · Holidays</div>
+          </div>
+          <div class="bd-idle">9 months</div>
+          <div class="bd-loss">₹2,109</div>
+        </div>
+        <div class="bd-row">
+          <div>
+            <div class="bd-cat">Spending buffer</div>
+            <div style="font-size:10px;color:var(--tx-3)">Always-on reserve (₹1.9L)</div>
+          </div>
+          <div class="bd-idle">12 months</div>
+          <div class="bd-loss">₹8,550</div>
+        </div>
+        <div class="bd-total">
+          <div class="bd-total-lbl">Total yield loss</div>
+          <div class="bd-total-val">₹14,826</div>
+        </div>
+      </div>
+
+      <!-- Bank vs Multipl -->
+      <div class="vs-card">
+        <div class="vs-col bank">
+          <div class="vs-clbl">Bank gives you</div>
+          <div class="vs-cval">₹8,237</div>
+          <div class="vs-crate">/ year at 2.5% p.a.</div>
+        </div>
+        <div class="vs-col ml">
+          <div class="vs-clbl">Multipl gives you</div>
+          <div class="vs-cval">₹23,063</div>
+          <div class="vs-crate">/ year at 7% p.a.</div>
+        </div>
+      </div>
+
+      <div style="padding:10px 20px 20px;font-size:10px;color:var(--tx-3);line-height:1.5;text-align:center">
+        Illustrative. Returns are market-linked and not guaranteed. Mutual fund investments are subject to market risks. Idle time estimates per Engine v2 for your cohort.
+      </div>
+    </div>
+    <div class="s-foot"><button class="cta">Start earning ₹23,063/year →</button></div>
+  </div>
+</div>
+
+<!-- ══════════ S11 — EMAIL + ACCOUNT ══════════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-label">11 of 11 — Account Setup</div>
+  <div class="phone">
+    <div class="status-bar" style="background:#FFA914;color:#5C3300">
+      <span class="sb-time">9:41</span>
+      <div class="sb-icons"><svg viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c1.9-1.9 4.3-3 7-3s5.1 1.1 7 3M8.5 15.5c1.3-1.3 2.3-2 3.5-2s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="19" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div>
+    </div>
+    <div class="prog-strip"><div class="prog-fill" style="width:100%"></div></div>
+    <div class="s11-hero">
+      <div class="s11-brand-lbl">Multipl</div>
+      <div class="s11-h">One last step — unlock<br>your earnings</div>
+      <div class="s11-stars">★★★★★</div>
+      <div class="s11-rating">4.8 · 2,400+ reviews</div>
+    </div>
+    <div class="s-body">
+      <div class="s-pad">
+        <div class="your-earn">
+          <div class="ye-lbl">You're about to start earning</div>
+          <div class="ye-val">₹23,063 / year</div>
+          <div class="ye-sub">vs ₹8,237 at your current bank · difference: ₹14,826/yr</div>
+        </div>
+
+        <div class="feat-mini">
+          <div class="feat-row"><div class="fchk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>7% p.a. interest credited monthly, automatically</div>
+          <div class="feat-row"><div class="fchk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>5–15% off Swiggy, Zomato, Amazon &amp; 50+ brands</div>
+          <div class="feat-row"><div class="fchk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Withdraw same-day. No exit load. No lock-in.</div>
+        </div>
+
+        <div class="field-wrap">
+          <label class="field-label">Full name</label>
+          <input class="text-field" type="text" placeholder="Rohan Mehta">
+        </div>
+        <div class="field-wrap">
+          <label class="field-label">Email address</label>
+          <input class="text-field" type="email" placeholder="rohan@gmail.com">
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <hr style="flex:1;border:none;border-top:1px solid var(--border-d)">
+          <span style="font-size:12px;color:var(--tx-3)">or link</span>
+          <hr style="flex:1;border:none;border-top:1px solid var(--border-d)">
+        </div>
+        <div class="soc-row">
+          <div class="soc-btn">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Google
+          </div>
+          <div class="soc-btn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#000"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.42.07 2.4.74 3.23.8 1.22-.24 2.4-.93 3.72-.84 1.58.12 2.77.75 3.55 1.9-3.27 1.94-2.5 5.9.58 7.05-.68 1.65-1.54 3.27-3.08 3.97zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            Apple
+          </div>
+        </div>
+
+        <button class="cta">Create my account →</button>
+        <div class="disclaimer">By creating an account you agree to our Terms &amp; Privacy Policy.<br>SEBI-registered · RBI-compliant · Your money is always safe.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /storyboard -->
+
+<script>
+// Carousel functionality for Screen 1
+function goToSlide(carouselId, slideIndex) {
+  const car = document.getElementById('car' + carouselId);
+  if (!car) return;
+  car.style.transform = 'translateX(-' + (slideIndex * 375) + 'px)';
+  // Update all dot groups inside this carousel's phone
+  const phone = car.closest('.phone');
+  if (!phone) return;
+  const allDots = phone.querySelectorAll('.car-dots .dot-pip');
+  // Each dot group has 3 dots; figure out which group
+  const dotGroups = phone.querySelectorAll('.car-dots');
+  dotGroups.forEach(group => {
+    const pips = group.querySelectorAll('.dot-pip');
+    pips.forEach((p, i) => {
+      p.classList.toggle('active', i === slideIndex);
+    });
+  });
+}
+</script>
+</body>
+</html>

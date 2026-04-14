@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multipl — Onboarding Flow v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --hero: linear-gradient(to bottom, #FFA914 3%, #FFC91A 31%, #FFED7A 64%, #FFFFFF 97%);
+  --nav:  linear-gradient(to bottom, #FFA914, #FFC91A);
+  --cta:  linear-gradient(to bottom, #FDEE5A, #F9B824);
+  --cta-b:#C9A028; --cta-c:#514104;
+  --cta-sh:0px 5px 10px rgba(132,99,7,.16),inset 0px 2px 0px rgba(255,252,220,.85);
+  --th:#5C3300; --t1:#1A1A1A; --t2:#595959; --t3:#767676; --td:#ADADAD;
+  --gs:#856B10; --gb:#FEDC67; --gf:#FEF3D0;
+  --bc:#EFE2BF; --bd:#E0E0E0;
+  --ok:#1A7A3C; --okb:#EDFAF1;
+  --er:#C0392B; --erb:#FFF0EE;
+  --cs:0px 2px 6px rgba(180,120,20,.08),0px 8px 24px rgba(180,120,20,.06);
+  --r8:8px; --r12:12px; --r16:16px; --rf:999px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Satoshi',system-ui,sans-serif;background:#E8E2D8;min-height:100vh;padding:48px 32px 80px}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.65}}
+@keyframes barGrow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes chipIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes slideR{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+@keyframes ringPulse{0%{box-shadow:0 0 0 0 rgba(192,57,43,.3)}70%{box-shadow:0 0 0 12px rgba(192,57,43,0)}100%{box-shadow:0 0 0 0 rgba(192,57,43,0)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes countUp{0%{opacity:0;transform:translateY(8px) scale(.95)}60%{opacity:1;transform:translateY(-2px) scale(1.02)}100%{transform:translateY(0) scale(1);opacity:1}}
+
+/* ─── PAGE ───────────────────────────────────────────────────── */
+.vpill{display:inline-block;background:var(--gf);border:1px solid var(--bc);color:var(--gs);font-size:11px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:var(--rf);margin-bottom:14px}
+h1.pt{font-family:'Satoshi',sans-serif;font-weight:700;font-size:22px;color:var(--t1);margin-bottom:5px}
+p.ps{font-size:14px;color:var(--t2);margin-bottom:40px}
+.sb{display:flex;gap:32px;overflow-x:auto;padding-bottom:24px;align-items:flex-start}
+.sb::-webkit-scrollbar{height:6px}
+.sb::-webkit-scrollbar-track{background:rgba(0,0,0,.06);border-radius:3px}
+.sb::-webkit-scrollbar-thumb{background:rgba(0,0,0,.2);border-radius:3px}
+
+/* ─── PHONE ──────────────────────────────────────────────────── */
+.pw{flex:0 0 375px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.pl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);background:#fff;border:1px solid var(--bd);padding:4px 12px;border-radius:var(--rf)}
+.ph{width:375px;height:812px;border-radius:44px;background:#fff;overflow:hidden;position:relative;box-shadow:0 0 0 10px #1A1A1A,0 0 0 12px #3A3A3A,0 24px 60px rgba(0,0,0,.35);display:flex;flex-direction:column}
+.ph::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:120px;height:32px;background:#1A1A1A;border-radius:20px;z-index:20}
+.sbar{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font-size:12px;font-weight:600;position:relative;z-index:10}
+.sbar.warm{color:var(--th);background:#FFA914}
+.sbar.wh{color:var(--th);background:transparent}
+
+/* ─── SHARED ─────────────────────────────────────────────────── */
+.prog{height:3px;background:rgba(92,51,0,.12);position:relative;flex:none;z-index:5}
+.pf{position:absolute;top:0;left:0;height:100%;background:#5C3300;border-radius:0 99px 99px 0}
+.nh{background:var(--nav);padding:10px 20px 12px;display:flex;align-items:center;justify-content:space-between;flex:none}
+.nb{width:32px;height:32px;border-radius:var(--rf);background:rgba(92,51,0,.12);display:flex;align-items:center;justify-content:center}
+.nb svg{width:18px;height:18px;stroke:#5C3300;stroke-width:2;fill:none}
+.ns{font-size:12px;font-weight:600;color:rgba(92,51,0,.7)}
+.btn{width:100%;height:48px;border-radius:var(--r8);background:var(--cta);border:1px solid var(--cta-b);color:var(--cta-c);font-family:'Satoshi',sans-serif;font-size:15px;font-weight:700;box-shadow:var(--cta-sh);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn2{width:100%;height:44px;border-radius:var(--r8);background:#fff;border:1px solid var(--bd);color:#4A566E;font-family:'Satoshi',sans-serif;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sb-body{flex:1;overflow-y:auto;overflow-x:hidden}
+.sb-body::-webkit-scrollbar{width:3px}
+.sb-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:2px}
+.pad{padding:20px 20px 24px}
+.foot{padding:12px 20px 28px;flex:none;background:#fff;border-top:1px solid var(--bd)}
+.sh{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--t1);padding:20px 20px 4px}
+.ss{font-size:13px;color:var(--t2);padding:0 20px 14px;line-height:1.5}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S1 — PRODUCT EXPLAINER CAROUSEL                            */
+/* ════════════════════════════════════════════════════════════ */
+.car-wrap{flex:1;position:relative;overflow:hidden}
+.car{display:flex;height:100%;transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.slide{min-width:375px;height:100%;display:flex;flex-direction:column;position:relative}
+
+/* slide 1 — THE LOSS */
+.sl1{background:var(--hero)}
+.sl1-inner{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;text-align:center}
+.brand-row{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7);border-radius:var(--rf);padding:5px 12px 5px 8px;backdrop-filter:blur(4px);margin-bottom:28px;align-self:center}
+.brand-m{width:22px;height:22px;background:linear-gradient(135deg,#FFA914,#F9B824);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:var(--cta-c)}
+.brand-n{font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;color:var(--th)}
+
+/* sleeping money visual */
+.bank-vis{position:relative;margin-bottom:20px}
+.bank-circle{width:72px;height:72px;border-radius:var(--rf);background:rgba(255,255,255,.45);border:1.5px solid rgba(255,255,255,.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;margin:0 auto;animation:float 3s ease-in-out infinite}
+.bank-circle svg{width:36px;height:36px;stroke:rgba(92,51,0,.45);stroke-width:1.4;fill:none}
+.rate-tag{position:absolute;top:-8px;right:-12px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:var(--rf);padding:3px 8px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--er)}
+
+/* loss number hero */
+.loss-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(92,51,0,.55);margin-bottom:6px;animation:fadeUp .5s ease both .1s}
+.loss-num{font-family:'Outfit',sans-serif;font-weight:700;font-size:48px;line-height:1;color:var(--er);animation:countUp .6s cubic-bezier(.22,1,.36,1) both .2s;letter-spacing:-.5px}
+.loss-sub{font-size:14px;color:rgba(92,51,0,.68);margin-top:6px;line-height:1.4;animation:fadeUp .5s ease both .4s}
+.loss-breakdown{display:flex;gap:8px;margin-top:16px;animation:fadeUp .5s ease both .5s}
+.lb-chip{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7);border-radius:var(--rf);padding:5px 10px;font-size:11px;font-weight:600;color:#5C3300;backdrop-filter:blur(4px)}
+.lb-chip .amt{font-family:'DM Mono',monospace;font-size:12px}
+
+/* slide 2 — THE SOLUTION */
+.sl2{background:var(--hero)}
+.sl2-inner{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 20px}
+.sl2-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;line-height:1.2;color:var(--th);text-align:center;margin-bottom:6px;animation:fadeUp .5s ease both .1s}
+.sl2-sub{font-size:13px;color:rgba(92,51,0,.65);text-align:center;margin-bottom:20px;animation:fadeUp .5s ease both .2s}
+
+/* bar chart */
+.bar-chart{width:100%;display:flex;gap:16px;align-items:flex-end;justify-content:center;height:160px;animation:fadeUp .5s ease both .2s}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.bar-wrap{width:100%;flex:1;display:flex;align-items:flex-end;justify-content:center}
+.bar{width:100%;border-radius:8px 8px 0 0;transform-origin:bottom;animation:barGrow .6s cubic-bezier(.22,1,.36,1) both}
+.bar.bank-bar{background:rgba(92,51,0,.12);border:1px solid rgba(92,51,0,.15);height:38%;animation-delay:.3s}
+.bar.ml-bar{background:linear-gradient(to top,#F9B824,#FDEE5A);border:1px solid var(--cta-b);height:100%;animation-delay:.5s}
+.bar-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;text-align:center}
+.bar.bank-bar+.bar-val,.bar-col:first-child .bar-lbl{color:var(--t3)}
+.bar-val.ok{color:var(--ok)}
+.bar-lbl{font-size:11px;font-weight:600;color:var(--t3);text-align:center;margin-top:2px}
+.bar-lbl.ok{color:var(--ok)}
+
+/* brand chips */
+.brand-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:14px;animation:fadeUp .5s ease both .6s}
+.bchip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);border-radius:var(--rf);padding:5px 10px;backdrop-filter:blur(6px)}
+.bchip-dot{width:18px;height:18px;border-radius:var(--rf);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
+.bchip-txt{font-size:11px;font-weight:700;color:#5C3300}
+
+/* slide 3 — TRUST */
+.sl3{background:#fff}
+.sl3-inner{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 20px}
+.sl3-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:24px;color:var(--t1);margin-bottom:6px;animation:fadeUp .5s ease both .1s}
+.sl3-sub{font-size:14px;color:var(--t2);margin-bottom:22px;line-height:1.5;animation:fadeUp .5s ease both .2s}
+.trust-list{display:flex;flex-direction:column;gap:11px}
+.trust-item{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--gf);border:1px solid var(--bc);border-radius:var(--r12);animation:slideR .4s ease both}
+.trust-item:nth-child(1){animation-delay:.2s}
+.trust-item:nth-child(2){animation-delay:.35s}
+.trust-item:nth-child(3){animation-delay:.5s}
+.trust-ico{width:40px;height:40px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.trust-ico svg{width:22px;height:22px;stroke:var(--gs);stroke-width:1.7;fill:none}
+.trust-head{font-size:14px;font-weight:700;color:var(--t1)}
+.trust-desc{font-size:12px;color:var(--t2);margin-top:2px;line-height:1.35}
+.rating-row{display:flex;align-items:center;gap:8px;margin-top:16px;animation:fadeUp .4s ease both .6s}
+.stars{color:#F59E0B;font-size:14px;letter-spacing:1px}
+.rating-txt{font-size:13px;font-weight:600;color:var(--t1)}
+.rating-sub{font-size:11px;color:var(--t3)}
+
+/* carousel nav */
+.car-foot{padding:12px 20px 28px;flex:none}
+.dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
+.dot{width:6px;height:6px;border-radius:var(--rf);background:rgba(92,51,0,.18);transition:all .25s;cursor:pointer}
+.dot.on{width:20px;background:#5C3300}
+.dot.wh{background:rgba(0,0,0,.15)}
+.dot.wh.on{background:var(--t1);width:20px}
+.skip{float:right;font-size:12px;color:rgba(92,51,0,.45);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:'Satoshi',sans-serif;padding:6px 20px 0 0}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S2 — LOSS HOOK (redesigned)                                */
+/* ════════════════════════════════════════════════════════════ */
+.s2-screen{flex:1;background:var(--hero);display:flex;flex-direction:column}
+.s2-body{flex:1;padding:24px 20px 0;display:flex;flex-direction:column}
+.urgent-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.5);border:1px solid rgba(192,57,43,.3);border-radius:var(--rf);padding:5px 11px;font-size:11px;font-weight:700;color:var(--er);margin-bottom:18px;align-self:flex-start}
+.utdot{width:6px;height:6px;background:var(--er);border-radius:var(--rf);animation:pulse 1.5s ease-in-out infinite}
+.s2-num{font-family:'Outfit',sans-serif;font-weight:700;font-size:52px;line-height:1;color:var(--er);letter-spacing:-.5px;margin-bottom:4px}
+.s2-label{font-size:14px;font-weight:600;color:rgba(92,51,0,.6);margin-bottom:18px}
+/* breakdown split */
+.split-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.split-card{border-radius:var(--r12);padding:13px 14px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7);backdrop-filter:blur(6px)}
+.split-lbl{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(92,51,0,.5);margin-bottom:4px}
+.split-val{font-family:'DM Mono',monospace;font-weight:500;font-size:18px;color:var(--th)}
+.split-desc{font-size:10px;color:rgba(92,51,0,.55);margin-top:2px;line-height:1.3}
+/* bank vs multipl row */
+.bvm{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.bvm-card{border-radius:var(--r12);padding:12px}
+.bvm-bank{background:rgba(255,255,255,.4);border:1px solid rgba(192,57,43,.2)}
+.bvm-ml{background:rgba(255,255,255,.75);border:1.5px solid rgba(26,122,60,.28)}
+.bvm-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.bvm-bank .bvm-lbl{color:var(--er)}
+.bvm-ml .bvm-lbl{color:var(--ok)}
+.bvm-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:16px}
+.bvm-bank .bvm-val{color:var(--t1)}
+.bvm-ml .bvm-val{color:var(--ok)}
+.bvm-sub{font-size:9px;color:var(--t3);margin-top:1px}
+.bvm-arrow{width:26px;height:26px;background:rgba(92,51,0,.1);border-radius:var(--rf);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--th)}
+.s2-foot{padding:16px 20px 32px;flex:none}
+.s2-note{text-align:center;font-size:11px;color:rgba(92,51,0,.45);margin-top:8px}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S3 — PHONE OTP                                             */
+/* ════════════════════════════════════════════════════════════ */
+.otp-hero{background:var(--hero);padding:26px 20px 22px;flex:none}
+.otp-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:24px;line-height:1.2;color:var(--th);margin-bottom:5px}
+.otp-s{font-size:13px;color:rgba(92,51,0,.68);line-height:1.5}
+.pfield{display:flex;align-items:center;border:1.5px solid var(--bd);border-radius:var(--r8);overflow:hidden;background:#fff;margin-bottom:12px}
+.pfield.focus{border-color:#FFA914;box-shadow:0 0 0 3px rgba(255,169,20,.12)}
+.prefix{display:flex;align-items:center;gap:6px;padding:0 12px;border-right:1px solid var(--bd);height:48px;flex:none}
+.flag{width:20px;height:20px;border-radius:var(--rf);overflow:hidden;border:1px solid var(--bd)}
+.cc{font-size:14px;font-weight:600;color:var(--t2)}
+.pinput{flex:1;height:48px;border:none;padding:0 14px;font-family:'Satoshi',sans-serif;font-size:16px;color:var(--t1);background:transparent;outline:none}
+.flabel{font-size:12px;font-weight:700;color:var(--t2);margin-bottom:6px;display:block}
+.otp-ok{display:flex;align-items:center;gap:7px;background:var(--okb);border:1px solid rgba(26,122,60,.2);border-radius:var(--r8);padding:10px 12px;margin-bottom:16px}
+.otp-ok svg{width:15px;height:15px;stroke:var(--ok);stroke-width:2;fill:none;flex:none}
+.otp-ok-txt{font-size:12px;color:var(--ok);font-weight:500}
+.divrow{display:flex;align-items:center;gap:10px;margin:14px 0}
+.divrow hr{flex:1;border:none;border-top:1px solid var(--bd)}
+.divrow span{font-size:12px;color:var(--t3)}
+.soc-row{display:flex;gap:10px;margin-bottom:10px}
+.sbtn{flex:1;height:44px;border-radius:var(--r8);border:1.5px solid var(--bd);background:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:600;color:var(--t1);cursor:pointer}
+.terms{font-size:11px;color:var(--t3);text-align:center;line-height:1.5;margin-top:10px}
+.terms a{color:var(--gs)}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S4 — GOAL QUESTION (improved)                              */
+/* ════════════════════════════════════════════════════════════ */
+.goal-list{display:flex;flex-direction:column;gap:9px;padding:16px 20px 0}
+.gitem{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1.5px solid var(--bd);border-radius:var(--r12);background:#fff;cursor:pointer;position:relative;transition:all .15s}
+.gitem.sel{border-color:#FFA914;background:var(--gf);box-shadow:0 0 0 3px rgba(255,169,20,.1)}
+.pop-tag{position:absolute;top:-9px;right:12px;background:var(--gb);color:var(--gs);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:var(--rf);border:1px solid rgba(133,107,16,.2)}
+.gico{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none}
+.gico svg{width:22px;height:22px;stroke-width:1.7;fill:none}
+/* icon bg per goal */
+.gico.earn{background:#FEF3D0;} .gico.earn svg{stroke:var(--gs)}
+.gico.spend{background:#EDF9F4;} .gico.spend svg{stroke:#1A7A3C}
+.gico.fd{background:#FFF0EE;} .gico.fd svg{stroke:#9B4228}
+.gico.invest{background:#E8F4FE;} .gico.invest svg{stroke:#0E7490}
+.gico.explore{background:#F3F3F3;} .gico.explore svg{stroke:var(--t3)}
+.gitem.sel .gico.earn{background:rgba(253,238,90,.4)}
+.gname{font-size:14px;font-weight:600;color:var(--t1)}
+.gdesc{font-size:11px;color:var(--t3);margin-top:1px;line-height:1.3}
+.gradio{width:20px;height:20px;border-radius:var(--rf);border:2px solid var(--bd);flex:none;position:relative;margin-left:auto}
+.gitem.sel .gradio{border-color:#FFA914;background:#FFA914}
+.gitem.sel .gradio::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#fff;border-radius:var(--rf)}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S5 — PAIN POINTS (improved)                                */
+/* ════════════════════════════════════════════════════════════ */
+.pain-list{display:flex;flex-direction:column;gap:8px;padding:12px 20px 0}
+.pitem{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border:1.5px solid var(--bd);border-radius:var(--r12);background:#fff;cursor:pointer;transition:all .15s}
+.pitem.chk{border-color:#FFA914;background:var(--gf)}
+.pcheck{width:22px;height:22px;border-radius:6px;border:2px solid var(--bd);flex:none;margin-top:1px;position:relative;display:flex;align-items:center;justify-content:center}
+.pitem.chk .pcheck{background:#FFA914;border-color:#FFA914}
+.pitem.chk .pcheck::after{content:'';display:block;width:11px;height:7px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px)}
+.pain-body{flex:1}
+.ptxt{font-size:13px;font-weight:500;color:var(--t1);line-height:1.4}
+.ppct{font-size:10px;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:4px}
+.ppct svg{width:10px;height:10px;stroke:var(--t3);stroke-width:2;fill:none}
+.pitem.chk .ppct{color:var(--gs)}
+.pitem.chk .ppct svg{stroke:var(--gs)}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S6 — SOLUTION MIRROR (improved)                            */
+/* ════════════════════════════════════════════════════════════ */
+.sol-hero{background:var(--hero);padding:20px 20px 16px;flex:none}
+.sol-hd{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;line-height:1.2;color:var(--th);margin-bottom:4px}
+.sol-sd{font-size:13px;color:rgba(92,51,0,.68);line-height:1.5}
+.sol-list{padding:14px 20px;display:flex;flex-direction:column;gap:10px}
+.sitem{border:1px solid var(--bc);border-radius:var(--r12);background:#fff;box-shadow:var(--cs);overflow:hidden}
+.sitem-top{padding:10px 14px 0;border-bottom:1px solid #F5F0E8}
+.sitem-pain{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:2px}
+.sitem-win{display:flex;align-items:baseline;gap:6px;padding-bottom:10px}
+.sitem-num{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--ok)}
+.sitem-unit{font-size:11px;font-weight:600;color:var(--ok)}
+.sitem-body{padding:10px 14px}
+.sitem-desc{font-size:12px;color:var(--t2);line-height:1.45}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S7 — BEFORE/AFTER (visual redesign)                        */
+/* ════════════════════════════════════════════════════════════ */
+.ba-wrap{padding:14px 20px;display:flex;flex-direction:column;gap:12px}
+/* two card layout */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.duo-card{border-radius:var(--r12);padding:14px 12px}
+.duo-card.bank{background:#FAFAFA;border:1px solid #E8E8E8}
+.duo-card.ml{background:var(--gf);border:1.5px solid var(--cta-b)}
+.duo-head{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.duo-card.bank .duo-head{color:var(--t3)}
+.duo-card.ml .duo-head{color:var(--gs)}
+.duo-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:var(--rf)}
+.duo-card.bank .duo-badge{background:var(--erb);color:var(--er)}
+.duo-card.ml .duo-badge{background:var(--okb);color:var(--ok)}
+.metric{margin-bottom:10px}
+.metric:last-child{margin-bottom:0}
+.metric-lbl{font-size:10px;color:var(--t3);margin-bottom:2px}
+.metric-val{font-family:'DM Mono',monospace;font-weight:500;font-size:14px}
+.duo-card.bank .metric-val{color:var(--t2)}
+.duo-card.ml .metric-val{color:var(--ok);font-weight:700}
+/* bar row */
+.mbar{height:4px;border-radius:99px;margin-top:3px;background:var(--bd)}
+.mbar-fill{height:100%;border-radius:99px}
+.duo-card.bank .mbar-fill{background:rgba(92,51,0,.15)}
+.duo-card.ml .mbar-fill{background:var(--ok)}
+/* savings callout */
+.save-card{background:linear-gradient(135deg,rgba(253,238,90,.22),rgba(249,184,36,.14));border:1.5px solid var(--cta-b);border-radius:var(--r12);padding:16px;display:flex;align-items:center;justify-content:space-between}
+.save-left .save-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gs);margin-bottom:3px}
+.save-left .save-sub{font-size:11px;color:var(--t3)}
+.save-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:28px;color:var(--ok)}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S8 — SOCIAL PROOF                                          */
+/* ════════════════════════════════════════════════════════════ */
+.sp-hero{background:var(--hero);padding:20px 20px 16px;flex:none}
+.sp-stats{display:flex;gap:8px;margin-top:12px}
+.sp-s{flex:1;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7);border-radius:var(--r8);padding:9px 6px;text-align:center;backdrop-filter:blur(4px)}
+.sp-n{font-family:'Outfit',sans-serif;font-weight:700;font-size:17px;color:var(--th)}
+.sp-l{font-size:10px;color:rgba(92,51,0,.65);font-weight:500;line-height:1.2;margin-top:1px}
+.tlist{padding:12px 20px;display:flex;flex-direction:column;gap:10px}
+.tcard{border:1px solid var(--bc);border-radius:var(--r12);padding:13px;background:#fff;box-shadow:var(--cs)}
+.ttop{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.tav{width:34px;height:34px;border-radius:var(--rf);background:var(--gf);border:1.5px solid var(--bc);display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:var(--gs);flex:none}
+.tnm{font-size:13px;font-weight:700;color:var(--t1)}
+.tper{font-size:11px;color:var(--t3)}
+.tstars{color:#F59E0B;font-size:11px;letter-spacing:1px}
+.tbody{font-size:12px;color:var(--t2);line-height:1.5;font-style:italic}
+.tbody::before{content:'\201C'}.tbody::after{content:'\201D'}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S9 — AGE + INCOME                                          */
+/* ════════════════════════════════════════════════════════════ */
+.pers-hero{background:var(--hero);padding:20px 20px 16px;flex:none}
+.pg{display:flex;flex-wrap:wrap;gap:7px}
+.popt{padding:9px 15px;border-radius:var(--rf);border:1.5px solid var(--bd);background:#fff;font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .15s}
+.popt.sel{background:var(--gf);border-color:#FFA914;color:var(--th)}
+.glbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:9px}
+.gsec{margin-bottom:18px}
+.preview{background:linear-gradient(135deg,rgba(253,238,90,.18),rgba(249,184,36,.1));border:1.5px solid var(--cta-b);border-radius:var(--r12);padding:14px;margin-top:2px}
+.prev-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gs);margin-bottom:3px}
+.prev-num{font-family:'Outfit',sans-serif;font-weight:700;font-size:30px;color:var(--er)}
+.prev-sub{font-size:11px;color:var(--t3);margin-top:2px}
+.prev-split{display:flex;gap:8px;margin-top:8px}
+.psplit{flex:1;background:rgba(255,255,255,.6);border:1px solid rgba(133,107,16,.15);border-radius:var(--r8);padding:7px 10px}
+.psplit-l{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:2px}
+.psplit-v{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--t1)}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S10 — LEAKAGE CALCULATOR                                   */
+/* ════════════════════════════════════════════════════════════ */
+.lc-hero{background:var(--hero);padding:16px 20px 14px;flex:none}
+.lc-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:20px;line-height:1.2;color:var(--th);margin-bottom:3px}
+.lc-s{font-size:12px;color:rgba(92,51,0,.65)}
+.cohort-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.7);border-radius:var(--rf);padding:3px 9px;font-size:10px;font-weight:600;color:var(--th);margin-top:7px}
+/* hero loss */
+.lc-top{background:linear-gradient(135deg,rgba(192,57,43,.08),rgba(192,57,43,.04));border:1.5px solid rgba(192,57,43,.2);border-radius:var(--r12);padding:14px;text-align:center;margin:12px 20px 10px}
+.lc-loss-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--er);margin-bottom:3px}
+.lc-loss-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:36px;color:var(--er);line-height:1}
+.lc-loss-sub{font-size:11px;color:var(--t3);margin-top:3px}
+.lc-split{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 20px 10px}
+.lcs-card{border-radius:var(--r8);padding:8px 10px}
+.lcs-yield{background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.15)}
+.lcs-brand{background:rgba(133,107,16,.07);border:1px solid rgba(133,107,16,.2)}
+.lcs-l{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:2px}
+.lcs-yield .lcs-l{color:var(--er)}
+.lcs-brand .lcs-l{color:var(--gs)}
+.lcs-v{font-family:'DM Mono',monospace;font-weight:500;font-size:15px}
+.lcs-yield .lcs-v{color:var(--er)}
+.lcs-brand .lcs-v{color:var(--gs)}
+.lcs-s{font-size:10px;color:var(--t3);margin-top:1px}
+/* yield breakdown table */
+.bdt{margin:0 20px;border:1px solid var(--bd);border-radius:var(--r12);overflow:hidden}
+.bdt-title{padding:8px 12px;background:#F8F8F8;border-bottom:1px solid var(--bd);font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);display:flex;justify-content:space-between}
+.bdr{display:grid;grid-template-columns:1fr auto auto;padding:9px 12px;border-top:1px solid var(--bd);gap:6px;align-items:center}
+.bdr:first-of-type{border-top:none}
+.bdcat{font-size:12px;font-weight:500;color:var(--t1)}
+.bdidle{font-family:'DM Mono',monospace;font-size:10px;color:var(--t3);text-align:right}
+.bdloss{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--er);text-align:right}
+.bdt-total{display:grid;grid-template-columns:1fr auto;padding:9px 12px;border-top:1.5px solid rgba(192,57,43,.3);background:rgba(192,57,43,.04)}
+.bdt-total-l{font-size:12px;font-weight:700;color:var(--t1)}
+.bdt-total-v{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--er)}
+/* brand discount table */
+.bdt2{margin:8px 20px 0;border:1px solid rgba(133,107,16,.2);border-radius:var(--r12);overflow:hidden}
+.bdt2-title{padding:8px 12px;background:var(--gf);border-bottom:1px solid rgba(133,107,16,.15);font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gs);display:flex;justify-content:space-between}
+.bdr2{display:grid;grid-template-columns:1fr auto auto;padding:9px 12px;border-top:1px solid rgba(133,107,16,.12);gap:6px;align-items:center}
+.bdcat2{font-size:12px;font-weight:500;color:var(--t1)}
+.bddis{font-family:'DM Mono',monospace;font-size:10px;color:var(--t3);text-align:right}
+.bdsave{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--gs);text-align:right}
+.bdt2-total{display:grid;grid-template-columns:1fr auto;padding:9px 12px;border-top:1.5px solid rgba(133,107,16,.25);background:rgba(133,107,16,.05)}
+.bdt2-total-l{font-size:12px;font-weight:700;color:var(--t1)}
+.bdt2-total-v{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--gs)}
+/* vs row */
+.vs-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 20px 0}
+.vsc{border-radius:var(--r12);padding:11px 12px}
+.vsc.bk{background:#FFF5F5;border:1px solid rgba(192,57,43,.15)}
+.vsc.ml{background:var(--okb);border:1px solid rgba(26,122,60,.2)}
+.vsc-l{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.vsc.bk .vsc-l{color:var(--er)}
+.vsc.ml .vsc-l{color:var(--ok)}
+.vsc-v{font-family:'Outfit',sans-serif;font-weight:700;font-size:19px}
+.vsc.bk .vsc-v{color:var(--er)}
+.vsc.ml .vsc-v{color:var(--ok)}
+.vsc-s{font-family:'DM Mono',monospace;font-size:10px;color:var(--t3);margin-top:1px}
+.disc-note{margin:8px 20px 14px;font-size:10px;color:var(--t3);text-align:center;line-height:1.5}
+
+/* ════════════════════════════════════════════════════════════ */
+/* S11 — ACCOUNT SETUP                                        */
+/* ════════════════════════════════════════════════════════════ */
+.acc-hero{background:var(--hero);padding:22px 20px 18px;flex:none;text-align:center}
+.acc-brand{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(92,51,0,.45);margin-bottom:6px}
+.acc-h{font-family:'Outfit',sans-serif;font-weight:700;font-size:24px;line-height:1.2;color:var(--th);margin-bottom:7px}
+.acc-stars{color:#F59E0B;font-size:13px;letter-spacing:1px}
+.acc-rat{font-size:11px;font-weight:600;color:var(--th);margin-top:2px}
+.unlock{background:linear-gradient(135deg,rgba(253,238,90,.2),rgba(249,184,36,.12));border:1.5px solid var(--cta-b);border-radius:var(--r12);padding:13px;text-align:center;margin-bottom:14px}
+.ul-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gs);margin-bottom:3px}
+.ul-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:26px;color:var(--ok)}
+.ul-sub{font-size:11px;color:var(--t3);margin-top:2px}
+.feats{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.feat{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t1);font-weight:500}
+.fck{width:18px;height:18px;background:var(--okb);border-radius:var(--rf);display:flex;align-items:center;justify-content:center;flex:none}
+.fck svg{width:10px;height:10px;stroke:var(--ok);stroke-width:3;fill:none}
+.tf{width:100%;height:48px;border:1.5px solid var(--bd);border-radius:var(--r8);padding:0 14px;font-family:'Satoshi',sans-serif;font-size:15px;color:var(--t1);background:#fff;outline:none}
+.fw{margin-bottom:10px}
+.disc2{font-size:10px;color:var(--t3);text-align:center;line-height:1.5;margin-top:8px}
+</style>
+</head>
+<body>
+
+<div class="vpill">V5 · Engine v2 · ₹31,826 total loss · Animated carousel</div>
+<h1 class="pt">Multipl Onboarding Flow v5</h1>
+<p class="ps">11 screens · yield ₹14,826 + brand ₹17,000 = ₹31,826 total · improved S1, S2, S4–S7 · DESIGN.md throughout</p>
+
+<div class="sb">
+
+<!-- ════ S1 ═ PRODUCT EXPLAINER (animated carousel) ══════════ -->
+<div class="pw">
+  <div class="pl">1 of 11 — Product Explainer</div>
+  <div class="ph">
+    <div class="sbar warm">
+      <span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg>
+      </div>
+    </div>
+    <div class="prog"><div class="pf" style="width:9%"></div></div>
+    <div style="display:flex;justify-content:flex-end;padding:4px 20px 0;position:relative;z-index:5">
+      <button class="skip" onclick="slide(0,2)">Skip →</button>
+    </div>
+    <div class="car-wrap">
+      <div class="car" id="c0">
+
+        <!-- Slide 1 — THE LOSS -->
+        <div class="slide sl1">
+          <div class="sl1-inner">
+            <div class="brand-row">
+              <div class="brand-m">M</div>
+              <span class="brand-n">Multipl</span>
+            </div>
+            <div class="bank-vis">
+              <div class="bank-circle">
+                <svg viewBox="0 0 24 24"><rect x="3" y="10" width="18" height="11" rx="1"/><path d="M7 10V7a5 5 0 0110 0v3"/><path d="M12 14v3"/></svg>
+              </div>
+              <div class="rate-tag">2.5% p.a.</div>
+            </div>
+            <div class="loss-eyebrow">You're leaving on the table</div>
+            <div class="loss-num">₹31,826</div>
+            <div class="loss-sub">every year — in lost interest<br>and brand discounts you never get</div>
+            <div class="loss-breakdown">
+              <div class="lb-chip"><span class="amt">₹14,826</span> yield</div>
+              <div class="lb-chip">+</div>
+              <div class="lb-chip"><span class="amt">₹17,000</span> discounts</div>
+            </div>
+          </div>
+          <div class="car-foot">
+            <div class="dots" id="d0">
+              <div class="dot on" onclick="slide(0,0)"></div>
+              <div class="dot" onclick="slide(0,1)"></div>
+              <div class="dot" onclick="slide(0,2)"></div>
+            </div>
+            <button class="btn" onclick="slide(0,1)">Next →</button>
+          </div>
+        </div>
+
+        <!-- Slide 2 — THE SOLUTION -->
+        <div class="slide sl2">
+          <div class="sl2-inner">
+            <div class="sl2-title">Multipl earns it back<br>— automatically</div>
+            <div class="sl2-sub">Same idle balance. Completely different outcome.</div>
+            <div class="bar-chart">
+              <div class="bar-col">
+                <div class="bar-wrap"><div class="bar bank-bar" style="width:70%"></div></div>
+                <div class="bar-val" style="color:var(--t3)">₹8,237</div>
+                <div class="bar-lbl">Your bank / yr</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-wrap"><div class="bar ml-bar" style="width:70%"></div></div>
+                <div class="bar-val ok">₹40,063</div>
+                <div class="bar-lbl ok">Multipl / yr</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:rgba(92,51,0,.55);text-align:center;margin-bottom:8px">₹23,063 interest + ₹17,000 brand discounts</div>
+            <div class="brand-chips">
+              <div class="bchip"><div class="bchip-dot" style="background:#FC8019">S</div><span class="bchip-txt">Swiggy 10%</span></div>
+              <div class="bchip"><div class="bchip-dot" style="background:#E23744">Z</div><span class="bchip-txt">Zomato 10%</span></div>
+              <div class="bchip"><div class="bchip-dot" style="background:#FF9900">A</div><span class="bchip-txt">Amazon 7%</span></div>
+              <div class="bchip"><div class="bchip-dot" style="background:#84C225">B</div><span class="bchip-txt">BigBasket 8%</span></div>
+            </div>
+          </div>
+          <div class="car-foot">
+            <div class="dots">
+              <div class="dot" onclick="slide(0,0)"></div>
+              <div class="dot on" onclick="slide(0,1)"></div>
+              <div class="dot" onclick="slide(0,2)"></div>
+            </div>
+            <button class="btn" onclick="slide(0,2)">Next →</button>
+          </div>
+        </div>
+
+        <!-- Slide 3 — TRUST -->
+        <div class="slide sl3">
+          <div class="sl3-inner">
+            <div class="sl3-title">Built safe.<br>Designed to flex.</div>
+            <div class="sl3-sub">Multipl runs on a SEBI-regulated liquid mutual fund — the same instrument used by India's largest corporations to park cash.</div>
+            <div class="trust-list">
+              <div class="trust-item">
+                <div class="trust-ico">
+                  <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                  <div class="trust-head">SEBI-regulated</div>
+                  <div class="trust-desc">Liquid mutual fund. Same safety as an FD, zero bureaucracy.</div>
+                </div>
+              </div>
+              <div class="trust-item">
+                <div class="trust-ico">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <div class="trust-head">Same-day withdrawal</div>
+                  <div class="trust-desc">No exit load. No lock-in. Your money, instantly.</div>
+                </div>
+              </div>
+              <div class="trust-item">
+                <div class="trust-ico">
+                  <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                </div>
+                <div>
+                  <div class="trust-head">4 minutes to set up</div>
+                  <div class="trust-desc">PAN + Aadhaar KYC. Earning starts Day 1.</div>
+                </div>
+              </div>
+            </div>
+            <div class="rating-row">
+              <span class="stars">★★★★★</span>
+              <div>
+                <div class="rating-txt">4.8 rating</div>
+                <div class="rating-sub">50,000+ active users</div>
+              </div>
+            </div>
+          </div>
+          <div class="car-foot" style="background:#fff;border-top:1px solid var(--bd)">
+            <div class="dots">
+              <div class="dot wh" onclick="slide(0,0)"></div>
+              <div class="dot wh" onclick="slide(0,1)"></div>
+              <div class="dot wh on" onclick="slide(0,2)"></div>
+            </div>
+            <button class="btn">Show me my number →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ S2 ═ LOSS HOOK (redesigned) ══════════════════════════ -->
+<div class="pw">
+  <div class="pl">2 of 11 — Loss Hook</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:18%"></div></div>
+    <div class="s2-screen">
+      <div class="s2-body">
+        <div class="urgent-tag"><span class="utdot"></span>You're losing this every year</div>
+        <div class="s2-num">₹31,826</div>
+        <div class="s2-label">in yield + brand discounts you never get</div>
+        <div class="split-row">
+          <div class="split-card">
+            <div class="split-lbl">Yield loss</div>
+            <div class="split-val">₹14,826</div>
+            <div class="split-desc">Interest gap: 2.5% vs 7% p.a. on your idle balance</div>
+          </div>
+          <div class="split-card">
+            <div class="split-lbl">Discount miss</div>
+            <div class="split-val">₹17,000</div>
+            <div class="split-desc">Swiggy, Zomato, Amazon, BigBasket</div>
+          </div>
+        </div>
+        <div class="bvm">
+          <div class="bvm-card bvm-bank">
+            <div class="bvm-lbl">Bank gives you</div>
+            <div class="bvm-val">₹8,237/yr</div>
+            <div class="bvm-sub">2.5% · yield only</div>
+          </div>
+          <div class="bvm-arrow">→</div>
+          <div class="bvm-card bvm-ml">
+            <div class="bvm-lbl">Multipl gives you</div>
+            <div class="bvm-val">₹40,063/yr</div>
+            <div class="bvm-sub">7% + brand discounts</div>
+          </div>
+        </div>
+      </div>
+      <div class="s2-foot" style="background:transparent;border-top:none">
+        <button class="btn">Stop leaving money behind →</button>
+        <div class="s2-note">ICP: 24–30 yrs · ₹10–18L income · ₹3.29L avg. idle balance</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ S3 ═ PHONE OTP ════════════════════════════════════════ -->
+<div class="pw">
+  <div class="pl">3 of 11 — Phone + OTP</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:27%"></div></div>
+    <div class="otp-hero">
+      <div class="otp-h">Enter your<br>mobile number</div>
+      <div class="otp-s">30 seconds — then we calculate your personal report.</div>
+    </div>
+    <div class="sb-body">
+      <div class="pad">
+        <label class="flabel">Mobile number</label>
+        <div class="pfield focus">
+          <div class="prefix">
+            <svg class="flag" viewBox="0 0 20 14"><rect width="20" height="4.67" fill="#FF9933"/><rect y="4.67" width="20" height="4.67" fill="#fff"/><rect y="9.33" width="20" height="4.67" fill="#138808"/><circle cx="10" cy="7" r="2" fill="none" stroke="#000080" stroke-width=".5"/></svg>
+            <span class="cc">+91</span>
+          </div>
+          <input class="pinput" type="tel" placeholder="98765 43210">
+        </div>
+        <div class="otp-ok">
+          <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+          <span class="otp-ok-txt">Used only for OTP — we never call or spam</span>
+        </div>
+        <div class="divrow"><hr><span>or sign in with</span><hr></div>
+        <div class="soc-row">
+          <div class="sbtn">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Google
+          </div>
+          <div class="sbtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#000"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.42.07 2.4.74 3.23.8 1.22-.24 2.4-.93 3.72-.84 1.58.12 2.77.75 3.55 1.9-3.27 1.94-2.5 5.9.58 7.05-.68 1.65-1.54 3.27-3.08 3.97zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            Apple
+          </div>
+        </div>
+        <div class="terms">By continuing you agree to our <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a></div>
+      </div>
+    </div>
+    <div class="foot"><button class="btn">Send OTP →</button></div>
+  </div>
+</div>
+
+<!-- ════ S4 ═ GOAL QUESTION (improved) ════════════════════════ -->
+<div class="pw">
+  <div class="pl">4 of 11 — Goal Question</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:36%"></div></div>
+    <div class="nh"><div class="nb"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><span class="ns">Step 1 of 4</span><div style="width:32px"></div></div>
+    <div class="sh">What brings you here?</div>
+    <div class="ss">Choose the one that fits best — we personalise from here</div>
+    <div class="sb-body">
+      <div class="goal-list">
+        <div class="gitem sel">
+          <div class="pop-tag">Most popular</div>
+          <div class="gico earn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v1m0 10v1M9 9h1.5a1.5 1.5 0 010 3h-1a1.5 1.5 0 000 3H11m1-9h2m-2 6h2"/></svg></div>
+          <div style="flex:1"><div class="gname">Earn more on idle money</div><div class="gdesc">My savings sit doing nothing at 2.5%</div></div>
+          <div class="gradio"></div>
+        </div>
+        <div class="gitem">
+          <div class="gico spend"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg></div>
+          <div style="flex:1"><div class="gname">Save on everyday spending</div><div class="gdesc">Discounts on Swiggy, Amazon, Zomato</div></div>
+          <div class="gradio"></div>
+        </div>
+        <div class="gitem">
+          <div class="gico fd"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2M12 12v4M10 14h4"/></svg></div>
+          <div style="flex:1"><div class="gname">Replace my fixed deposit</div><div class="gdesc">Better returns, full flexibility to withdraw</div></div>
+          <div class="gradio"></div>
+        </div>
+        <div class="gitem">
+          <div class="gico invest"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div style="flex:1"><div class="gname">Start investing — low risk</div><div class="gdesc">First step into mutual funds, safely</div></div>
+          <div class="gradio"></div>
+        </div>
+        <div class="gitem">
+          <div class="gico explore"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          <div style="flex:1"><div class="gname">Just exploring</div><div class="gdesc">Want to understand what this is first</div></div>
+          <div class="gradio"></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><button class="btn">Continue →</button></div>
+  </div>
+</div>
+
+<!-- ════ S5 ═ PAIN POINTS (improved) ══════════════════════════ -->
+<div class="pw">
+  <div class="pl">5 of 11 — Pain Points</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:45%"></div></div>
+    <div class="nh"><div class="nb"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><span class="ns">Step 2 of 4</span><div style="width:32px"></div></div>
+    <div class="sh" style="padding-bottom:2px">Which feels familiar?</div>
+    <div style="font-size:11px;color:var(--t3);padding:0 20px 10px;display:flex;align-items:center;gap:4px"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--t3)" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Pick all that apply</div>
+    <div class="sb-body">
+      <div class="pain-list">
+        <div class="pitem chk">
+          <div class="pcheck"></div>
+          <div class="pain-body">
+            <div class="ptxt">My bank balance just sits there — I barely glance at the interest I earn</div>
+            <div class="ppct"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>72% of Multipl users said this</div>
+          </div>
+        </div>
+        <div class="pitem chk">
+          <div class="pcheck"></div>
+          <div class="pain-body">
+            <div class="ptxt">I pay full price on Swiggy / Zomato — I know there must be a smarter way</div>
+            <div class="ppct"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>68% of Multipl users said this</div>
+          </div>
+        </div>
+        <div class="pitem">
+          <div class="pcheck"></div>
+          <div class="pain-body">
+            <div class="ptxt">Mutual funds feel risky and complicated — I don't know where to start</div>
+            <div class="ppct"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>61% of Multipl users said this</div>
+          </div>
+        </div>
+        <div class="pitem">
+          <div class="pcheck"></div>
+          <div class="pain-body">
+            <div class="ptxt">I've tried saving but always dip in when I need cash — lock-in kills me</div>
+            <div class="ppct"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>54% of Multipl users said this</div>
+          </div>
+        </div>
+        <div class="pitem">
+          <div class="pcheck"></div>
+          <div class="pain-body">
+            <div class="ptxt">I don't want yet another app — I just want my existing money to work harder</div>
+            <div class="ppct"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>49% of Multipl users said this</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <button class="btn" style="margin-bottom:8px">Show me the fix →</button>
+      <div style="font-size:11px;color:var(--t3);text-align:center">2 selected</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ S6 ═ SOLUTION MIRROR (numbers-first) ══════════════════ -->
+<div class="pw">
+  <div class="pl">6 of 11 — Solution Mirror</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:55%"></div></div>
+    <div class="sol-hero">
+      <div class="sol-hd">Here's how Multipl<br>fixes each one</div>
+      <div class="sol-sd">Specific answers to what you just told us.</div>
+    </div>
+    <div class="sb-body">
+      <div class="sol-list">
+        <div class="sitem">
+          <div class="sitem-top">
+            <div class="sitem-pain">Idle money earns nothing</div>
+            <div class="sitem-win">
+              <div class="sitem-num">₹1,922</div>
+              <div class="sitem-unit">/ month at 7% p.a.</div>
+            </div>
+          </div>
+          <div class="sitem-body"><div class="sitem-desc">Your ₹3.29L idle balance earns automatically — credited monthly. No action needed, ever.</div></div>
+        </div>
+        <div class="sitem">
+          <div class="sitem-top">
+            <div class="sitem-pain">Full price on food delivery</div>
+            <div class="sitem-win">
+              <div class="sitem-num">₹1,417</div>
+              <div class="sitem-unit">/ month saved on brands</div>
+            </div>
+          </div>
+          <div class="sitem-body"><div class="sitem-desc">Spend from Multipl, get 10% off Swiggy &amp; Zomato, 8% off BigBasket, 7% off Amazon &amp; 50+ more.</div></div>
+        </div>
+        <div class="sitem">
+          <div class="sitem-top">
+            <div class="sitem-pain">Worried about lock-in</div>
+            <div class="sitem-win">
+              <div class="sitem-num">Same day</div>
+              <div class="sitem-unit">withdrawal, no exit load</div>
+            </div>
+          </div>
+          <div class="sitem-body"><div class="sitem-desc">SEBI-regulated liquid fund. Redeem any time — money hits your account within hours.</div></div>
+        </div>
+        <div class="sitem">
+          <div class="sitem-top">
+            <div class="sitem-pain">Don't want another app</div>
+            <div class="sitem-win">
+              <div class="sitem-num">1 card</div>
+              <div class="sitem-unit">spend + earn from same balance</div>
+            </div>
+          </div>
+          <div class="sitem-body"><div class="sitem-desc">Multipl is your spending account — swipe to pay anywhere. No separate transfers, no juggling.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><button class="btn">See the comparison →</button></div>
+  </div>
+</div>
+
+<!-- ════ S7 ═ BEFORE/AFTER (visual redesign) ══════════════════ -->
+<div class="pw">
+  <div class="pl">7 of 11 — Before / After</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:64%"></div></div>
+    <div class="nh"><div class="nb"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div style="width:32px"></div></div>
+    <div class="sb-body">
+      <div class="sh" style="padding-top:14px">What changes on Day 1</div>
+      <div class="ss">Same money. Completely different outcome.</div>
+      <div class="ba-wrap">
+        <div class="duo">
+          <div class="duo-card bank">
+            <div class="duo-head">Your bank <span class="duo-badge">Today</span></div>
+            <div class="metric">
+              <div class="metric-lbl">Interest rate</div>
+              <div class="metric-val">2.5% p.a.</div>
+              <div class="mbar"><div class="mbar-fill" style="width:16%"></div></div>
+            </div>
+            <div class="metric">
+              <div class="metric-lbl">Monthly yield</div>
+              <div class="metric-val">₹686</div>
+              <div class="mbar"><div class="mbar-fill" style="width:16%"></div></div>
+            </div>
+            <div class="metric">
+              <div class="metric-lbl">Brand discounts</div>
+              <div class="metric-val">None</div>
+              <div class="mbar"><div class="mbar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="metric">
+              <div class="metric-lbl">Withdrawal</div>
+              <div class="metric-val" style="font-size:12px">FD locked in</div>
+            </div>
+          </div>
+          <div class="duo-card ml">
+            <div class="duo-head" style="font-family:'Outfit',sans-serif">Multipl <span class="duo-badge">From Day 1</span></div>
+            <div class="metric">
+              <div class="metric-lbl">Interest rate</div>
+              <div class="metric-val">7% p.a.</div>
+              <div class="mbar"><div class="mbar-fill" style="width:100%"></div></div>
+            </div>
+            <div class="metric">
+              <div class="metric-lbl">Monthly yield</div>
+              <div class="metric-val">₹1,922</div>
+              <div class="mbar"><div class="mbar-fill" style="width:100%"></div></div>
+            </div>
+            <div class="metric">
+              <div class="metric-lbl">Brand discounts</div>
+              <div class="metric-val">₹1,417/mo</div>
+              <div class="mbar"><div class="mbar-fill" style="width:100%"></div></div>
+            </div>
+            <div class="metric">
+              <div class="metric-lbl">Withdrawal</div>
+              <div class="metric-val" style="font-size:12px">Same day</div>
+            </div>
+          </div>
+        </div>
+        <div class="save-card">
+          <div class="save-left">
+            <div class="save-lbl">Extra per year</div>
+            <div class="save-sub">vs your savings account</div>
+          </div>
+          <div class="save-val">₹31,826</div>
+        </div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;line-height:1.5">ICP: 24–30 yrs · ₹10–18L · ₹3.29L idle. Returns market-linked.</div>
+      </div>
+    </div>
+    <div class="foot"><button class="btn">See what others say →</button></div>
+  </div>
+</div>
+
+<!-- ════ S8 ═ SOCIAL PROOF ════════════════════════════════════ -->
+<div class="pw">
+  <div class="pl">8 of 11 — Social Proof</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:73%"></div></div>
+    <div class="sp-hero">
+      <div class="sol-hd" style="font-size:21px">Thousands earning<br>more every day</div>
+      <div class="sp-stats">
+        <div class="sp-s"><div class="sp-n">4.8★</div><div class="sp-l">App Store</div></div>
+        <div class="sp-s"><div class="sp-n">50K+</div><div class="sp-l">Active users</div></div>
+        <div class="sp-s"><div class="sp-n">₹2.1Cr</div><div class="sp-l">Earned this month</div></div>
+      </div>
+    </div>
+    <div class="sb-body">
+      <div class="tlist">
+        <div class="tcard">
+          <div class="ttop"><div class="tav">R</div><div style="flex:1"><div class="tnm">Rohan M.</div><div class="tper">SWE · Bangalore · 27 yrs</div></div><div class="tstars">★★★★★</div></div>
+          <div class="tbody">Had ₹80K sitting idle. First month on Multipl: ₹467 interest + ₹340 Swiggy savings. I cannot go back to a normal savings account.</div>
+        </div>
+        <div class="tcard">
+          <div class="ttop"><div class="tav">P</div><div style="flex:1"><div class="tnm">Priya S.</div><div class="tper">Marketing · Mumbai · 29 yrs</div></div><div class="tstars">★★★★★</div></div>
+          <div class="tbody">Sceptical of another fintech app. But it's SEBI-regulated — not a wallet. Set up in 4 minutes, now I don't think about it at all.</div>
+        </div>
+        <div class="tcard">
+          <div class="ttop"><div class="tav">A</div><div style="flex:1"><div class="tnm">Arjun K.</div><div class="tper">Freelancer · Delhi · 26 yrs</div></div><div class="tstars">★★★★★</div></div>
+          <div class="tbody">Irregular income so I needed flexibility. Instant withdrawal was the deal-maker. Saved ₹890 on Amazon last week alone.</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><button class="btn">Calculate my number →</button></div>
+  </div>
+</div>
+
+<!-- ════ S9 ═ AGE + INCOME ════════════════════════════════════ -->
+<div class="pw">
+  <div class="pl">9 of 11 — Personalise</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:82%"></div></div>
+    <div class="pers-hero">
+      <div class="sol-hd" style="font-size:22px">Personalise your<br>loss report</div>
+      <div class="sol-sd" style="font-size:13px;color:rgba(92,51,0,.65)">Two taps — we calculate your exact annual number.</div>
+    </div>
+    <div class="sb-body">
+      <div class="pad">
+        <div class="gsec"><div class="glbl">Your age</div>
+          <div class="pg"><div class="popt">18–23</div><div class="popt sel">24–30</div><div class="popt">31–35</div><div class="popt">35+</div></div>
+        </div>
+        <div class="gsec"><div class="glbl">Annual income</div>
+          <div class="pg"><div class="popt">Under 6L</div><div class="popt">6–10L</div><div class="popt sel">10–18L</div><div class="popt">18–30L</div><div class="popt">Above 30L</div></div>
+        </div>
+        <div class="preview">
+          <div class="prev-lbl">Your total annual loss</div>
+          <div class="prev-num">₹31,826</div>
+          <div class="prev-sub">24–30 yrs · 10–18L · ₹3.29L idle balance</div>
+          <div class="prev-split">
+            <div class="psplit"><div class="psplit-l">Yield loss</div><div class="psplit-v">₹14,826</div></div>
+            <div class="psplit"><div class="psplit-l">Brand miss</div><div class="psplit-v">₹17,000</div></div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:10px;color:var(--t3);line-height:1.5">Based on your cohort's spending patterns. Illustrative — returns are market-linked and not guaranteed. No personal data collected.</div>
+      </div>
+    </div>
+    <div class="foot"><button class="btn">Show my full report →</button></div>
+  </div>
+</div>
+
+<!-- ════ S10 ═ LEAKAGE CALCULATOR ════════════════════════════ -->
+<div class="pw">
+  <div class="pl">10 of 11 — Leakage Report</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:91%"></div></div>
+    <div class="lc-hero">
+      <div class="lc-h">Your personal<br>loss report</div>
+      <div class="lc-s">Where your money leaks — every year</div>
+      <div class="cohort-pill">24–30 yrs · 10–18L income</div>
+    </div>
+    <div class="sb-body">
+      <!-- total hero -->
+      <div class="lc-top">
+        <div class="lc-loss-lbl">Total annual loss</div>
+        <div class="lc-loss-val">₹31,826</div>
+        <div class="lc-loss-sub">by keeping spending money in a 2.5% savings account</div>
+      </div>
+      <!-- split -->
+      <div class="lc-split">
+        <div class="lcs-card lcs-yield"><div class="lcs-l">Yield loss</div><div class="lcs-v">₹14,826</div><div class="lcs-s">2.5% vs 7% gap</div></div>
+        <div class="lcs-card lcs-brand"><div class="lcs-l">Brand discount miss</div><div class="lcs-v">₹17,000</div><div class="lcs-s">Swiggy, Amazon &amp; more</div></div>
+      </div>
+      <!-- yield breakdown -->
+      <div class="bdt">
+        <div class="bdt-title"><span>Yield loss breakdown</span><span>Loss / yr</span></div>
+        <div class="bdr"><div><div class="bdcat">Monthly spends</div><div style="font-size:10px;color:var(--t3)">Food · Grocery · Rides · Rent</div></div><div class="bdidle">2 mo idle</div><div class="bdloss">₹2,547</div></div>
+        <div class="bdr"><div><div class="bdcat">Shopping</div><div style="font-size:10px;color:var(--t3)">Apparel · Electronics</div></div><div class="bdidle">4 mo idle</div><div class="bdloss">₹1,620</div></div>
+        <div class="bdr"><div><div class="bdcat">Travel</div><div style="font-size:10px;color:var(--t3)">Flights · Hotels</div></div><div class="bdidle">9 mo idle</div><div class="bdloss">₹2,109</div></div>
+        <div class="bdr"><div><div class="bdcat">Spending buffer</div><div style="font-size:10px;color:var(--t3)">Always-on reserve</div></div><div class="bdidle">12 mo</div><div class="bdloss">₹8,550</div></div>
+        <div class="bdt-total"><div class="bdt-total-l">Yield loss total</div><div class="bdt-total-v">₹14,826</div></div>
+      </div>
+      <!-- brand breakdown -->
+      <div class="bdt2">
+        <div class="bdt2-title"><span>Brand discount you're missing</span><span>/ yr</span></div>
+        <div class="bdr2"><div class="bdcat2">Food delivery</div><div class="bddis">10% off</div><div class="bdsave">₹6,000</div></div>
+        <div class="bdr2"><div class="bdcat2">Groceries</div><div class="bddis">8% off</div><div class="bdsave">₹5,000</div></div>
+        <div class="bdr2"><div class="bdcat2">Online shopping</div><div class="bddis">7% off</div><div class="bdsave">₹4,000</div></div>
+        <div class="bdr2"><div class="bdcat2">Other brands</div><div class="bddis">5–12% off</div><div class="bdsave">₹2,000</div></div>
+        <div class="bdt2-total"><div class="bdt2-total-l">Discount miss total</div><div class="bdt2-total-v">₹17,000</div></div>
+      </div>
+      <!-- bank vs multipl -->
+      <div class="vs-row">
+        <div class="vsc bk"><div class="vsc-l">Bank gives you</div><div class="vsc-v">₹8,237</div><div class="vsc-s">/ year · 2.5% yield only</div></div>
+        <div class="vsc ml"><div class="vsc-l">Multipl gives you</div><div class="vsc-v">₹40,063</div><div class="vsc-s">/ year · 7% + discounts</div></div>
+      </div>
+      <div class="disc-note">Illustrative. Returns market-linked, not guaranteed. Mutual fund investments subject to market risks. Engine v2, cohort 24–30 / 10–18L.</div>
+    </div>
+    <div class="foot"><button class="btn">Start earning ₹40,063/year →</button></div>
+  </div>
+</div>
+
+<!-- ════ S11 ═ ACCOUNT SETUP ══════════════════════════════════ -->
+<div class="pw">
+  <div class="pl">11 of 11 — Account Setup</div>
+  <div class="ph">
+    <div class="sbar warm"><span style="font-family:'Satoshi',sans-serif;font-weight:700">9:41</span><div style="display:flex;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2"><path d="M1.5 8.5C4.5 5.5 8 4 12 4s7.5 1.5 10.5 4.5M5 12c2-2 4.3-3 7-3s5 1 7 3M8.5 15.5C9.8 14.2 10.8 13.5 12 13.5s2.2.7 3.5 2M12 19h.01" stroke-linecap="round"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="#5C3300"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11h1v3h-1z"/></svg></div></div>
+    <div class="prog"><div class="pf" style="width:100%"></div></div>
+    <div class="acc-hero">
+      <div class="acc-brand">Multipl</div>
+      <div class="acc-h">One last step to unlock<br>your earnings</div>
+      <div class="acc-stars">★★★★★</div>
+      <div class="acc-rat">4.8 · 2,400+ reviews</div>
+    </div>
+    <div class="sb-body">
+      <div class="pad">
+        <div class="unlock">
+          <div class="ul-lbl">You're about to start earning</div>
+          <div class="ul-val">₹40,063 / year</div>
+          <div class="ul-sub">vs ₹8,237 at your bank · you gain ₹31,826/yr</div>
+        </div>
+        <div class="feats">
+          <div class="feat"><div class="fck"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>7% p.a. interest — credited monthly, automatically</div>
+          <div class="feat"><div class="fck"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>₹17,000/yr in brand discounts — Swiggy, Amazon &amp; 50+</div>
+          <div class="feat"><div class="fck"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Withdraw same-day — SEBI-regulated, no lock-in</div>
+        </div>
+        <div class="fw"><label class="flabel">Full name</label><input class="tf" type="text" placeholder="Rohan Mehta"></div>
+        <div class="fw"><label class="flabel">Email address</label><input class="tf" type="email" placeholder="rohan@gmail.com"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><hr style="flex:1;border:none;border-top:1px solid var(--bd)"><span style="font-size:12px;color:var(--t3)">or link</span><hr style="flex:1;border:none;border-top:1px solid var(--bd)"></div>
+        <div class="soc-row">
+          <div class="sbtn"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66 2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Google</div>
+          <div class="sbtn"><svg viewBox="0 0 24 24" width="16" height="16" fill="#000"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.42.07 2.4.74 3.23.8 1.22-.24 2.4-.93 3.72-.84 1.58.12 2.77.75 3.55 1.9-3.27 1.94-2.5 5.9.58 7.05-.68 1.65-1.54 3.27-3.08 3.97zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>Apple</div>
+        </div>
+        <button class="btn">Create my account →</button>
+        <div class="disc2">By signing up you agree to our Terms &amp; Privacy Policy.<br>SEBI-registered · RBI-compliant · Your money is always safe.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /storyboard -->
+
+<script>
+function slide(id, idx) {
+  const car = document.getElementById('c' + id);
+  if (!car) return;
+  car.style.transform = 'translateX(-' + (idx * 375) + 'px)';
+  const phone = car.closest('.ph');
+  phone.querySelectorAll('.dots').forEach(dg => {
+    dg.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === idx));
+  });
+}
+</script>
+</body>
+</html>
