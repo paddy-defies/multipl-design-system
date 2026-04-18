@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multipl — Home Screen v5 (Version A)</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --hero-grad: linear-gradient(180deg, #FFA914 0%, #FFC91A 28%, #FFE565 62%, #FFF6D9 92%, #FFFFFF 100%);
+  --cta:       linear-gradient(180deg, #FDEE5A, #F9B824);
+  --cta-b:     #C9A028; --cta-c: #514104;
+  --cta-sh:    0px 5px 10px rgba(132,99,7,.16), inset 0px 2px 0px rgba(255,252,220,.85);
+  --th: #5C3300; --t1: #1A1A1A; --t2: #595959; --t3: #767676; --td: #ADADAD;
+  --gs: #856B10; --gb: #FEDC67; --gf: #FEF3D0;
+  --bc: #EFE2BF; --bd: #E0E0E0;
+  --ok: #1A7A3C; --okb: #EDFAF1;
+  --cs: 0px 2px 6px rgba(180,120,20,.08), 0px 8px 24px rgba(180,120,20,.06);
+  --r8: 8px; --r12: 12px; --r16: 16px; --rf: 999px;
+  --font-d: 'Outfit', system-ui, sans-serif;
+  --font-b: 'Satoshi', system-ui, sans-serif;
+  --font-m: 'DM Mono', monospace;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-b);
+  background: #D8D2C8;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 24px 80px;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* ── PAGE LABEL ─────────────────────────────────────────────── */
+.page-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.page-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: #5C3300;
+  background: #fff; border: 1px solid var(--bd);
+  padding: 4px 12px; border-radius: var(--rf);
+}
+
+/* ── PHONE FRAME ────────────────────────────────────────────── */
+.phone {
+  width: 375px; height: 812px;
+  border-radius: 44px;
+  background: #fff;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 0 10px #1A1A1A, 0 0 0 12px #3A3A3A, 0 28px 70px rgba(0,0,0,.38);
+  display: flex; flex-direction: column;
+}
+.phone::before {
+  content: '';
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  width: 120px; height: 32px;
+  background: #1A1A1A; border-radius: 20px; z-index: 50;
+}
+
+/* Status bar */
+.sbar {
+  height: 44px; flex: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+  font-size: 12px; font-weight: 700;
+  position: relative; z-index: 10;
+  color: var(--th);
+  background: #FFA914;
+}
+
+/* Scrollable screen content */
+.screen {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  background: #fff;
+  position: relative;
+}
+.screen::-webkit-scrollbar { width: 0; }
+
+/* ── ANIMATIONS ─────────────────────────────────────────────── */
+@keyframes numberPopA {
+  0%   { transform: scale(.96); }
+  60%  { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+@keyframes floatA {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-3px); }
+}
+@keyframes bobA {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-2px); }
+}
+@keyframes twinkleA {
+  0%,100% { opacity: .35; transform: scale(.85); }
+  50%     { opacity: 1;   transform: scale(1.08); }
+}
+@keyframes shineA {
+  0%        { transform: translateX(-120%); }
+  60%,100%  { transform: translateX(220%); }
+}
+@keyframes pulseDotA {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%     { opacity: .4; transform: scale(.85); }
+}
+@keyframes confettiA {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translateY(-60px) rotate(180deg); opacity: 0; }
+}
+@keyframes flowDashA {
+  to { stroke-dashoffset: -36; }
+}
+@keyframes meterShimmerA {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes ringPulseA {
+  0%   { box-shadow: 0 0 0 0 rgba(18,93,7,.28); }
+  70%  { box-shadow: 0 0 0 8px rgba(18,93,7,0); }
+  100% { box-shadow: 0 0 0 0 rgba(18,93,7,0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ── HERO ───────────────────────────────────────────────────── */
+.hero {
+  background: var(--hero-grad);
+  padding: 54px 16px 22px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-dots {
+  position: absolute; inset: 0; opacity: .35; pointer-events: none;
+  background-image:
+    radial-gradient(circle at 15% 18%, rgba(255,255,255,.6) 1px, transparent 2px),
+    radial-gradient(circle at 82% 38%, rgba(255,255,255,.5) 1px, transparent 2px),
+    radial-gradient(circle at 40% 68%, rgba(255,255,255,.45) 1px, transparent 2px);
+  background-size: 180px 180px, 220px 220px, 260px 260px;
+}
+.hero-top {
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; z-index: 1;
+}
+.hero-logo {
+  display: flex; align-items: center; gap: 10px;
+}
+.hero-logo-mark {
+  width: 36px; height: 36px; border-radius: var(--rf);
+  background: #0E0A00;
+  display: flex; align-items: center; justify-content: center;
+  color: #FFC91A; font-family: var(--font-d); font-weight: 700; font-size: 18px;
+}
+.hero-logo-name {
+  font-family: var(--font-d); font-weight: 700; font-size: 20px; color: #1A1A1A;
+}
+.hero-actions-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.hero-icon-btn {
+  width: 40px; height: 40px; border-radius: var(--rf);
+  background: rgba(255,255,255,.7); border: 1px solid rgba(92,51,0,.14);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.hero-avatar {
+  width: 40px; height: 40px; border-radius: var(--rf);
+  background: linear-gradient(135deg, #FEDC67, #856B10);
+  border: 2px solid rgba(255,255,255,.8);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-d); font-weight: 700; color: #5C3300; font-size: 15px;
+}
+
+/* Balance */
+.hero-balance-wrap {
+  margin-top: 28px; text-align: center; position: relative; z-index: 1;
+}
+.hero-balance-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-b); font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: #5C3300; opacity: .8;
+}
+.hero-balance-amount {
+  font-family: var(--font-d); font-weight: 700; font-size: 52px; line-height: 1.05;
+  color: #2B1700; margin-top: 6px; letter-spacing: -.02em;
+  animation: numberPopA 900ms cubic-bezier(.2,.9,.25,1.2) 1 both;
+}
+.hero-balance-paise {
+  font-size: 26px; color: #2B1700; opacity: .55;
+}
+.hero-pills-row {
+  margin-top: 14px;
+  display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+}
+.gains-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #94FA84; color: #125D07;
+  padding: 7px 14px; border-radius: var(--rf);
+  font-family: var(--font-b); font-weight: 700; font-size: 13px;
+  box-shadow: 0 2px 8px rgba(18,93,7,.18);
+  animation: ringPulseA 2.6s ease-out infinite;
+}
+.add-money-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 34px; padding: 0 14px;
+  background: #0E0A00; color: #FFE565;
+  border: none; border-radius: var(--rf); cursor: pointer;
+  font-family: var(--font-b); font-weight: 700; font-size: 13px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,252,220,.18);
+}
+
+/* UPI glass strip */
+.upi-strip {
+  margin-top: 22px;
+  padding: 8px;
+  background: rgba(255,255,255,.55);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.8); border-radius: var(--rf);
+  display: flex; align-items: center; justify-content: space-around;
+  box-shadow: 0 4px 14px rgba(132,99,7,.12);
+  position: relative; z-index: 1;
+}
+.upi-action {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 10px; flex: 1;
+}
+.upi-icon-wrap {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 3px rgba(132,99,7,.12);
+  color: #856B10;
+}
+.upi-label {
+  font-family: var(--font-b); font-size: 11px; font-weight: 600; color: #5C3300;
+}
+
+/* Flow lines anchor */
+.flow-source {
+  position: absolute; left: 50%; bottom: 6px;
+  width: 2px; height: 2px; transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* ── ACTION TILES ───────────────────────────────────────────── */
+.actions-row {
+  padding: 18px 16px 0;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+  position: relative; z-index: 1;
+}
+.action-tile {
+  padding: 14px 10px 12px;
+  border-radius: 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: pointer; border: none; text-align: center;
+}
+.action-tile.gold {
+  background: linear-gradient(180deg, #FEF3D0 0%, #FEDC67 100%);
+  border: 1px solid #EFE2BF;
+  box-shadow: 0 4px 10px rgba(132,99,7,.16);
+}
+.action-tile.neutral {
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.action-icon-wrap {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.action-tile.gold .action-icon-wrap { background: rgba(255,255,255,.7); color: #5C3300; }
+.action-tile.neutral .action-icon-wrap { background: #FFF6DA; color: #5C3300; }
+.action-label {
+  font-family: var(--font-b); font-weight: 700; font-size: 13px;
+  color: #1A1A1A; line-height: 1.15;
+}
+.action-sub {
+  font-family: var(--font-b); font-weight: 500; font-size: 10px; color: #595959;
+}
+
+/* ── FLOW LINES SVG ─────────────────────────────────────────── */
+.flow-svg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  overflow: visible;
+}
+
+/* ── INVESTED / AVAILABLE ───────────────────────────────────── */
+.inv-avail {
+  margin: 16px 16px 0;
+  display: flex;
+  background: #FBFAF7; border: 1px solid #EFE2BF; border-radius: var(--r12);
+  overflow: hidden;
+}
+.inv-col {
+  flex: 1; padding: 12px 14px;
+}
+.inv-col + .inv-col { border-left: 1px solid #EFE2BF; }
+.inv-col-label {
+  font-family: var(--font-b); font-size: 11px; font-weight: 600; color: #767676;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+.inv-col-value {
+  font-family: var(--font-d); font-weight: 700; font-size: 16px; color: #1A1A1A;
+  margin-top: 4px;
+}
+
+/* ── BEATING BANKS ──────────────────────────────────────────── */
+.banks-wrap {
+  margin: 16px 16px 0;
+  position: relative; overflow: hidden;
+  border-radius: 18px; padding: 2px;
+  background: linear-gradient(135deg, #FDEE5A 0%, #F9B824 40%, #94FA84 100%);
+  box-shadow: 0 10px 28px rgba(132,99,7,.14);
+}
+.banks-inner {
+  position: relative; overflow: hidden;
+  background: #FFFDF4; border-radius: 16px;
+}
+.confetti-host {
+  position: absolute; top: 14px; right: 18px;
+  width: 0; height: 0; pointer-events: none;
+}
+.confetti-piece {
+  position: absolute;
+  width: 6px; height: 8px; border-radius: 1px;
+  animation: confettiA 1.6s ease-out both;
+}
+.banks-header { padding: 18px 16px 10px; position: relative; }
+.banks-title-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.banks-title {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-b); font-weight: 800; font-size: 11px;
+  text-transform: uppercase; letter-spacing: .1em; color: #856B10;
+}
+.trophy-icon {
+  display: inline-flex; width: 22px; height: 22px; border-radius: var(--rf);
+  background: linear-gradient(135deg, #FDEE5A, #F9B824);
+  align-items: center; justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255,252,220,.9), 0 2px 4px rgba(132,99,7,.25);
+  animation: bobA 2.4s ease-in-out infinite;
+}
+.banks-period { font-family: var(--font-m); font-size: 11px; color: #767676; }
+.banks-lead-row {
+  margin-top: 10px;
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+}
+.banks-lead-amount {
+  font-family: var(--font-d); font-weight: 800; font-size: 38px; line-height: 1;
+  color: #1A7A3C; letter-spacing: -.02em;
+  animation: numberPopA 900ms cubic-bezier(.2,.9,.25,1.2) 1 both;
+}
+.banks-lead-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #EDFAF1; color: #1A7A3C;
+  padding: 4px 10px; border-radius: var(--rf);
+  font-family: var(--font-b); font-weight: 800; font-size: 12px;
+}
+.banks-copy {
+  font-family: var(--font-b); font-size: 13.5px; color: #3B2E05;
+  margin-top: 6px; line-height: 1.4;
+}
+/* Meter */
+.meter-section { padding: 0 16px 14px; }
+.meter-header {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-b); font-size: 11px; font-weight: 700; color: #595959;
+  text-transform: uppercase; letter-spacing: .09em; margin-bottom: 8px;
+}
+.meter-multipl { display: inline-flex; align-items: center; gap: 6px; color: #856B10; }
+.meter-bank    { display: inline-flex; align-items: center; gap: 6px; }
+.meter-bar {
+  position: relative; height: 40px; border-radius: 12px;
+  background: #F5F0EB; overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+}
+.meter-fill {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, #FDEE5A 0%, #F9B824 85%, #FFA914 100%);
+  border-radius: 12px;
+  transition: width 600ms cubic-bezier(.16,1,.3,1);
+}
+.meter-shimmer-clip {
+  position: absolute; top: 0; bottom: 0; left: 0;
+  overflow: hidden; border-radius: 12px; pointer-events: none;
+}
+.meter-shimmer {
+  position: absolute; top: 0; bottom: 0; width: 45%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.75) 50%, transparent 100%);
+  animation: meterShimmerA 2.8s ease-in-out infinite;
+}
+.meter-labels {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px;
+  font-family: var(--font-m); font-size: 12px; font-weight: 500;
+}
+.meter-label-multipl { color: #514104; font-weight: 800; }
+.meter-label-bank    { color: #78716C; }
+.meter-chips {
+  display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;
+}
+.meter-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #FFF8DA; border: 1px solid #FEEBA9;
+  padding: 4px 9px; border-radius: var(--rf);
+  font-family: var(--font-b); font-size: 11px; font-weight: 600; color: #5C3300;
+}
+.meter-chip strong { color: #1A1A1A; }
+
+/* ── BRAND CARDS ────────────────────────────────────────────── */
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 16px 10px;
+}
+.section-head-title {
+  font-family: var(--font-d); font-weight: 700; font-size: 17px; color: #1A1A1A;
+}
+.section-head-action {
+  font-family: var(--font-b); font-size: 13px; font-weight: 600; color: #856B10;
+  cursor: pointer; background: none; border: none;
+}
+.brands-scroll {
+  padding: 0 16px 4px;
+  display: flex; gap: 10px;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.brands-scroll::-webkit-scrollbar { height: 0; }
+.brand-card {
+  flex: 0 0 164px; border-radius: 14px; overflow: hidden;
+  border: 1px solid #EFE2BF; background: #fff;
+  box-shadow: var(--cs); cursor: pointer;
+  scroll-snap-align: start;
+}
+.brand-header {
+  height: 76px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-d); font-weight: 700; font-size: 22px;
+  position: relative; overflow: hidden;
+}
+.brand-shine {
+  position: absolute; top: 0; bottom: 0; width: 40%;
+  background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,.45) 50%, transparent 100%);
+}
+.brand-body { padding: 10px; }
+.brand-name {
+  font-family: var(--font-b); font-size: 11px; font-weight: 700;
+  color: #595959; text-transform: uppercase; letter-spacing: .08em;
+}
+.brand-price-row {
+  display: flex; align-items: baseline; gap: 6px; margin-top: 4px;
+}
+.brand-price     { font-family: var(--font-d); font-weight: 700; font-size: 16px; color: #1A1A1A; }
+.brand-original  { font-family: var(--font-m); font-size: 11px; color: #ADADAD; text-decoration: line-through; }
+.brand-discount  {
+  margin-top: 6px;
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #EDFAF1; color: #1A7A3C;
+  padding: 2px 8px; border-radius: var(--rf);
+  font-family: var(--font-b); font-size: 11px; font-weight: 700;
+}
+
+/* ── REFERRAL CARD ──────────────────────────────────────────── */
+.referral-wrap { padding: 20px 16px 0; }
+.referral-card {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #2B1700 0%, #4A2C00 55%, #6B3E00 100%);
+  border-radius: 16px; padding: 20px; color: #FFE565;
+}
+.referral-shine {
+  position: absolute; top: 0; bottom: 0; width: 35%;
+  background: linear-gradient(110deg, transparent 0%, rgba(255,229,101,.18) 50%, transparent 100%);
+  animation: shineA 6s ease-in-out 1s infinite;
+  pointer-events: none;
+}
+.sparkle-1 {
+  position: absolute; top: 12px; right: 14px; color: #FFE565;
+  animation: twinkleA 2.2s ease-in-out infinite;
+}
+.sparkle-2 {
+  position: absolute; bottom: 14px; right: 52px; color: #FFE565;
+  animation: twinkleA 2.6s ease-in-out .8s infinite;
+}
+.sparkle-3 {
+  position: absolute; top: 58px; right: 38px; color: #FFE565;
+  animation: twinkleA 3.1s ease-in-out 1.6s infinite;
+}
+.referral-live-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #94FA84; color: #125D07;
+  padding: 3px 10px; border-radius: var(--rf);
+  font-family: var(--font-b); font-weight: 700; font-size: 10px;
+  text-transform: uppercase; letter-spacing: .09em;
+  position: relative;
+}
+.referral-live-dot {
+  width: 6px; height: 6px; border-radius: var(--rf);
+  background: currentColor;
+  animation: pulseDotA 1.4s ease-in-out infinite;
+}
+.referral-title {
+  font-family: var(--font-d); font-weight: 700; font-size: 22px; color: #FFE565;
+  margin-top: 10px; letter-spacing: -.01em; position: relative;
+}
+.referral-sub {
+  font-family: var(--font-b); font-weight: 500; font-size: 13px;
+  color: #FFED7A; opacity: .8; margin-top: 2px; position: relative;
+}
+.referral-bottom {
+  margin-top: 14px; display: flex; align-items: center; gap: 12px; position: relative;
+}
+.referral-btn {
+  height: 40px; padding: 0 18px; border: none; cursor: pointer;
+  background: var(--cta); color: #514104;
+  font-family: var(--font-b); font-weight: 700; font-size: 13px;
+  border-radius: var(--rf);
+  box-shadow: 0 5px 12px rgba(0,0,0,.25), inset 0 2px 0 rgba(255,252,220,.85);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.avatar-stack { display: flex; align-items: center; gap: 4px; }
+.avatar-stack-item {
+  width: 22px; height: 22px; border-radius: var(--rf);
+  border: 2px solid #2B1700; margin-left: -8px;
+}
+.avatar-stack-item:first-child { margin-left: 0; }
+.avatar-stack-label {
+  margin-left: 6px;
+  font-family: var(--font-b); font-weight: 600; font-size: 11px; color: #FFED7A;
+}
+
+/* ── BOTTOM NAV ─────────────────────────────────────────────── */
+.bottom-nav {
+  flex: none; height: 83px;
+  background: #fff; border-top: 1px solid var(--bd);
+  display: flex; align-items: flex-start; padding-top: 8px;
+  position: relative;
+}
+.nav-tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding-top: 4px; cursor: pointer; background: none; border: none;
+}
+.nav-tab-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.nav-tab-label { font-family: var(--font-b); font-size: 11px; font-weight: 500; color: #808080; }
+.nav-tab.active .nav-tab-label { color: #998300; }
+.nav-tab.active .nav-tab-bg {
+  position: absolute; border-radius: var(--rf);
+  background: rgba(255,219,0,.15);
+  width: 56px; height: 32px; top: 6px;
+}
+/* Floating Scan button */
+.nav-scan-wrap {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  position: relative; top: -20px;
+}
+.nav-scan-btn {
+  width: 54px; height: 54px; border-radius: var(--rf);
+  background: #0E0A00;
+  border: 3px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.28);
+}
+.nav-scan-label { font-family: var(--font-b); font-size: 11px; font-weight: 600; color: #808080; margin-top: 4px; }
+
+/* spacer at bottom of scroll */
+.scroll-end { height: 28px; }
+
+/* ── SVG ICON HELPER ────────────────────────────────────────── */
+.ph { display: inline-flex; align-items: center; justify-content: center; }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+  <div class="page-label">Home Screen · V5 · Version A · Warm Gold</div>
+  <div class="phone">
+    <!-- Status bar -->
+    <div class="sbar">
+      <span>9:41</span>
+      <span style="display:flex;gap:5px;align-items:center">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="#5C3300"><rect x="0" y="3" width="3" height="9" rx="1"/><rect x="4.5" y="2" width="3" height="10" rx="1"/><rect x="9" y="0" width="3" height="12" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity=".3"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#5C3300" stroke-width="1.5"><path d="M8 9.5a1 1 0 100 2 1 1 0 000-2z"/><path d="M4.5 6.8C5.7 5.7 6.8 5 8 5s2.3.7 3.5 1.8"/><path d="M1.5 4C3.5 2.2 5.6 1 8 1s4.5 1.2 6.5 3"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="3.5" stroke="#5C3300" stroke-opacity=".35"/><rect x="2" y="2" width="18" height="8" rx="2" fill="#5C3300"/><path d="M23 4.5v3a1.5 1.5 0 000-3z" fill="#5C3300" opacity=".4"/></svg>
+      </span>
+    </div>
+
+    <!-- Scrollable screen -->
+    <div class="screen" id="mainScreen">
+
+      <!-- ═══════════════════════════════════
+           FLOW WRAP: hero + action tiles
+           (SVG overlay measured from this)
+           ═══════════════════════════════════ -->
+      <div id="flowWrap" style="position:relative">
+
+        <!-- HERO -->
+        <div class="hero">
+          <div class="hero-dots"></div>
+
+          <!-- Top row -->
+          <div class="hero-top">
+            <div class="hero-logo">
+              <div class="hero-logo-mark">✳</div>
+              <div class="hero-logo-name">multipl</div>
+            </div>
+            <div class="hero-actions-row">
+              <button class="hero-icon-btn">
+                <!-- Bell icon -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
+                </svg>
+              </button>
+              <div class="hero-avatar">A</div>
+            </div>
+          </div>
+
+          <!-- Balance -->
+          <div class="hero-balance-wrap">
+            <div class="hero-balance-label">
+              Spending account
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C3300" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <div class="hero-balance-amount" id="balanceDisplay">
+              ₹<span id="balanceInt">0</span><span class="hero-balance-paise">.25</span>
+            </div>
+            <div class="hero-pills-row">
+              <div class="gains-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#125D07"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                + ₹4,275 lifetime gains
+              </div>
+              <button class="add-money-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFE565" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add money
+              </button>
+            </div>
+          </div>
+
+          <!-- UPI glass strip -->
+          <div class="upi-strip">
+            <button class="upi-action">
+              <div class="upi-icon-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/></svg>
+              </div>
+              <span class="upi-label">Scan</span>
+            </button>
+            <button class="upi-action">
+              <div class="upi-icon-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </div>
+              <span class="upi-label">Send</span>
+            </button>
+            <button class="upi-action">
+              <div class="upi-icon-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </div>
+              <span class="upi-label">History</span>
+            </button>
+            <button class="upi-action">
+              <div class="upi-icon-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#856B10" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/></svg>
+              </div>
+              <span class="upi-label">Receive</span>
+            </button>
+          </div>
+
+          <!-- Flow source anchor -->
+          <span data-flow-source class="flow-source" aria-hidden="true"></span>
+        </div><!-- /hero -->
+
+        <!-- ACTION TILES -->
+        <div class="actions-row">
+          <button class="action-tile gold" data-flow-target="0">
+            <div class="action-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#5C3300"><path d="M20 12v10H4V12M22 7H2v5h20V7zM12 22V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+            </div>
+            <div class="action-label">Get gift cards</div>
+            <div class="action-sub">Up to 15% off</div>
+          </button>
+          <button class="action-tile neutral" data-flow-target="1">
+            <div class="action-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#856B10"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/></svg>
+            </div>
+            <div class="action-label">Pay via UPI</div>
+            <div class="action-sub">Instant</div>
+          </button>
+          <button class="action-tile neutral" data-flow-target="2">
+            <div class="action-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#856B10"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0v20M2 12h20"/><path d="M12 2C9.3 7 8 9.5 8 12s1.3 5 4 10M12 2c2.7 5 4 7.5 4 10s-1.3 5-4 10"/></svg>
+            </div>
+            <div class="action-label">Withdraw</div>
+            <div class="action-sub">24×7 · instant</div>
+          </button>
+        </div>
+
+        <!-- SVG flow lines (populated by JS) -->
+        <svg class="flow-svg" id="flowSvg" style="position:absolute;inset:0;pointer-events:none;z-index:0;overflow:visible"></svg>
+
+      </div><!-- /flowWrap -->
+
+      <!-- INVESTED / AVAILABLE -->
+      <div class="inv-avail">
+        <div class="inv-col">
+          <div class="inv-col-label">Invested</div>
+          <div class="inv-col-value">₹70,589.59</div>
+        </div>
+        <div class="inv-col">
+          <div class="inv-col-label">Instantly available</div>
+          <div class="inv-col-value">₹63,530.00</div>
+        </div>
+      </div>
+
+      <!-- BEATING BANKS -->
+      <div class="banks-wrap">
+        <div class="banks-inner">
+          <!-- Confetti host -->
+          <div class="confetti-host" id="confettiHost"></div>
+
+          <div class="banks-header">
+            <div class="banks-title-row">
+              <div class="banks-title">
+                <div class="trophy-icon">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="#5C3300"><path d="M8 21v-1a4 4 0 014-4 4 4 0 014 4v1M12 16V8M5 4h2M17 4h2M7 4v4a5 5 0 005 5 5 5 0 005-5V4M7 4H5v2a7 7 0 002 4.9M17 4h2v2a7 7 0 01-2 4.9"/></svg>
+                </div>
+                You're ahead of your bank
+              </div>
+              <div class="banks-period">This year</div>
+            </div>
+
+            <div class="banks-lead-row">
+              <div class="banks-lead-amount" id="leadAmount">+₹0</div>
+              <div class="banks-lead-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#1A7A3C"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                <span id="leadPct">0</span>% lead
+              </div>
+            </div>
+            <div class="banks-copy">
+              Nice — your money's working <strong>40× harder</strong> here than a savings a/c.
+            </div>
+          </div>
+
+          <div class="meter-section">
+            <div class="meter-header">
+              <span class="meter-multipl">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#856B10"><path d="M12 3l1.09 3.36L16.5 5l-2.5 2.5 1.09 3.36L12 9l-3.09 1.86L10 7.5 7.5 5l3.41 1.36L12 3z"/></svg>
+                Multipl
+              </span>
+              <span class="meter-bank">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#595959" stroke-width="2"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="22" x2="6" y2="11"/><line x1="10" y1="22" x2="10" y2="11"/><line x1="14" y1="22" x2="14" y2="11"/><line x1="18" y1="22" x2="18" y2="11"/><polygon points="12 2 2 7 22 7"/></svg>
+                Bank
+              </span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" id="meterFill" style="width:3%"></div>
+              <div class="meter-shimmer-clip" id="meterShimmerClip" style="right:97%">
+                <div class="meter-shimmer"></div>
+              </div>
+              <div class="meter-labels">
+                <span class="meter-label-multipl" id="meterMultipl">₹4,275</span>
+                <span class="meter-label-bank" id="meterBank">₹108</span>
+              </div>
+            </div>
+            <div class="meter-chips">
+              <div class="meter-chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="#856B10"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8.5 9.5A3.5 3.5 0 0112 8a3.5 3.5 0 013.5 3.5c0 3-7 3-7 6A3.5 3.5 0 0012 21a3.5 3.5 0 003.5-3.5" stroke="white" stroke-width="1.5" fill="none"/></svg>
+                Returns <strong>₹4,275</strong>
+              </div>
+              <div class="meter-chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="#856B10"><path d="M20 12v10H4V12M22 7H2v5h20V7zM12 22V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+                Discounts <strong>₹3,972</strong>
+              </div>
+              <div class="meter-chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="#856B10"><path d="M8 21v-1a4 4 0 014-4 4 4 0 014 4v1M12 16V8M5 4h2M17 4h2M7 4v4a5 5 0 005 5 5 5 0 005-5V4"/></svg>
+                Beats bank by <strong>97%</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /banks-wrap -->
+
+      <!-- BRAND GIFT CARDS -->
+      <div class="section-head">
+        <div class="section-head-title">Redeem for brand gift cards</div>
+        <button class="section-head-action">See all</button>
+      </div>
+      <div class="brands-scroll" id="brandsScroll">
+        <!-- Cards injected by JS -->
+      </div>
+
+      <!-- REFERRAL -->
+      <div class="referral-wrap">
+        <div class="referral-card">
+          <div class="referral-shine"></div>
+          <div class="sparkle-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="#FFE565"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/></svg></div>
+          <div class="sparkle-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="#FFE565"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/></svg></div>
+          <div class="sparkle-3"><svg width="10" height="10" viewBox="0 0 24 24" fill="#FFE565"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/></svg></div>
+
+          <div class="referral-live-pill">
+            <div class="referral-live-dot"></div>
+            2,434 others earning today
+          </div>
+          <div class="referral-title">Gift a friend ₹250 today</div>
+          <div class="referral-sub">Put them on track to save ₹30,000/year.</div>
+          <div class="referral-bottom">
+            <button class="referral-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#514104"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Invite friends
+            </button>
+            <div class="avatar-stack">
+              <div class="avatar-stack-item" style="background:#FFA914;animation:bobA 2.6s ease-in-out 0s infinite"></div>
+              <div class="avatar-stack-item" style="background:#F97316;animation:bobA 2.6s ease-in-out .18s infinite"></div>
+              <div class="avatar-stack-item" style="background:#94FA84;animation:bobA 2.6s ease-in-out .36s infinite"></div>
+              <div class="avatar-stack-item" style="background:#FEDC67;animation:bobA 2.6s ease-in-out .54s infinite"></div>
+              <span class="avatar-stack-label">+12 this week</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-end"></div>
+    </div><!-- /screen -->
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+      <button class="nav-tab active">
+        <div class="nav-tab-bg"></div>
+        <div class="nav-tab-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#998300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <span class="nav-tab-label" style="color:#998300">HYSA</span>
+      </button>
+      <button class="nav-tab">
+        <div class="nav-tab-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <span class="nav-tab-label">Spends</span>
+      </button>
+
+      <!-- Floating Scan & Pay center -->
+      <div class="nav-scan-wrap">
+        <button class="nav-scan-btn">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFE565" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/></svg>
+        </button>
+        <span class="nav-scan-label">Scan & Pay</span>
+      </div>
+
+      <button class="nav-tab">
+        <div class="nav-tab-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <span class="nav-tab-label">Wealth</span>
+      </button>
+      <button class="nav-tab">
+        <div class="nav-tab-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <span class="nav-tab-label">Journey</span>
+      </button>
+    </div>
+
+  </div><!-- /phone -->
+</div><!-- /page-wrap -->
+
+<script>
+// ── helpers ───────────────────────────────────────────────────
+function fmtINR(n) {
+  const s = Math.round(n).toString();
+  const last3 = s.slice(-3);
+  const rest  = s.slice(0, -3);
+  if (!rest) return last3;
+  return rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + last3;
+}
+
+function countUp(target, durMs, onTick, onDone) {
+  let start = null;
+  function frame(t) {
+    if (!start) start = t;
+    const p = Math.min(1, (t - start) / durMs);
+    const eased = 1 - Math.pow(1 - p, 4); // ease-out-quart
+    onTick(target * eased);
+    if (p < 1) requestAnimationFrame(frame);
+    else if (onDone) onDone();
+  }
+  requestAnimationFrame(frame);
+}
+
+// ── balance count-up ──────────────────────────────────────────
+const BALANCE = 70892;
+const MULTIPL_EARN = 4275.31;
+const BANK_EARN    = 108.09;
+const LEAD = MULTIPL_EARN - BANK_EARN;
+const LEAD_PCT = Math.round((LEAD / MULTIPL_EARN) * 100);
+
+countUp(BALANCE, 1100, v => {
+  document.getElementById('balanceInt').textContent = fmtINR(v);
+});
+
+// ── beating banks count-up ────────────────────────────────────
+countUp(LEAD, 1400, v => {
+  document.getElementById('leadAmount').textContent = '+₹' + fmtINR(v);
+  const pct = Math.round((v / MULTIPL_EARN) * 100);
+  document.getElementById('leadPct').textContent = pct;
+  // animate meter width
+  const w = Math.min(97, 100 - (v / MULTIPL_EARN) * 100 + 3);
+  document.getElementById('meterFill').style.width = (100 - pct + 3) + '%';
+  document.getElementById('meterShimmerClip').style.right = pct + '%';
+});
+
+// ── confetti burst ────────────────────────────────────────────
+const CONFETTI_COLORS = ['#F9B824','#94FA84','#FDEE5A','#FFA914','#FFFFFF'];
+function fireConfetti() {
+  const host = document.getElementById('confettiHost');
+  host.innerHTML = '';
+  for (let i = 0; i < 7; i++) {
+    const el = document.createElement('span');
+    el.style.cssText = `
+      position:absolute; left:${(i-3)*10}px; top:0;
+      width:6px; height:8px; border-radius:1px;
+      background:${CONFETTI_COLORS[i % CONFETTI_COLORS.length]};
+      animation:confettiA 1.6s ease-out ${i*0.08}s 1 both;
+    `;
+    host.appendChild(el);
+  }
+}
+fireConfetti();
+setInterval(fireConfetti, 5200);
+
+// ── brand cards ───────────────────────────────────────────────
+const brands = [
+  { name:'Amazon',    wordmark:'amazon',    bg:'#232F3E', color:'#FF9900', discount:1.75, price:'4,900', original:'5,000' },
+  { name:'Zomato',    wordmark:'zomato',    bg:'#E23744', color:'#FFFFFF', discount:2.5,  price:'480',   original:'500'   },
+  { name:'Swiggy',    wordmark:'Swiggy',    bg:'#FC8019', color:'#FFFFFF', discount:4,    price:'1,900', original:'2,000' },
+  { name:'Flipkart',  wordmark:'Flipkart',  bg:'#2874F0', color:'#FFE500', discount:2,    price:'1,960', original:'2,000' },
+  { name:'BigBasket', wordmark:'bigbasket', bg:'#84B135', color:'#FFFFFF', discount:4,    price:'4,800', original:'5,000' },
+  { name:'PVR',       wordmark:'PVR',       bg:'#0B0B0B', color:'#F9B824', discount:15,   price:'880',   original:'1,000' },
+];
+
+const scroll = document.getElementById('brandsScroll');
+brands.forEach((b, i) => {
+  const delay = (i % 3) * 0.5;
+  const shineDelay = (i * 0.7) + 1;
+  const badgeDelay = i * 0.3;
+  scroll.innerHTML += `
+    <div class="brand-card" style="animation:floatA 4.2s ease-in-out ${delay}s infinite">
+      <div class="brand-header" style="background:${b.bg};color:${b.color}">
+        ${b.wordmark || b.name}
+        <div class="brand-shine" style="animation:shineA 4.5s ease-in-out ${shineDelay}s infinite"></div>
+      </div>
+      <div class="brand-body">
+        <div class="brand-name">${b.name}</div>
+        <div class="brand-price-row">
+          <span class="brand-price">₹${b.price}</span>
+          <span class="brand-original">₹${b.original}</span>
+        </div>
+        <div class="brand-discount" style="animation:pulseDotA 2.8s ease-in-out ${badgeDelay}s infinite">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1A7A3C" stroke-width="2.5"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+          ${b.discount}% off
+        </div>
+      </div>
+    </div>
+  `;
+});
+
+// ── flow lines (SVG, measured after layout) ───────────────────
+function buildFlowLines() {
+  const host = document.getElementById('flowWrap');
+  const svg  = document.getElementById('flowSvg');
+  if (!host || !svg) return;
+
+  const src     = host.querySelector('[data-flow-source]');
+  const targets = host.querySelectorAll('[data-flow-target]');
+  if (!src || targets.length === 0) return;
+
+  const hostRect = host.getBoundingClientRect();
+  const sRect    = src.getBoundingClientRect();
+
+  const sx = sRect.left - hostRect.left + sRect.width / 2;
+  const sy = sRect.bottom - hostRect.top - 6;
+
+  const W = host.clientWidth;
+  const H = host.clientHeight;
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', W);
+  svg.setAttribute('height', H);
+  svg.style.width  = W + 'px';
+  svg.style.height = H + 'px';
+
+  // Build defs once
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="flowGradA" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#F9B824" stop-opacity="0.95"/>
+        <stop offset="100%" stop-color="#F9B824" stop-opacity="0.2"/>
+      </linearGradient>
+      <radialGradient id="flowDotGradA" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFF8CC" stop-opacity="1"/>
+        <stop offset="60%" stop-color="#FDEE5A" stop-opacity="0.9"/>
+        <stop offset="100%" stop-color="#F9B824" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+  `;
+
+  targets.forEach((t, i) => {
+    const r  = t.getBoundingClientRect();
+    const tx = r.left - hostRect.left + r.width / 2;
+    const ty = r.top  - hostRect.top  + 2;
+
+    const c1x = sx + (tx - sx) * 0.18;
+    const c1y = sy + (ty - sy) * 0.55;
+    const c2x = tx - (tx - sx) * 0.12;
+    const c2y = sy + (ty - sy) * 0.75;
+    const d   = `M ${sx} ${sy} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${tx} ${ty}`;
+    const delay = i * 0.25;
+    const motionDelay = i * 0.5;
+
+    svg.innerHTML += `
+      <g>
+        <!-- halo -->
+        <path d="${d}" fill="none" stroke="#FDEE5A" stroke-opacity="0.32" stroke-width="6" stroke-linecap="round"/>
+        <!-- dashed line -->
+        <path d="${d}" fill="none" stroke="url(#flowGradA)"
+          stroke-width="1.6" stroke-linecap="round"
+          stroke-dasharray="6 6"
+          style="animation:flowDashA 1.8s linear ${delay}s infinite"/>
+        <!-- traveling dot -->
+        <circle r="5" fill="url(#flowDotGradA)">
+          <animateMotion dur="2.2s" repeatCount="indefinite" begin="${motionDelay}s" path="${d}" rotate="auto"/>
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.2s" repeatCount="indefinite" begin="${motionDelay}s"/>
+        </circle>
+      </g>
+    `;
+  });
+}
+
+// Fire after layout settles, then again for font loading
+window.addEventListener('DOMContentLoaded', () => {
+  buildFlowLines();
+  setTimeout(buildFlowLines, 200);
+  setTimeout(buildFlowLines, 900);
+});
+if (document.readyState !== 'loading') {
+  buildFlowLines();
+  setTimeout(buildFlowLines, 200);
+  setTimeout(buildFlowLines, 900);
+}
+
+// Re-measure on scroll container resize
+if (window.ResizeObserver) {
+  const ro = new ResizeObserver(buildFlowLines);
+  ro.observe(document.getElementById('flowWrap'));
+}
+</script>
+</body>
+</html>
